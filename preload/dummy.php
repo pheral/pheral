@@ -38,7 +38,7 @@
             <aside>
                 <h3>Внешние ресурсы</h3>
                 <menu>
-                    <li><a href="https://github.com/pheral" target="_blank">GitHub</a></li>
+                    <li><a href="https://github.com/pheral/pheral" target="_blank">GitHub</a></li>
                     <li><a href="https://vk.com/pheral" target="_blank">ВКонтакте</a></li>
                     <li><a href="https://twitter.com/pheral_ru" target="_blank">Twitter</a></li>
                 </menu>

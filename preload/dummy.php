@@ -7,7 +7,7 @@
     <head>
         <title>Главная | Pheral</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" type="text/css" href="/css/app.css?t=<?php echo $version; ?>" />
+        <link rel="stylesheet" type="text/css" href="/css/app.css?t=<?=$version?>" />
     </head>
     <body>
         <header>
@@ -48,9 +48,13 @@
             <p>
                 <small>
                     &copy;
-                    <time datetime="2017-12-21T21:11" title="2017-12-21 21:11">2017</time>
+                    <time datetime="2017-12-21T21:11" title="2017-12-21 21:11">
+                        2017
+                    </time>
                     &ndash;
-                    <time datetime="<?php echo date('Y-m-d\TH:i'); ?>" title="<?php echo date('Y-m-d H:i'); ?>"><?php echo date('d.m.Y'); ?></time>
+                    <time datetime="<?=date('Y-m-d\TH:i')?>" title="<?=date('Y-m-d H:i')?>">
+                        <?=date('d.m.Y')?>
+                    </time>
                     <q>Pheral</q>
                 </small>
             </p>

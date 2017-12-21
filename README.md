@@ -1,2 +1,2 @@
 # pheral
-The Pheral Framework
+PHP code experiments

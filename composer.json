@@ -1,11 +1,12 @@
 {
   "name": "pheral/pheral",
-  "description": "The Pheral Framework.",
-  "keywords": ["framework", "pheral"],
+  "description": "The Pheral Code.",
+  "keywords": ["code", "pheral"],
   "license": "MIT",
   "type": "project",
   "require": {
-    "php": ">=7.0.0"
+    "php": ">=7.0.0",
+    "pheral/essential": "^1.0@dev"
   },
   "autoload": {
     "psr-4": {

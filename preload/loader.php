@@ -1,5 +1,7 @@
 <?php
 
-# require __DIR__ . '/../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
-require __DIR__ . '/dummy.php';
+$app = new Pheral\Essential\Application(__DIR__ . '/..');
+
+$app->force('templates/home/index.php');

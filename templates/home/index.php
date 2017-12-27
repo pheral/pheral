@@ -32,13 +32,14 @@ $version = '2017-12-27_23-30';
         </figure>
         <section>
             <h3>О будущем коде</h3>
-            <p>Сам код на стадии проектирования, вероятнее всего выберу эволюционную модель развития приложения.</p>
+            <p>Сам код на стадии проектирования, добавил интеграцию с <q>GitHub</q> и <q>Packagist</q></p>
         </section>
     </article>
     <aside>
         <h3>Внешние ресурсы</h3>
         <menu>
-            <li><a href="https://github.com/pheral/pheral" target="_blank">GitHub</a></li>
+            <li><a href="https://github.com/pheral" target="_blank">GitHub</a></li>
+            <li><a href="https://packagist.org/packages/pheral/" target="_blank">Packagist</a></li>
             <li><a href="https://vk.com/pheral" target="_blank">ВКонтакте</a></li>
             <li><a href="https://twitter.com/pheral_ru" target="_blank">Twitter</a></li>
         </menu>

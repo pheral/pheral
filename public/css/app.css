@@ -28,6 +28,11 @@ a.inverse:hover {
     color: #cef188;
 }
 
+time {
+    cursor: help;
+    display: inline-block;
+}
+
 header {
     background-color: #373737;
     color: #fff;
@@ -65,6 +70,16 @@ section {
     background-color:#eee;
     border: 1px solid #ccc;
     padding: 20px;
+    margin-bottom: 10px;
+}
+section h3 {
+    margin-top: 0px;
+}
+section time {
+    font-size: 12px;
+    font-style: italic;
+    --font-weight: bold;
+    color: #777;
 }
 
 aside {

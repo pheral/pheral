@@ -1,9 +1,15 @@
 <?php
 
-require_once __DIR__ . '/../preload/loader.php';
+$preloadPath = __DIR__ . '/../preload';
 
-$app = new Pheral\Essential\Basement\Application(__DIR__ . '/../');
+require_once __DIR__ . '/../preload/autoload_vendor.php';
 
-$response = $app->handle(
-    new \Pheral\Essential\Network\Request()
+require __DIR__ . '/../preload/create_application.php';
+
+$network = network(
+    (new \Pheral\Essential\Network\Request())->make()
 );
+
+$response = $network->handle();
+
+echo $response;

@@ -3,10 +3,13 @@
 namespace App\Network\Controllers;
 
 
-class HomeController
+use Pheral\Essential\Direct\Controller;
+use Pheral\Essential\Direct\View;
+
+class HomeController extends Controller
 {
     public function index()
     {
-        app()->force('templates/home/index.php');
+        return View::make('home.index')->render(['version' => 'v1.0.2']);
     }
 }

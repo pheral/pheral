@@ -1,2 +1,2 @@
-# pheral
-PHP code experiments
+## About Pheral
+

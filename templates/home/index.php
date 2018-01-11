@@ -1,6 +1,6 @@
 <?php
 
-$version = 'v1.0.1.15';
+$version = $version ?? 'v1.0.1.15';
 
 ?><!DOCTYPE html>
 <html lang="ru">

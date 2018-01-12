@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Network;
+namespace Tests\Unit\Network;
 
 
 use \PHPUnit\Framework\TestCase;

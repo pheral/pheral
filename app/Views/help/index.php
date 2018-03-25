@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Home</h1>
+<h1>Manual</h1>
 <div>Page: <?= $page ?? '' ?></div>
 <form name="test" action="" method="post" enctype="multipart/form-data">
     <input type="file" name="asdf" /><br />

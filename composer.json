@@ -1,0 +1,26 @@
+{
+  "name": "pheral/pheral",
+  "description": "The Pheral Essential.",
+  "keywords": ["essential", "pheral"],
+  "license": "MIT",
+  "homepage": "http://pheral.ru",
+  "authors": [
+    {
+      "name": "Dmitriy Yudin",
+      "email": "pheral@yandex.ru"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "app/",
+      "Pheral\\Essential\\": "src/"
+    }
+  },
+  "config": {
+    "sort-packages": true
+  },
+  "minimum-stability": "dev"
+}

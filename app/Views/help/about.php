@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Home :: About</h1>
+<h1>Manual :: About</h1>
 
 <div><b>first</b>: <?= $first ?? '' ?></div>
 <div><b>middle</b>: <?= $middle ?? '' ?></div>

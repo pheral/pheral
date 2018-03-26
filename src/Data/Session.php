@@ -2,6 +2,8 @@
 
 namespace Pheral\Essential\Data;
 
+use Pheral\Essential\Container\Pool;
+
 class Session
 {
     protected $data = [];
@@ -11,6 +13,10 @@ class Session
             session_start();
         }
         $this->data =& ${'_SESSION'};
+    }
+    public static function instance(): Session
+    {
+        return Pool::get('Session');
     }
     public function all(): array
     {

@@ -9,39 +9,35 @@ use Pheral\Essential\Network\Core;
 use Pheral\Essential\Network\Request;
 use Pheral\Essential\Network\Response;
 use Pheral\Essential\Network\Routing\Router;
-use Pheral\Essential\Tools\Factory;
+use Pheral\Essential\Container\Factory;
 
 class Application
 {
-    /**
-     * @var \Pheral\Essential\Network\Request $request
-     */
-    protected $request;
-
     public function __construct()
     {
         //
     }
-    protected function boot()
+    protected function boot(): Request
     {
-        $this->request = Factory::singleton('Request', Request::class, [
+        $request = Factory::singleton('Request', Request::class, [
             Factory::singleton('Server', Server::class),
             Factory::singleton('Session', Session::class),
             Factory::singleton('Cookies', Cookies::class),
             Factory::singleton('Router', Router::class),
         ]);
+        return $request;
     }
     public function run()
     {
         try {
-            $this->boot();
-            $response = (new Core($this->request))->handle();
+            $request = $this->boot();
+            $response = (new Core($request))->handle();
             if ($response->hasRedirect()) {
                 $response->redirect()->send();
             } else {
                 $response->send();
             }
-            $this->terminate($this->request, $response);
+            $this->terminate($request, $response);
         } catch (\Throwable $exception) {
             debug([
                 'MESSAGE' => $exception->getMessage(),

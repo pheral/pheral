@@ -13,17 +13,7 @@ class Help
             'page' => $page,
         ]);
         if ($request->files()->all()) {
-            debug([
-                'page' => $page,
-                'server' => server()->all(),
-                'session' => session()->all(),
-                'cookies' => cookies()->all(),
-                'request' => [
-                    'inputs' => $request->all(),
-                    'files' => $request->files()->all(),
-                    'headers' => $request->headers()->all(),
-                ],
-            ]);
+            debug($request);
         }
         return $view;
     }

@@ -2,7 +2,7 @@
 
 namespace Pheral\Essential\Network;
 
-use Pheral\Essential\Data\Pool;
+use Pheral\Essential\Container\Pool;
 
 class Redirect
 {

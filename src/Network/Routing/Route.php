@@ -31,4 +31,13 @@ class Route
     {
         return $this->params;
     }
+    public static function make($options = []): Route
+    {
+        return new static(
+            array_get($options, 'controller'),
+            array_get($options, 'action', 'index'),
+            array_get($options, 'params', []),
+            array_get($options, 'method')
+        );
+    }
 }

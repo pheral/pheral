@@ -2,12 +2,18 @@
 
 namespace Pheral\Essential\Data;
 
+use Pheral\Essential\Container\Pool;
+
 class Cookies
 {
     protected $data = [];
     public function __construct()
     {
         $this->data =& ${'_COOKIE'};
+    }
+    public static function instance(): Cookies
+    {
+        return Pool::get('Cookies');
     }
     public function all(): array
     {

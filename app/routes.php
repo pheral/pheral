@@ -1,8 +1,6 @@
 <?php
 
-use \Pheral\Essential\Network\Routing\Router;
-
-$router = Router::instance();
+$router = \Pheral\Essential\Network\Routing\Router::instance();
 
 $router->add('/help/{first}/{middle?}/{last?}', [
     'controller' => \App\Controllers\Help::class,
@@ -14,7 +12,6 @@ $router->add('/help/{first}/{middle?}/{last?}', [
 $router->add('/help', [
     'controller' => \App\Controllers\Help::class,
     'action' => 'index',
-    'method' => 'GET',
     'name' => 'help.index',
 ]);
 

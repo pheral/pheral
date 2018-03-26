@@ -2,7 +2,7 @@
 
 namespace Pheral\Essential\Network;
 
-use Pheral\Essential\Tools\Factory;
+use Pheral\Essential\Container\Factory;
 
 class Core
 {
@@ -12,21 +12,12 @@ class Core
     protected $params;
     protected $redirect;
     protected $response;
-    protected $isHandled = false;
     public function __construct(Request $request)
     {
         $this->request = $request;
     }
-    public function request(): Request
+    public function handle(): Response
     {
-        return $this->request;
-    }
-    public function handle()
-    {
-        if ($this->isHandled) {
-            return $this->response;
-        }
-
         $controller = $this->getController();
         $action = $this->getAction();
         $data = null;
@@ -34,12 +25,11 @@ class Core
             $data = $action->invokeArgs($controller, $this->getParams());
         }
         if ($data instanceof Response) {
-            $this->response = $data;
+            $response = $data;
         } else {
-            $this->response = new Response($data);
+            $response = new Response($data);
         }
-        $this->isHandled = true;
-        return $this->response;
+        return $response;
     }
     protected function getController()
     {
@@ -75,7 +65,7 @@ class Core
         if (is_null($this->action)) {
             try {
                 $reflection = new \ReflectionMethod($controller, $action);
-            } catch (\ReflectionException $exception) {
+            } catch (\Throwable $exception) {
                 debug([
                     'DEBUG' => $exception->getMessage(),
                     'PLACE' => $exception->getFile() . ':' . $exception->getLine(),
@@ -115,16 +105,5 @@ class Core
             $this->params[$param->name] = $value;
         }
         return $this->params;
-    }
-    /**
-     * @return \Pheral\Essential\Network\Response|null
-     */
-    public function response()
-    {
-        return $this->response;
-    }
-    public function hasResponse(): bool
-    {
-        return $this->isHandled && !empty($this->response);
     }
 }

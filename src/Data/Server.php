@@ -2,7 +2,8 @@
 
 namespace Pheral\Essential\Data;
 
-use Pheral\Essential\Tools\Factory;
+use Pheral\Essential\Container\Factory;
+use Pheral\Essential\Container\Pool;
 
 class Server
 {
@@ -15,6 +16,10 @@ class Server
     {
         $this->data = ${'_SERVER'};
         $this->headers = Factory::singleton('Headers', Headers::class, $this);
+    }
+    public static function instance(): Server
+    {
+        return Pool::get('Server');
     }
     public function all(): array
     {

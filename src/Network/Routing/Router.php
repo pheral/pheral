@@ -2,7 +2,8 @@
 
 namespace Pheral\Essential\Network\Routing;
 
-use Pheral\Essential\Data\Pool;
+use Pheral\Essential\Container\Pool;
+use Pheral\Essential\Data\Server;
 
 class Router
 {
@@ -15,9 +16,9 @@ class Router
 
     public function load()
     {
-        $routesConfig = server()->path('app/routes.php');
-        if (file_exists($routesConfig)) {
-            require_once $routesConfig;
+        $config = Server::instance()->path('app/routes.php');
+        if (file_exists($config)) {
+            require_once $config;
         }
     }
     public function add($pattern, $options = [])
@@ -42,6 +43,7 @@ class Router
         $this->currentMethod = strtoupper($method);
         return $this;
     }
+
     public function find($url, $method = null)
     {
         if (is_null($this->currentMethod)) {
@@ -63,15 +65,12 @@ class Router
                 continue;
             }
             array_set($options, 'params', $params);
+            array_set($options, 'method', $method);
             $route = $options;
             break;
         }
         if (isset($route)) {
-            $controller = array_get($route, 'controller');
-            $action = array_get($route, 'action', 'index');
-            $method = array_get($route, 'method', 'GET');
-            $params = array_get($route, 'params', []);
-            return new Route($controller, $action, $params, $method);
+            return Route::make($route);
         }
         return null;
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @param string $key
  * @param null $default
@@ -6,10 +7,7 @@
  */
 function server($key = '', $default = null)
 {
-    /**
-     * @var \Pheral\Essential\Data\Server $server
-     */
-    $server = \Pheral\Essential\Data\Pool::get('Server');
+    $server = \Pheral\Essential\Data\Server::instance();;
     return $key ? $server->get($key, $default) : $server;
 }
 
@@ -20,10 +18,7 @@ function server($key = '', $default = null)
  */
 function session($key = '', $default = null)
 {
-    /**
-     * @var \Pheral\Essential\Data\Session $session
-     */
-    $session = \Pheral\Essential\Data\Pool::get('Session');
+    $session = \Pheral\Essential\Data\Session::instance();
     return $key ? $session->get($key, $default) : $session;
 }
 
@@ -34,10 +29,7 @@ function session($key = '', $default = null)
  */
 function cookies($key = '', $default = null)
 {
-    /**
-     * @var \Pheral\Essential\Data\Cookies $cookies
-     */
-    $cookies = \Pheral\Essential\Data\Pool::get('Cookies');
+    $cookies = \Pheral\Essential\Data\Cookies::instance();
     return $key ? $cookies->get($key, $default) : $cookies;
 }
 
@@ -48,18 +40,24 @@ function cookies($key = '', $default = null)
  */
 function request($key = '', $default = null)
 {
-    /**
-     * @var \Pheral\Essential\Network\Request $request
-     */
-    $request = \Pheral\Essential\Data\Pool::get('Request');
+    $request = \Pheral\Essential\Network\Request::instance();
     return $key ? $request->get($key, $default) : $request;
 }
 
+/**
+ * @param mixed $data
+ * @return \Pheral\Essential\Network\Response
+ */
 function response($data = null)
 {
     return new \Pheral\Essential\Network\Response($data);
 }
 
+/**
+ * @param string $url
+ * @param int $status
+ * @return \Pheral\Essential\Network\Redirect
+ */
 function redirect($url = '', $status = 302)
 {
     return new \Pheral\Essential\Network\Redirect($url, $status);

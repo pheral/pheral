@@ -1,6 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Data;
+namespace Pheral\Essential\Container;
 
 class Pool
 {

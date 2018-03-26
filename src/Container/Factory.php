@@ -1,8 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Tools;
-
-use Pheral\Essential\Data\Pool;
+namespace Pheral\Essential\Container;
 
 class Factory
 {
@@ -18,7 +16,7 @@ class Factory
         if (is_string($abstract) && class_exists($abstract)) {
             try {
                 $reflection = new \ReflectionClass($abstract);
-            } catch (\ReflectionException $exception) {
+            } catch (\Throwable $exception) {
                 debug([
                     'DEBUG' => $exception->getMessage(),
                     'PLACE' => $exception->getFile() . ':' . $exception->getLine(),

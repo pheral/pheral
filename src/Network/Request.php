@@ -8,7 +8,8 @@ use Pheral\Essential\Data\Headers;
 use Pheral\Essential\Data\Server;
 use Pheral\Essential\Data\Session;
 use Pheral\Essential\Network\Routing\Router;
-use Pheral\Essential\Tools\Factory;
+use Pheral\Essential\Container\Factory;
+use Pheral\Essential\Container\Pool;
 
 class Request
 {
@@ -54,6 +55,10 @@ class Request
             }
         }
         $this->route = $this->routes->find($this->currentUrl, $this->method);
+    }
+    public static function instance(): Request
+    {
+        return Pool::get('Request');
     }
     public function all(): array
     {

@@ -13,7 +13,6 @@ class Router
     {
         return Pool::get('Router');
     }
-
     public function load()
     {
         $config = Server::instance()->path('app/routes.php');
@@ -26,24 +25,11 @@ class Router
         array_set($this->data, $pattern, $options);
         return $this;
     }
-    /**
-     * @param $pattern
-     * @return \Pheral\Essential\Network\Routing\Route|null
-     */
-    public function get($pattern)
-    {
-        return array_get($this->data, $pattern);
-    }
-    public function all(): array
-    {
-        return $this->data;
-    }
     protected function setMethod($method)
     {
         $this->currentMethod = strtoupper($method);
         return $this;
     }
-
     public function find($url, $method = null)
     {
         if (is_null($this->currentMethod)) {
@@ -97,15 +83,17 @@ class Router
                     break;
                 }
                 if ($required = array_get($requires, $patternSegment)) {
-                    if (!$pathSegment) {
-                        $success = false;
-                        break;
+                    if ($pathSegment) {
+                        $params[$required] = $pathSegment;
+                        continue;
                     }
-                    $params[$required] = $pathSegment;
-                    continue;
+                    $success = false;
+                    break;
                 }
                 if ($optional = array_get($optionals, $patternSegment)) {
-                    $params[$optional] = $pathSegment;
+                    if ($pathSegment) {
+                        $params[$optional] = $pathSegment;
+                    }
                     continue;
                 }
                 $success = false;

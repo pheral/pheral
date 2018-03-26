@@ -91,8 +91,10 @@ class Core
         foreach ($params as $param) {
             if (array_has($routeParams, $param->name)) {
                 $value = array_get($routeParams, $param->name);
-            } else {
+            } elseif ($this->request->has($param->name)) {
                 $value = $this->request->get($param->name);
+            } else {
+                $value = $param->getDefaultValue();
             }
             if ($param->hasType()) {
                 $type = $param->getType();

@@ -16,7 +16,7 @@
   "autoload": {
     "files": [
       "src/Support/helpers.php",
-      "src/Support/components.php"
+      "src/Support/tools.php"
     ],
     "psr-4": {
       "App\\": "app/",

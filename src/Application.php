@@ -19,13 +19,12 @@ class Application
     }
     protected function boot(): Request
     {
-        $request = Factory::singleton('Request', Request::class, [
+        return Factory::singleton('Request', Request::class, [
             Factory::singleton('Server', Server::class),
             Factory::singleton('Session', Session::class),
             Factory::singleton('Cookies', Cookies::class),
             Factory::singleton('Router', Router::class),
         ]);
-        return $request;
     }
     public function run()
     {

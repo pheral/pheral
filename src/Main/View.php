@@ -1,6 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Tools;
+namespace Pheral\Essential\Main;
 
 use Pheral\Essential\Data\Server;
 

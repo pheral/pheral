@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use Pheral\Essential\Main\Controller;
+use Pheral\Essential\Layers\Controller;
 use Pheral\Essential\Network\Request;
 
 class Help extends Controller

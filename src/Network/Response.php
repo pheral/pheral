@@ -2,7 +2,7 @@
 
 namespace Pheral\Essential\Network;
 
-use Pheral\Essential\Main\View;
+use Pheral\Essential\Layers\View;
 
 class Response
 {

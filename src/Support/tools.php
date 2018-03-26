@@ -79,10 +79,10 @@ if (!function_exists('view')) {
     /**
      * @param string $path
      * @param array $data
-     * @return \Pheral\Essential\Main\View
+     * @return \Pheral\Essential\Layers\View
      */
     function view($path = '', $data = [])
     {
-        return \Pheral\Essential\Main\View::make($path, $data);
+        return \Pheral\Essential\Layers\View::make($path, $data);
     }
 }

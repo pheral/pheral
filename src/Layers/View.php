@@ -1,6 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Main;
+namespace Pheral\Essential\Layers;
 
 use Pheral\Essential\Data\Server;
 

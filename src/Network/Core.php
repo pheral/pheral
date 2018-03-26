@@ -10,8 +10,6 @@ class Core
     protected $controller;
     protected $action;
     protected $params;
-    protected $redirect;
-    protected $response;
     public function __construct(Request $request)
     {
         $this->request = $request;

@@ -15,10 +15,8 @@ class Router
     }
     public function load()
     {
-        $config = Server::instance()->path('app/routes.php');
-        if (file_exists($config)) {
-            require_once $config;
-        }
+        require Server::instance()->path('app/routes.php');
+        return $this;
     }
     public function add($pattern, $options = [])
     {

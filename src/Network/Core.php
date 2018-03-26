@@ -93,7 +93,7 @@ class Core
                 $value = array_get($routeParams, $param->name);
             } elseif ($this->request->has($param->name)) {
                 $value = $this->request->get($param->name);
-            } else {
+            } elseif ($param->isDefaultValueAvailable()) {
                 $value = $param->getDefaultValue();
             }
             if ($param->hasType()) {
@@ -101,10 +101,10 @@ class Core
                 if (!$type->isBuiltin()) {
                     $abstract = string_wrap($type);
                     $alias = string_end($abstract, '\\');
-                    $value = Factory::make($alias, $abstract, $value);
+                    $value = Factory::make($alias, $abstract, $value ?? []);
                 }
             }
-            $this->params[$param->name] = $value;
+            $this->params[$param->name] = $value ?? null;
         }
         return $this->params;
     }

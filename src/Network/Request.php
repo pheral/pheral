@@ -17,27 +17,25 @@ class Request
     protected $method;
     protected $currentUrl;
     protected $previousUrl;
+    protected $redirectedUrl;
     protected $protocol;
     protected $host;
     protected $uriString;
     protected $queryString;
     protected $data = [];
     protected $files;
-    protected $routes;
     protected $cookies;
     protected $server;
     protected $session;
-    public function __construct(Server $server, Session $session, Cookies $cookies, Router $routes)
+    public function __construct(Server $server, Session $session, Cookies $cookies, Router $router)
     {
         $this->data =& ${'_REQUEST'};
         $this->files = Factory::singleton('Files', Files::class);
         $this->server = $server;
         $this->session = $session;
         $this->cookies = $cookies;
-        $this->routes = $routes;
 
-        // инициализация основных данных
-        $this->routes->load();
+        // инициализация динамических данных
         $this->protocol = $server->isSecure() ? 'https' : 'http';
         $this->host = $server->get('HTTP_HOST');
         $this->queryString = $server->get('QUERY_STRING');
@@ -46,6 +44,7 @@ class Request
         if (!$this->previousUrl = $server->get('HTTP_REFERER')) {
             $this->previousUrl = $this->session()->get('_url.previous', $this->currentUrl);
         }
+        $this->redirectedUrl = $this->session()->get('_url.redirected');
         $this->method = strtoupper($server->get('REQUEST_METHOD', 'GET'));
         if ($this->method === 'POST') {
             if ($method = $server->get('HTTP_X_METHOD_OVERRIDE')) {
@@ -54,7 +53,7 @@ class Request
                 $this->method = strtoupper($this->get('_method', 'POST'));
             }
         }
-        $this->route = $this->routes->find($this->currentUrl, $this->method);
+        $this->route = $router->load()->find($this->currentUrl, $this->method);
     }
     public static function instance(): Request
     {

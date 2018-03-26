@@ -50,8 +50,8 @@ class Application
         if ($request->isDirect()) {
             $request->session()->set('_url.previous', $request->getCurrentUrl());
         }
-        if (!$response->hasContent() && !$response->hasRedirect()) {
-            debug($response, $request);
+        if ($response->hasRedirect()) {
+            $request->session()->set('_url.redirected', $response->redirect()->getUrl());
         }
     }
 }

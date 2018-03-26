@@ -43,11 +43,11 @@ if (!function_exists('request')) {
     /**
      * @param string $key
      * @param null $default
-     * @return \Pheral\Essential\Network\Request|mixed
+     * @return \Pheral\Essential\Data\Request|mixed
      */
     function request($key = '', $default = null)
     {
-        $request = \Pheral\Essential\Network\Request::instance();
+        $request = \Pheral\Essential\Data\Request::instance();
         return $key ? $request->get($key, $default) : $request;
     }
 }
@@ -55,11 +55,11 @@ if (!function_exists('request')) {
 if (!function_exists('response')) {
     /**
      * @param mixed $data
-     * @return \Pheral\Essential\Network\Response
+     * @return \Pheral\Essential\Network\Output\Response
      */
     function response($data = null)
     {
-        return \Pheral\Essential\Network\Response::make($data);
+        return \Pheral\Essential\Network\Output\Response::make($data);
     }
 }
 
@@ -67,11 +67,11 @@ if (!function_exists('redirect')) {
     /**
      * @param string $url
      * @param int $status
-     * @return \Pheral\Essential\Network\Redirect
+     * @return \Pheral\Essential\Network\Output\Redirect
      */
     function redirect($url = '', $status = 302)
     {
-        return \Pheral\Essential\Network\Redirect::make($url, $status);
+        return \Pheral\Essential\Network\Output\Redirect::make($url, $status);
     }
 }
 

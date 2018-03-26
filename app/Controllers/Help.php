@@ -3,15 +3,15 @@
 namespace App\Controllers;
 
 use Pheral\Essential\Layers\Controller;
-use Pheral\Essential\Network\Request;
+use Pheral\Essential\Network\Frame;
 
 class Help extends Controller
 {
-    public function index(Request $request, $page = 1)
+    public function index(Frame $frame, $page = 1)
     {
         return view('help.index', [
             'page' => (int)$page,
-            'isAjax' => (int)$request->isAjax()
+            'isAjax' => (int)$frame->isAjax()
         ]);
     }
 }

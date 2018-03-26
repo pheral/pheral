@@ -1,8 +1,8 @@
 <?php
 
-namespace Pheral\Essential\Network;
+namespace Pheral\Essential\Network\Output;
 
-use Pheral\Essential\Container\Pool;
+use Pheral\Essential\Network\Frame;
 
 class Redirect
 {
@@ -24,10 +24,6 @@ class Redirect
     {
         return new static($url, $status);
     }
-    protected function getRequest(): Request
-    {
-        return Pool::get('Request');
-    }
     public function setUrl($url)
     {
         $this->url = $url;
@@ -48,7 +44,7 @@ class Redirect
     }
     public function back()
     {
-        $target = $this->getRequest()->getPreviousUrl();
+        $target = Frame::instance()->getPreviousUrl();
         return $this->setUrl($target);
     }
     public function send()
@@ -58,11 +54,11 @@ class Redirect
         }
         $location = $url;
         if (!parse_url($url, PHP_URL_HOST)) {
-            $host = $this->getRequest()->getHost();
+            $host = Frame::instance()->getHost();
             $location = $host . '/' . ltrim($location, '/');
         }
         if (!parse_url($url, PHP_URL_SCHEME)) {
-            $protocol = $this->getRequest()->getProtocol();
+            $protocol = Frame::instance()->getProtocol();
             $location = $protocol . '://' . ltrim($location, '://');
         }
         $status = $this->getStatus();

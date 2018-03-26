@@ -40,4 +40,8 @@ class Route
     {
         return $this->params;
     }
+    public function get($key, $default = null)
+    {
+        return array_get($this->params, $key, $default);
+    }
 }

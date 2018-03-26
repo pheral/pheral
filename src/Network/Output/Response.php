@@ -1,6 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Network;
+namespace Pheral\Essential\Network\Output;
 
 use Pheral\Essential\Layers\View;
 
@@ -41,7 +41,11 @@ class Response
     }
     public function send()
     {
-        echo $this->content;
+        if ($this->hasRedirect()) {
+            $this->redirect()->send();
+        } else {
+            echo $this->content;
+        }
     }
     public function setRedirect($target = '', $status = 302)
     {
@@ -57,7 +61,7 @@ class Response
         return $this->redirect instanceof Redirect;
     }
     /**
-     * @return \Pheral\Essential\Network\Redirect|null
+     * @return \Pheral\Essential\Network\Output\Redirect|null
      */
     public function redirect()
     {

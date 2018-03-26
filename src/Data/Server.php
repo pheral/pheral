@@ -15,11 +15,11 @@ class Server
     public function __construct()
     {
         $this->data = ${'_SERVER'};
-        $this->headers = Factory::singleton('Headers', Headers::class, $this);
+        $this->headers = Factory::singleton('_Headers', Headers::class, $this);
     }
     public static function instance(): Server
     {
-        return Pool::get('Server');
+        return Pool::get('_Server');
     }
     public function all(): array
     {

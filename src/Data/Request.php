@@ -2,27 +2,26 @@
 
 namespace Pheral\Essential\Data;
 
+use Pheral\Essential\Container\Factory;
 use Pheral\Essential\Container\Pool;
 
-class Session
+class Request
 {
     protected $data = [];
     public function __construct()
     {
-        if (!session_id()) {
-            session_start();
-        }
-        $this->data =& ${'_SESSION'};
+        $this->data =& ${'_REQUEST'};
+        $this->files = Factory::singleton('_Files', Files::class);
     }
-    public static function instance(): Session
+    public static function instance(): Request
     {
-        return Pool::get('_Session');
+        return Pool::get('_Request');
     }
     public function all(): array
     {
         return $this->data;
     }
-    public function has($key): bool
+    public function has($key)
     {
         return array_has($this->data, $key);
     }
@@ -41,7 +40,11 @@ class Session
     }
     public function clear()
     {
-        session_unset();
+        $this->data = [];
         return $this;
+    }
+    public function files(): Files
+    {
+        return $this->files;
     }
 }

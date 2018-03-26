@@ -70,13 +70,22 @@ class Router
 
         $pattern = trim($pattern, '/ ');
         $patternSegments = explode('/', $pattern);
+
+        if (count($pathSegments) > count($patternSegments)) {
+            return null;
+        }
+
         $optionals = $this->parseMatches('/\{([a-z0-9-_]+?)\?\}/si', $pattern);
         $requires = $this->parseMatches('/\{([a-z0-9-_]+?)\}/si', $pattern);
 
         $success = true;
         $params = [];
-        foreach ($patternSegments as $index => $patternSegment) {
-            $pathSegment = array_get($pathSegments, $index);
+        foreach ($patternSegments as $key => $patternSegment) {
+            $pathSegment = array_get($pathSegments, $key);
+            if ($pathSegment && !$patternSegment) {
+                $success = false;
+                break;
+            }
             if ($pathSegment != $patternSegment) {
                 if (strpos($patternSegment, '{') === false) {
                     $success = false;

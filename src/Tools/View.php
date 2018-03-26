@@ -6,33 +6,36 @@ use Pheral\Essential\Data\Server;
 
 class View
 {
+    protected $name;
     protected $path;
     protected $data;
-    public function __construct($path, $data = [])
+    public function __construct($path = '', $data = [])
     {
-        $segments = explode('.', trim($path, '.'));
-        $folder = Server::instance()->path('/app/views');
-        $absPath = $folder . '/' . implode('/', $segments) . '.php';
-        if (!file_exists($absPath)) {
-            debug('Template "' . $path . '" not found ');
+        if ($path) {
+            $this->setPath($path);
         }
-        $this->path = $absPath;
-        $this->data = $data;
+        if ($data) {
+            $this->setData($data);
+        }
     }
     public function __toString()
     {
-        $filePath = $this->getPath();
-        if ($filePath) {
+        if ($filePath = $this->getPath()) {
             if ($data = $this->getData()) {
                 extract($data);
             }
             ob_start();
             include $filePath;
             return ob_get_clean();
+        } else {
+            debug('Template "' . $this->name . '" not found ');
         }
         return '';
     }
-
+    public static function make($path = '', $data = [])
+    {
+        return new static($path, $data);
+    }
     public function render($data = [])
     {
         $this->setData($data);
@@ -43,11 +46,22 @@ class View
         if ($newData = array_wrap($data, false)) {
             $this->data = array_merge($this->getData(), $newData);
         }
-        return array_wrap($this->data, false);
+        return $this;
     }
     public function getData()
     {
         return array_wrap($this->data, false);
+    }
+    public function setPath($path)
+    {
+        $this->name = $path;
+        $segments = explode('.', trim($path, '.'));
+        $folder = Server::instance()->path('/app/views');
+        $absPath = $folder . '/' . implode('/', $segments) . '.php';
+        if (file_exists($absPath)) {
+            $this->path = $absPath;
+        }
+        return $this;
     }
     public function getPath()
     {

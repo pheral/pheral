@@ -16,6 +16,10 @@ class Response
             $this->setContent($data);
         }
     }
+    public static function make($data = [])
+    {
+        return new static($data);
+    }
     public function setContent($data)
     {
         if (!isset($data)) {
@@ -48,7 +52,6 @@ class Response
         }
         return $this;
     }
-
     public function hasRedirect(): bool
     {
         return $this->redirect instanceof Redirect;

@@ -20,6 +20,10 @@ class Redirect
             $this->setStatus($status);
         }
     }
+    public static function make($url = '', $status = 302)
+    {
+        return new static($url, $status);
+    }
     protected function getRequest(): Request
     {
         return Pool::get('Request');

@@ -15,6 +15,15 @@ class Route
         $this->params = $params;
         $this->method = $method;
     }
+    public static function make($options = []): Route
+    {
+        return new static(
+            array_get($options, 'controller'),
+            array_get($options, 'action', 'index'),
+            array_get($options, 'params', []),
+            array_get($options, 'method')
+        );
+    }
     public function controller()
     {
         return $this->controller;
@@ -30,14 +39,5 @@ class Route
     public function params()
     {
         return $this->params;
-    }
-    public static function make($options = []): Route
-    {
-        return new static(
-            array_get($options, 'controller'),
-            array_get($options, 'action', 'index'),
-            array_get($options, 'params', []),
-            array_get($options, 'method')
-        );
     }
 }

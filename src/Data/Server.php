@@ -9,17 +9,21 @@ class Server
 {
     protected $data = [];
     protected $headers;
+    protected $referer;
     protected $path;
-    protected $isSecure;
+    protected $requestMethod;
     protected $isXmlHttpRequest;
+    protected $isSecure;
     public function __construct()
     {
         $this->data = ${'_SERVER'};
-        $this->headers = Factory::singleton('_Headers', Headers::class, $this);
+
+        Factory::singleton('Headers', Headers::class, [$this->data]);
+        $this->headers = Headers::instance();
     }
     public static function instance(): Server
     {
-        return Pool::get('_Server');
+        return Pool::get('Server');
     }
     public function all(): array
     {
@@ -40,12 +44,43 @@ class Server
     public function path($path = '')
     {
         if (is_null($this->path)) {
-            $this->path = dirname($this->get('DOCUMENT_ROOT'));
+            $this->path = dirname($this->getDocumentRoot());
         }
         if ($path) {
             return realpath($this->path . '/' . trim($path, '/ '));
         }
         return $this->path;
+    }
+    public function getDocumentRoot()
+    {
+        return $this->get('DOCUMENT_ROOT');
+    }
+    public function getQueryString()
+    {
+        return $this->get('QUERY_STRING');
+    }
+    public function getRequestUri()
+    {
+        return $this->get('REQUEST_URI');
+    }
+    public function getHost()
+    {
+        return $this->headers->getHost();
+    }
+    public function getReferer()
+    {
+        return $this->headers->getReferer();
+    }
+    public function getRequestMethod()
+    {
+        if (is_null($this->requestMethod)) {
+            $this->requestMethod = strtoupper($this->get('REQUEST_METHOD', 'GET'));
+            $methodOverride = $this->get('HTTP_X_METHOD_OVERRIDE');
+            if ($this->requestMethod === 'POST' && $methodOverride) {
+                $this->requestMethod = strtoupper($methodOverride);
+            }
+        }
+        return $this->requestMethod;
     }
     public function isSecure(): bool
     {

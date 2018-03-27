@@ -8,14 +8,17 @@ use Pheral\Essential\Container\Pool;
 class Request
 {
     protected $data = [];
+    protected $files;
     public function __construct()
     {
         $this->data =& ${'_REQUEST'};
-        $this->files = Factory::singleton('_Files', Files::class);
+
+        Factory::singleton('Files', Files::class);
+        $this->files = Files::instance();
     }
     public static function instance(): Request
     {
-        return Pool::get('_Request');
+        return Pool::get('Request');
     }
     public function all(): array
     {

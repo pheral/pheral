@@ -7,9 +7,9 @@ use Pheral\Essential\Container\Pool;
 class Headers
 {
     protected $data = [];
-    public function __construct(Server $server)
+    public function __construct($data = [])
     {
-        foreach ($server->all() as $key => $value) {
+        foreach ($data as $key => $value) {
             if (strpos($key, 'HTTP_') !== 0) {
                 continue;
             }
@@ -19,7 +19,7 @@ class Headers
             $this->data[$headerName] = $value;
         }
     }
-    public function instance(): Headers
+    public static function instance(): Headers
     {
         return Pool::get('Headers');
     }
@@ -30,5 +30,13 @@ class Headers
     public function get($key, $default = null)
     {
         return array_get($this->data, $key, $default);
+    }
+    public function getHost()
+    {
+        return $this->get('Host');
+    }
+    public function getReferer()
+    {
+        return $this->get('Referer');
     }
 }

@@ -11,7 +11,7 @@ class Help extends Controller
     {
         return view('help.index', [
             'page' => (int)$page,
-            'isAjax' => (int)$frame->isAjax()
+            'isAjax' => (int)$frame->isAjaxRequest()
         ]);
     }
 }

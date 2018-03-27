@@ -46,6 +46,7 @@ class Response
         } else {
             echo $this->content;
         }
+        return $this;
     }
     public function setRedirect($target = '', $status = 302)
     {

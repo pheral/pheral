@@ -13,7 +13,7 @@ class Cookies
     }
     public static function instance(): Cookies
     {
-        return Pool::get('_Cookies');
+        return Pool::get('Cookies');
     }
     public function all(): array
     {

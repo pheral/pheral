@@ -13,9 +13,9 @@ class Router
     {
         return Pool::get('Router');
     }
-    public function load()
+    public function load(Server $server)
     {
-        $config = Server::instance()->path('app/routes.php');
+        $config = $server->path('app/routes.php');
         require $config;
         return $this;
     }
@@ -24,15 +24,10 @@ class Router
         array_set($this->data, $pattern, $options);
         return $this;
     }
-    protected function setMethod($method)
-    {
-        $this->currentMethod = strtoupper($method);
-        return $this;
-    }
-    public function find($url, $method = null)
+    public function find($url, $method = '')
     {
         if (is_null($this->currentMethod)) {
-            $this->currentMethod = $method;
+            $this->currentMethod = strtoupper($method);
         }
         $method = $method ? strtoupper($method) : $this->currentMethod;
         $path = parse_url($url, PHP_URL_PATH);

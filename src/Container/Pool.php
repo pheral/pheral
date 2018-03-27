@@ -2,6 +2,8 @@
 
 namespace Pheral\Essential\Container;
 
+use Pheral\Essential\Network\Exceptions\NetworkException;
+
 class Pool
 {
     protected static $instance;
@@ -16,7 +18,7 @@ class Pool
     public static function instance()
     {
         if (is_null(static::$instance)) {
-            static::$instance = new static();
+            static::$instance = new static;
         }
         return static::$instance;
     }
@@ -74,7 +76,7 @@ class Pool
             $abstract = get_class($abstract);
         }
         if ($abstract === static::class || is_subclass_of($abstract, static::class)) {
-            skip('Pool can not contain itself', true);
+            error('Pool can not contain itself');
         }
         $alias = $this->setAlias($abstract);
         $this->setSettings($alias, $abstract, $params, $singleton);
@@ -162,5 +164,15 @@ class Pool
     protected function getConcrete($abstract)
     {
         return array_get($this->concretes, $abstract);
+    }
+
+    /**
+     * @param $message
+     * @param $code
+     * @throws \Pheral\Essential\Network\Exceptions\NetworkException
+     */
+    public function error($message, $code = 500)
+    {
+        throw new NetworkException($code, $message);
     }
 }

@@ -8,12 +8,6 @@ function stop()
     exit;
 }
 
-function skip($message, $printDebugFrom = false)
-{
-    print json_encode($message) . ($printDebugFrom ? ' ' . PHP_EOL . debug_from() : '');
-    stop();
-}
-
 /**
  * @param array ...$args
  */

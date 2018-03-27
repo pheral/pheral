@@ -1,6 +1,9 @@
 <?php
 
 if (!function_exists('app')) {
+    /**
+     * @return \Pheral\Essential\Container\Pool
+     */
     function app()
     {
         return \Pheral\Essential\Container\Pool::instance();
@@ -91,5 +94,26 @@ if (!function_exists('view')) {
     function view($path = '', $data = [])
     {
         return \Pheral\Essential\Layers\View::make($path, $data);
+    }
+}
+
+if (!function_exists('error')) {
+    /**
+     * @param $message
+     * @param $code
+     */
+    function error($message, $code = 500)
+    {
+        app()->error($message, $code);
+    }
+}
+
+if (!function_exists('error404')) {
+    /**
+     * @param $message
+     */
+    function error404($message)
+    {
+        error($message, 404);
     }
 }

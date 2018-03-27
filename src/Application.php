@@ -2,31 +2,24 @@
 
 namespace Pheral\Essential;
 
+use App\Exceptions\ExceptionHandler;
 use Pheral\Essential\Container\Pool;
 use Pheral\Essential\Core\Interfaces\Executable;
 
 class Application extends Pool
 {
     protected $core;
-    public function __construct(Executable $core)
-    {
-        $this->core = $core;
-    }
-    public function run()
+    public function run(Executable $core)
     {
         try {
-            $this->core->execute();
-            $this->terminate();
+            $core->execute();
+            $this->terminate($core);
         } catch (\Throwable $exception) {
-            skip([
-                'MESSAGE' => $exception->getMessage(),
-                'PLACE' => $exception->getFile() . ':' . $exception->getLine(),
-                'TRACE' => PHP_EOL . $exception->getTraceAsString()
-            ], true);
+            (new ExceptionHandler())->display($exception);
         }
     }
-    protected function terminate()
+    protected function terminate(Executable $core)
     {
-        $this->core->terminate();
+        $core->terminate();
     }
 }

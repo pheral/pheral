@@ -28,7 +28,7 @@ class View
             include $filePath;
             return ob_get_clean();
         } else {
-            skip('Template "' . $this->name . '" not found ', true);
+            error('Template "' . $this->name . '" not found ');
         }
         return '';
     }

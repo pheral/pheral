@@ -112,7 +112,7 @@ if (!function_exists('error404')) {
     /**
      * @param $message
      */
-    function error404($message)
+    function error404($message = '')
     {
         error($message, 404);
     }

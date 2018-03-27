@@ -10,9 +10,7 @@
 <body>
 <h1>Page Not Found</h1>
 <pre>
-Message: <?= $message ?? false ?>
-
-Trace: <?= $trace ?? false ?>
+<?= $message ?? false ?>
 </pre>
 </body>
 </html>

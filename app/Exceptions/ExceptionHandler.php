@@ -2,9 +2,9 @@
 
 namespace App\Exceptions;
 
-use Pheral\Essential\Network\Exceptions\NetworkExceptionHandler;
+use Pheral\Essential\Exceptions\DefaultExceptionHandler;
 
-class ExceptionHandler extends NetworkExceptionHandler
+class ExceptionHandler extends DefaultExceptionHandler
 {
 
 }

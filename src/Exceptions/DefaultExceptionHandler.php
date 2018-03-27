@@ -1,11 +1,12 @@
 <?php
 
-namespace Pheral\Essential\Network\Exceptions;
+namespace Pheral\Essential\Exceptions;
 
 use Pheral\Essential\Layers\View;
+use Pheral\Essential\Network\Exceptions\NetworkException;
 use Pheral\Essential\Network\Output\Response;
 
-class NetworkExceptionHandler
+class DefaultExceptionHandler
 {
     public function display(\Throwable $exception)
     {

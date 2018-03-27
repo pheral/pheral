@@ -2,7 +2,6 @@
 
 namespace Pheral\Essential\Data;
 
-use Pheral\Essential\Container\Factory;
 use Pheral\Essential\Container\Pool;
 
 class Request
@@ -13,7 +12,7 @@ class Request
     {
         $this->data =& ${'_REQUEST'};
 
-        Factory::singleton('Files', Files::class);
+        Pool::singleton('Files', Files::class);
         $this->files = Files::instance();
     }
     public static function instance(): Request

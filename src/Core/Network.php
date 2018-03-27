@@ -3,7 +3,7 @@
 namespace Pheral\Essential\Core;
 
 use Pheral\Essential\Core\Interfaces\Executable;
-use Pheral\Essential\Container\Factory;
+use Pheral\Essential\Container\Pool;
 use Pheral\Essential\Network\Frame;
 use Pheral\Essential\Network\Output\Response;
 use Pheral\Essential\Network\Routing\Route;
@@ -17,7 +17,7 @@ class Network implements Executable
     protected $frame;
     public function __construct()
     {
-        Factory::singleton('Frame', Frame::class);
+        Pool::singleton('Frame', Frame::class);
         $this->frame = Frame::instance();
     }
     public function execute()
@@ -37,7 +37,7 @@ class Network implements Executable
 
     protected function getController(Route $route)
     {
-        return Factory::make($route->controller());
+        return Pool::make($route->controller());
     }
     protected function getAction(Route $route, $controller)
     {
@@ -61,8 +61,7 @@ class Network implements Executable
                     $type = $param->getType();
                     if (!$type->isBuiltin()) {
                         $abstract = string_wrap($type);
-                        $alias = string_end($abstract, '\\');
-                        $value = Factory::make($alias, $abstract, $value ?? []);
+                        $value = Pool::make($abstract, null, $params ?? []);
                     }
                 }
                 $params[$param->name] = $value ?? null;

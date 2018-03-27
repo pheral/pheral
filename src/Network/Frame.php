@@ -7,7 +7,6 @@ use Pheral\Essential\Data\Server;
 use Pheral\Essential\Data\Session;
 use Pheral\Essential\Data\Request;
 use Pheral\Essential\Network\Routing\Router;
-use Pheral\Essential\Container\Factory;
 use Pheral\Essential\Container\Pool;
 
 class Frame
@@ -52,12 +51,11 @@ class Frame
     }
     protected function init()
     {
-        Factory::singleton('Server', Server::class);
-        Factory::singleton('Session', Session::class);
-        Factory::singleton('Cookies', Cookies::class);
-        Factory::singleton('Request', Request::class);
-
-        Factory::singleton('Router', Router::class);
+        Pool::singleton('Server', Server::class);
+        Pool::singleton('Session', Session::class);
+        Pool::singleton('Cookies', Cookies::class);
+        Pool::singleton('Request', Request::class);
+        Pool::singleton('Router', Router::class);
     }
     public function getProtocol()
     {

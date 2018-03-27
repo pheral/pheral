@@ -1,15 +1,21 @@
 <?php
 
-function debug_from($limit = 3)
+/**
+ * @SuppressWarnings(ExitExpression)
+ */
+function stop()
 {
-    if ($backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $limit)) {
-        $call = next($backtrace);
-    }
-    return !empty($call) ? $call['file'] . ':' . $call['line'] : __FILE__.':'.__LINE__;
+    exit;
 }
+
+function skip($message, $printDebugFrom = false)
+{
+    print json_encode($message) . ($printDebugFrom ? ' ' . PHP_EOL . debug_from() : '');
+    stop();
+}
+
 /**
  * @param array ...$args
- * @SuppressWarnings(ExitExpression)
  */
 function debug(...$args)
 {
@@ -18,7 +24,24 @@ function debug(...$args)
         print var_export($arg, true) . PHP_EOL;
     }, $args);
     print PHP_EOL . PHP_EOL . debug_from();
-    exit;
+    stop();
+}
+
+function debug_from($limit = 3)
+{
+    if ($backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $limit)) {
+        $call = next($backtrace);
+    }
+    return !empty($call) ? $call['file'] . ':' . $call['line'] : __FILE__.':'.__LINE__;
+}
+
+/**
+ * @param $argument
+ * @return mixed
+ */
+function ignore($argument)
+{
+    return $argument;
 }
 function array_set(&$array, $key, $value)
 {

@@ -1,5 +1,12 @@
 <?php
 
+if (!function_exists('app')) {
+    function app()
+    {
+        return \Pheral\Essential\Container\Pool::instance();
+    }
+}
+
 if (!function_exists('server')) {
     /**
      * @param string $key
@@ -8,7 +15,7 @@ if (!function_exists('server')) {
      */
     function server($key = '', $default = null)
     {
-        $server = \Pheral\Essential\Data\Server::instance();;
+        $server = \Pheral\Essential\Data\Server::instance();
         return $key ? $server->get($key, $default) : $server;
     }
 }

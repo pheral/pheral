@@ -4,6 +4,5 @@ namespace Pheral\Essential\Layers;
 
 class Controller
 {
-
+    //
 }
-

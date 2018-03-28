@@ -9,10 +9,9 @@
 </head>
 <body>
 <h1>Exception <?= $code ?? 500 ?></h1>
+<p><?= $message ?? '' ?></p>
 <pre>
-Message: <?= $message ?? false ?>
-
-Trace: <?= $trace ?? false ?>
+<?= $trace ?? '' ?>
 </pre>
 </body>
 </html>

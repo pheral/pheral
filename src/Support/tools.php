@@ -2,7 +2,7 @@
 
 if (!function_exists('app')) {
     /**
-     * @return \Pheral\Essential\Container\Pool
+     * @return \Pheral\Essential\Application|\Pheral\Essential\Container\Pool
      */
     function app()
     {
@@ -101,19 +101,21 @@ if (!function_exists('error')) {
     /**
      * @param $message
      * @param $code
+     * @throws \Pheral\Essential\Exceptions\NetworkException
      */
     function error($message, $code = 500)
     {
-        app()->error($message, $code);
+        throw new \Pheral\Essential\Exceptions\NetworkException($code, $message);
     }
 }
 
 if (!function_exists('error404')) {
     /**
      * @param $message
+     * @throws \Pheral\Essential\Exceptions\NetworkException
      */
     function error404($message = '')
     {
-        error($message, 404);
+        throw new \Pheral\Essential\Exceptions\NetworkException(404, $message);
     }
 }

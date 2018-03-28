@@ -1,6 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Network\Exceptions;
+namespace Pheral\Essential\Exceptions;
 
 class NetworkException extends \RuntimeException
 {

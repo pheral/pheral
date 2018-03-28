@@ -3,6 +3,7 @@
 namespace Pheral\Essential\Layers;
 
 use Pheral\Essential\Data\Server;
+use Pheral\Essential\Exceptions\NetworkException;
 
 class View
 {
@@ -28,9 +29,8 @@ class View
             include $filePath;
             return ob_get_clean();
         } else {
-            error('Template "' . $this->name . '" not found ');
+            throw new NetworkException(500, 'Template "' . $this->name . '" not found ');
         }
-        return '';
     }
     public static function make($path = '', $data = [])
     {
@@ -55,10 +55,7 @@ class View
     public function setPath($path)
     {
         $this->name = $path;
-        $segments = explode('.', trim($path, '.'));
-        $folder = Server::instance()->path('/app/views');
-        $absPath = $folder . '/' . implode('/', $segments) . '.php';
-        if (file_exists($absPath)) {
+        if ($absPath = static::exists($path)) {
             $this->path = $absPath;
         }
         return $this;
@@ -66,5 +63,16 @@ class View
     public function getPath()
     {
         return $this->path;
+    }
+    public function exists($path = '')
+    {
+        if ($path) {
+            $segments = explode('.', trim($path, '.'));
+            $folder = Server::instance()->path('/app/views');
+            $absPath = $folder . '/' . implode('/', $segments) . '.php';
+        } else {
+            $absPath = $this->path;
+        }
+        return $absPath && file_exists($absPath) ? $absPath : false;
     }
 }

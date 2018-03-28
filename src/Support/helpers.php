@@ -7,7 +7,6 @@ function stop()
 {
     exit;
 }
-
 /**
  * @param array ...$args
  */
@@ -28,7 +27,6 @@ function debug_from($limit = 3)
     }
     return !empty($call) ? $call['file'] . ':' . $call['line'] : __FILE__.':'.__LINE__;
 }
-
 /**
  * @param $argument
  * @return mixed

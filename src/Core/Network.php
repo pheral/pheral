@@ -4,6 +4,7 @@ namespace Pheral\Essential\Core;
 
 use Pheral\Essential\Core\Interfaces\Executable;
 use Pheral\Essential\Container\Pool;
+use Pheral\Essential\Exceptions\NetworkException;
 use Pheral\Essential\Network\Frame;
 use Pheral\Essential\Network\Output\Response;
 use Pheral\Essential\Network\Routing\Route;
@@ -28,6 +29,8 @@ class Network implements Executable
             $action = $this->getAction($route, $controller);
             $params = $this->getParams($route, $action);
             $response = $action->invokeArgs($controller, $params);
+        } else {
+            throw new NetworkException(404, 'Page not found');
         }
         if (!$response instanceof Response) {
             $response = Response::make($response);

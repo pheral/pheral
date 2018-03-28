@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Page Not Found</h1>
+<h1>Error 404</h1>
 <pre>
 <?= $message ?? false ?>
 </pre>

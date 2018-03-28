@@ -2,5 +2,5 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$app = new \Pheral\Essential\Application();
-$app->run(new \Pheral\Essential\Core\Network());
+$application = (new \Pheral\Essential\Application());
+$application->run(new \Pheral\Essential\Core\Network());

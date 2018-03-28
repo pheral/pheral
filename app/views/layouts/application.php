@@ -8,8 +8,9 @@
         <title>Document</title>
     </head>
     <body>
-        <h1>Help</h1>
-        <div>Page: <?= $page ?? 1 ?></div>
-        <div>isAjax: <?= $isAjax ?? false ?></div>
+        <h1>Pheral</h1>
+        <div>
+            <?= $content ?? '' ?>
+        </div>
     </body>
 </html>

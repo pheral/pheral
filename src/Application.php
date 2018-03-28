@@ -9,13 +9,20 @@ use Pheral\Essential\Exceptions\NetworkException;
 
 class Application extends Pool
 {
+    protected $running = false;
     public function run(Executable $core)
     {
         try {
+            if ($this->running) {
+                throw new NetworkException(500, 'Application is still running');
+            }
+            $this->running = true;
             $core->execute();
             $this->terminate($core);
         } catch (\Throwable $exception) {
             (new ExceptionHandler())->display($exception);
+        } finally {
+            $this->running = false;
         }
     }
     protected function terminate(Executable $core)

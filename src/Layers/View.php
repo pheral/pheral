@@ -21,16 +21,7 @@ class View
     }
     public function __toString()
     {
-        if ($filePath = $this->getPath()) {
-            if ($data = $this->getData()) {
-                extract($data);
-            }
-            ob_start();
-            include $filePath;
-            return ob_get_clean();
-        } else {
-            throw new NetworkException(500, 'Template "' . $this->name . '" not found ');
-        }
+        return $this->render();
     }
     public static function make($path = '', $data = [])
     {
@@ -39,7 +30,16 @@ class View
     public function render($data = [])
     {
         $this->setData($data);
-        return $this->__toString();
+        if ($filePath = $this->getPath()) {
+            if ($vars = $this->getData()) {
+                extract($vars);
+            }
+            ob_start();
+            include $filePath;
+            return ob_get_clean();
+        } else {
+            throw new NetworkException(500, 'Template "' . $this->name . '" not found ');
+        }
     }
     public function setData($data = [])
     {
@@ -54,15 +54,32 @@ class View
     }
     public function setPath($path)
     {
-        $this->name = $path;
-        if ($absPath = static::exists($path)) {
-            $this->path = $absPath;
+        if ($path instanceof View) {
+            $view = $path;
+            if ($name = $view->getName()) {
+                $this->name = $name;
+            }
+            if ($path = $view->getPath()) {
+                $this->path = $path;
+            }
+            if ($data = $view->getData()) {
+                $this->setData($data);
+            }
+        } else {
+            $this->name = $path;
+            if ($absPath = static::exists($path)) {
+                $this->path = $absPath;
+            }
         }
         return $this;
     }
     public function getPath()
     {
         return $this->path;
+    }
+    public function getName()
+    {
+        return $this->name;
     }
     public function exists($path = '')
     {

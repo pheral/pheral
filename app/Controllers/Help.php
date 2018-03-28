@@ -2,16 +2,19 @@
 
 namespace App\Controllers;
 
-use Pheral\Essential\Layers\Controller;
 use Pheral\Essential\Network\Frame;
 
-class Help extends Controller
+class Help extends Front
 {
-    public function index(Frame $frame, $page = 1)
+    public function index(Frame $frame, $param = 'default')
     {
-        return view('help.index', [
-            'page' => (int)$page,
-            'isAjax' => (int)$frame->isAjaxRequest()
+        $content = view('templates.help.index', [
+            'paramArgument' => $param,
+            'paramRequest' => $frame->request()->get('param')
+        ]);
+
+        return $this->render([
+            'content' => $content
         ]);
     }
 }

@@ -10,6 +10,16 @@ if (!function_exists('app')) {
     }
 }
 
+if (!function_exists('frame')) {
+    /**
+     * @return \Pheral\Essential\Network\Frame
+     */
+    function frame()
+    {
+        return \Pheral\Essential\Network\Frame::instance();
+    }
+}
+
 if (!function_exists('server')) {
     /**
      * @param string $key
@@ -105,7 +115,7 @@ if (!function_exists('error')) {
      */
     function error($message, $code = 500)
     {
-        throw new \Pheral\Essential\Exceptions\NetworkException($code, $message);
+        app()->error($message, $code);
     }
 }
 
@@ -116,6 +126,6 @@ if (!function_exists('error404')) {
      */
     function error404($message = '')
     {
-        throw new \Pheral\Essential\Exceptions\NetworkException(404, $message);
+        error($message, 404);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Pheral\Essential\Layers;
 
-class Model
+abstract class Model
 {
     //
 }

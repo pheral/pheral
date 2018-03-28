@@ -11,12 +11,10 @@ abstract class Pool
     protected $settings = [];
     protected $reflections = [];
     protected $concretes = [];
-
     public function __construct()
     {
         static::$instance = $this;
     }
-
     /**
      * @return static
      */

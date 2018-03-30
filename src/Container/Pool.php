@@ -137,7 +137,11 @@ abstract class Pool
             if (is_object($object)) {
                 $reflection = new \ReflectionObject($object);
             } else {
-                $reflection = new \ReflectionClass($abstract);
+                try {
+                    $reflection = new \ReflectionClass($abstract);
+                } catch (\ReflectionException $exception) {
+                    throw new NetworkException(500, "class {$abstract} does not exists");
+                }
             }
             $this->reflections[$abstract] = $reflection;
         }

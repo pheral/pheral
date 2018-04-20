@@ -22,9 +22,10 @@ class ExceptionHandler
                 stop();
             }
         }
-        debug([
+        debug_stop([
             'message' => $exception->getMessage(),
             'code' => $exception->getCode(),
+            'place' => $exception->getFile() . ':' . $exception->getLine(),
             'trace' => $exception->getTraceAsString()
         ]);
     }

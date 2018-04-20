@@ -3,20 +3,46 @@
 namespace Pheral\Essential\Network\Routing;
 
 use Pheral\Essential\Container\Pool;
-use Pheral\Essential\Data\Server;
 
 class Router
 {
     protected $currentMethod;
     protected $data = [];
+    protected $sources;
+    protected function sources()
+    {
+        if (is_null($this->sources)) {
+            $sources = [];
+            if ($relativePath = config('app.sources.router')) {
+                if ($absolutePath = app()->path($relativePath)) {
+                    $dir = dir($absolutePath);
+                    while (false !== ($source = $dir->read())) {
+                        if (is_dir($source)) {
+                            continue;
+                        }
+                        $sources[] = $absolutePath . '/'. $source;
+                    }
+                }
+            }
+            if (!$sources) {
+                if ($source = app()->path('app/routing.php')) {
+                    $sources[] = $source;
+                }
+            }
+            $this->sources = $sources;
+        }
+        return $this->sources;
+    }
+
     public static function instance(): Router
     {
         return Pool::get('Router');
     }
-    public function load(Server $server)
+    public function load()
     {
-        $config = $server->path('app/routes.php');
-        require $config;
+        foreach ($this->sources() as $source) {
+            require $source;
+        }
         return $this;
     }
     public function add($pattern, $options = [])

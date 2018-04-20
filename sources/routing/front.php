@@ -6,4 +6,3 @@ $router->add('/{param?}', [
     'controller' => \App\Controllers\Help::class,
     'action' => 'index',
 ]);
-

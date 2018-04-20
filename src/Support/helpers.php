@@ -1,5 +1,8 @@
 <?php
-
+function is_cli()
+{
+    return PHP_SAPI === 'cli';
+}
 /**
  * @SuppressWarnings(ExitExpression)
  */
@@ -8,32 +11,62 @@ function stop()
     exit;
 }
 /**
- * @param array ...$args
+ * @SuppressWarnings(DevelopmentCodeFragment)
+ * @param $args
+ * @param null $from
+ * @param bool $trace
  */
-function debug(...$args)
+function inspect($args, $from = null, $trace = false, $html = true)
 {
-    print '<pre>';
+    $from = $from ?? inspect_from();
+    if (!is_cli() && $html) {
+        print '<pre style="border:1px solid red; background: #fffdf4;padding:5px;">';
+    }
+
     array_map(function ($arg) {
         print var_export($arg, true) . PHP_EOL;
     }, $args);
-    print PHP_EOL . PHP_EOL . debug_from();
-    stop();
-}
 
-function debug_from($limit = 3)
+    if (!is_cli() && $html) {
+        print '<p style="font-size:10px;">';
+    }
+    print PHP_EOL . PHP_EOL . $from;
+    if ($trace) {
+        print PHP_EOL . PHP_EOL;
+        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+    }
+    if (!is_cli() && $html) {
+        print '</p></pre>';
+    }
+}
+function inspect_from()
 {
-    if ($backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $limit)) {
+    if ($backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)) {
         $call = next($backtrace);
     }
     return !empty($call) ? $call['file'] . ':' . $call['line'] : __FILE__.':'.__LINE__;
 }
-/**
- * @param $argument
- * @return mixed
- */
+function debug(...$args)
+{
+    inspect($args, inspect_from());
+}
+function debug_stop(...$args)
+{
+    inspect($args, inspect_from(), true);
+    stop();
+}
+function debug_raw(...$args)
+{
+    inspect($args, inspect_from(), true, false);
+    stop();
+}
 function ignore($argument)
 {
     return $argument;
+}
+function array_wrap($array, $force = true)
+{
+    return is_array($array) ? $array : ($array || $force ? [$array] : []);
 }
 function array_set(&$array, $key, $value)
 {
@@ -50,32 +83,116 @@ function array_get($array, $key, $default = null)
 {
     return array_has($array, $key) ? $array[$key] : $default;
 }
-function array_drop(&$array, $key)
+function array_only($array, $keys)
 {
-    if (array_has($array, $key)) {
-        unset($array[$key]);
+    $only = [];
+    $onlyKeys = array_wrap($keys);
+    foreach ($onlyKeys as $key) {
+        if (array_has($array, $key)) {
+            $only[$key] = $array[$key];
+        }
+    }
+    return $only;
+}
+function array_except($array, $keys)
+{
+    return array_expel($array, $keys);
+}
+function array_expel(&$array, $keys)
+{
+    $expelKeys = array_wrap($keys);
+    foreach ($expelKeys as $key) {
+        if (array_has($array, $key)) {
+            unset($array[$key]);
+        }
     }
     return $array;
 }
 function array_cut(&$array, $key, $default = null)
 {
     $value = array_get($array, $key, $default);
-    array_drop($array, $key);
+    array_expel($array, $key);
     return $value;
 }
-function array_wrap($array, $force = true)
+function dot_array_get($array, $path, $default = null)
 {
-    return is_array($array) ? $array : ($array || $force ? [$array] : []);
+    $key = string_start_cut($path);
+    if (!array_has($array, $key)) {
+        return $default;
+    }
+    $value = array_get($array, $key);
+    if ($path && is_array($value)) {
+        return dot_array_get($value, $path, $default);
+    } elseif ($path) {
+        return $default;
+    } else {
+        return $value;
+    }
+}
+function dot_array_set(&$array, $path, $value)
+{
+    if (!$path) {
+        return ;
+    }
+    if (is_array($path)) {
+        $path = implode('.', $path);
+    }
+    $key = string_start_cut($path);
+    if (!array_has($array, $key)) {
+        $nested = $path ? [] : $value;
+    } else {
+        $nested = array_get($array, $key, []);
+        if (!is_array($nested)) {
+            $nested = [];
+        }
+    }
+    if ($path) {
+        dot_array_set($nested, $path, $value);
+    }
+    $array[$key] = $path ? $nested : $value;
+}
+function dot_array_has($array, $path)
+{
+    if (!$path) {
+        return false;
+    }
+    $key = string_start_cut($path);
+    if (!array_has($array, $key)) {
+        return false;
+    }
+    if ($path) {
+        return dot_array_has(array_get($array, $key), $path);
+    }
+    return true;
+}
+
+function string_segments($string, $delimiter = '.')
+{
+    return explode($delimiter, $string);
 }
 function string_start($string, $delimiter = '.')
 {
-    $contents = explode($delimiter, $string);
-    return current($contents);
+    $segments = string_segments($string, $delimiter);
+    return current($segments);
+}
+function string_start_cut(&$string, $delimiter = '.')
+{
+    $segments = string_segments($string, $delimiter);
+    $segment = array_shift($segments);
+    $string = implode($delimiter, $segments);
+    return $segment;
 }
 function string_end($string, $delimiter = '.')
 {
-    $contents = explode($delimiter, $string);
-    return end($contents);
+    $segments = string_segments($string, $delimiter);
+    return end($segments);
+}
+function string_end_cut(&$string, $delimiter = '.')
+{
+    $segments = string_segments($string, $delimiter);
+    $segment = array_pop($segments);
+    $string = implode($delimiter, $segments);
+    return $segment;
 }
 function string_wrap($string, $force = true)
 {

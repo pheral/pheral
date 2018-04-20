@@ -10,6 +10,18 @@ if (!function_exists('app')) {
     }
 }
 
+if (!function_exists('config')) {
+    /**
+     * @param string $key
+     * @param null $default
+     * @return \Pheral\Essential\Data\Config|mixed
+     */
+    function config($key = '', $default = null)
+    {
+        return app()->config($key, $default);
+    }
+}
+
 if (!function_exists('frame')) {
     /**
      * @return \Pheral\Essential\Network\Frame

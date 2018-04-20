@@ -2,6 +2,7 @@
 
 namespace Pheral\Essential\Network;
 
+use Pheral\Essential\Data\Config;
 use Pheral\Essential\Data\Cookies;
 use Pheral\Essential\Data\Server;
 use Pheral\Essential\Data\Session;
@@ -17,23 +18,44 @@ class Frame
     protected $protocol;
     protected $requestUri;
     protected $queryString;
-    protected $route;
-    protected $request;
-    protected $cookies;
+
+    /**
+     * @var \Pheral\Essential\Data\Server $server
+     */
     protected $server;
+
+    /**
+     * @var \Pheral\Essential\Data\Session $session
+     */
     protected $session;
+
+    /**
+     * @var \Pheral\Essential\Data\Cookies $cookies
+     */
+    protected $cookies;
+
+    /**
+     * @var \Pheral\Essential\Data\Request $request
+     */
+    protected $request;
+
+    /**
+     * @var \Pheral\Essential\Network\Routing\Route|null $route
+     */
+    protected $route;
+
     public static function instance(): Frame
     {
         return Pool::get('Frame');
     }
+
     public function __construct()
     {
-        $this->init();
-
-        $this->server = Server::instance();
-        $this->session = Session::instance();
-        $this->cookies = Cookies::instance();
-        $this->request = Request::instance();
+        $this->server = Pool::singleton('Server', Server::class);
+        $this->session = Pool::singleton('Session', Session::class);
+        $this->cookies = Pool::singleton('Cookies', Cookies::class);
+        $this->request = Pool::singleton('Request', Request::class);
+        Pool::singleton('Router', Router::class);
 
         $this->protocol = $this->server->isSecure() ? 'https' : 'http';
         $this->currentUrl = $this->protocol . '://' . $this->server->getHost() . $this->server->getRequestUri();
@@ -45,18 +67,9 @@ class Frame
         if ($this->requestMethod === 'POST' && $this->server->isXmlHttpRequest()) {
             $this->requestMethod = strtoupper($this->request->get('_method', $this->requestMethod));
         }
-        $this->route = Router::instance()
-            ->load($this->server)
-            ->find($this->currentUrl, $this->requestMethod);
+        $this->route = Router::instance()->load()->find($this->currentUrl, $this->requestMethod);
     }
-    protected function init()
-    {
-        Pool::singleton('Server', Server::class);
-        Pool::singleton('Session', Session::class);
-        Pool::singleton('Cookies', Cookies::class);
-        Pool::singleton('Request', Request::class);
-        Pool::singleton('Router', Router::class);
-    }
+
     public function getProtocol()
     {
         return $this->protocol;
@@ -85,12 +98,13 @@ class Frame
     {
         return $this->server->isXmlHttpRequest();
     }
-    /**
-     * @return \Pheral\Essential\Network\Routing\Route|null
-     */
     public function route()
     {
         return $this->route;
+    }
+    public function config(): Config
+    {
+        return Config::instance();
     }
     public function server(): Server
     {

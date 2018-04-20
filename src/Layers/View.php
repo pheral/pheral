@@ -2,7 +2,6 @@
 
 namespace Pheral\Essential\Layers;
 
-use Pheral\Essential\Data\Server;
 use Pheral\Essential\Exceptions\NetworkException;
 
 class View
@@ -10,6 +9,7 @@ class View
     protected $name;
     protected $path;
     protected $data;
+    protected $source;
     public function __construct($path = '', $data = [])
     {
         if ($path) {
@@ -18,6 +18,13 @@ class View
         if ($data) {
             $this->setData($data);
         }
+    }
+    protected function source()
+    {
+        if (is_null($this->source)) {
+            $this->source = app()->path(config('app.sources.view', 'app/views'));
+        }
+        return $this->source;
     }
     public function __toString()
     {
@@ -85,8 +92,7 @@ class View
     {
         if ($path) {
             $segments = explode('.', trim($path, '.'));
-            $folder = Server::instance()->path('/app/views');
-            $absPath = $folder . '/' . implode('/', $segments) . '.php';
+            $absPath = $this->source() . '/' . implode('/', $segments) . '.php';
         } else {
             $absPath = $this->path;
         }

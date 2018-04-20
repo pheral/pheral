@@ -36,6 +36,10 @@ class Request
         array_set($this->data, $key, $value);
         return $this;
     }
+    public function expel($key)
+    {
+        return array_expel($this->data, $key);
+    }
     public function cut($key, $default = null)
     {
         return array_cut($this->data, $key, $default);

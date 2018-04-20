@@ -34,17 +34,17 @@ class Cookies
         array_set($this->data, $key, $value);
         return $this;
     }
-    public function drop($key)
+    public function expel($key)
     {
         $this->set($key, '', -60);
         $this->set($key, '', -60, '/');
-        array_drop($this->data, $key);
+        array_expel($this->data, $key);
         return $this;
     }
     public function cut($key, $default = null)
     {
         $value = $this->get($key, $default);
-        $this->drop($key);
+        $this->expel($key);
         return $value;
     }
     public function clear()
@@ -54,7 +54,7 @@ class Cookies
             if ($key === 'PHPSESSID') {
                 continue;
             }
-            $this->drop($key);
+            $this->expel($key);
         }
         return $this;
     }

@@ -40,16 +40,6 @@ class Server
     {
         return $this->headers;
     }
-    public function path($path = '')
-    {
-        if (is_null($this->path)) {
-            $this->path = dirname($this->getDocumentRoot());
-        }
-        if ($path) {
-            return realpath($this->path . '/' . trim($path, '/ '));
-        }
-        return $this->path;
-    }
     public function getDocumentRoot()
     {
         return $this->get('DOCUMENT_ROOT');

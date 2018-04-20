@@ -15,15 +15,15 @@ class Network implements Executable
      * @var \Pheral\Essential\Network\Output\Response|null
      */
     protected $response;
+
+    /**
+     * @var \Pheral\Essential\Network\Frame
+     */
     protected $frame;
-    public function __construct()
-    {
-        Pool::singleton('Frame', Frame::class);
-        $this->frame = Frame::instance();
-    }
+
     public function execute()
     {
-        $response = null;
+        $this->frame = Pool::singleton('Frame', Frame::class);
         if ($route = $this->frame->route()) {
             $controller = $this->getController($route);
             $action = $this->getAction($route, $controller);
@@ -42,10 +42,17 @@ class Network implements Executable
     {
         return Pool::make($route->controller());
     }
+
     protected function getAction(Route $route, $controller)
     {
-        return new \ReflectionMethod($controller, $route->action());
+        try {
+            $reflection = new \ReflectionMethod($controller, $route->action());
+        } catch (\ReflectionException $exception) {
+            throw new NetworkException(500, $exception->getMessage());
+        }
+        return $reflection;
     }
+
     protected function getParams(Route $route, \ReflectionMethod $action)
     {
         $params = [];
@@ -72,16 +79,14 @@ class Network implements Executable
         }
         return $params;
     }
+
     public function terminate()
     {
-        $frame = $this->frame;
-        $session = $frame->session();
-        if (!$frame->isAjaxRequest() && $frame->isRequestMethod('GET')) {
-            $session->setPreviousUrl($frame->getCurrentUrl());
+        if (!$this->frame->isAjaxRequest() && $this->frame->isRequestMethod('GET')) {
+            $this->frame->session()->setPreviousUrl($this->frame->getCurrentUrl());
         }
-        $response = $this->response;
-        if ($response && $response->hasRedirect()) {
-            $session->setRedirectedUrl($response->redirect()->getUrl());
+        if ($this->response && $this->response->hasRedirect()) {
+            $this->frame->session()->setRedirectedUrl($this->response->redirect()->getUrl());
         }
     }
 }

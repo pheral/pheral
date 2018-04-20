@@ -2,7 +2,7 @@
 
 return [
     'sources' => [
-        'router' => 'sources/routing',
-        'view' => 'sources/views',
+        'routes' => 'sources/routes',
+        'views' => 'sources/views',
     ],
 ];

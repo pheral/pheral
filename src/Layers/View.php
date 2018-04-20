@@ -22,7 +22,7 @@ class View
     protected function source()
     {
         if (is_null($this->source)) {
-            $this->source = app()->path(config('app.sources.view', 'app/views'));
+            $this->source = app()->path(config('app.sources.views', 'app/views'));
         }
         return $this->source;
     }

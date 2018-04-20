@@ -13,7 +13,7 @@ class Router
     {
         if (is_null($this->sources)) {
             $sources = [];
-            if ($relativePath = config('app.sources.router')) {
+            if ($relativePath = config('app.sources.routes', 'app/routes')) {
                 if ($absolutePath = app()->path($relativePath)) {
                     $dir = dir($absolutePath);
                     while (false !== ($source = $dir->read())) {
@@ -22,11 +22,6 @@ class Router
                         }
                         $sources[] = $absolutePath . '/'. $source;
                     }
-                }
-            }
-            if (!$sources) {
-                if ($source = app()->path('app/routing.php')) {
-                    $sources[] = $source;
                 }
             }
             $this->sources = $sources;

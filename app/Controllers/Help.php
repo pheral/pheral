@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\Test;
 use Pheral\Essential\Network\Frame;
 
 class Help extends Front
@@ -10,7 +11,8 @@ class Help extends Front
     {
         $content = view('templates.help.index', [
             'paramArgument' => $param,
-            'paramRequest' => $frame->request()->get('param')
+            'paramRequest' => $frame->request()->get('param'),
+            'dbExample' => (new Test())->get(),
         ]);
 
         return $this->render([

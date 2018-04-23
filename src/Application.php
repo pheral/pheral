@@ -5,6 +5,7 @@ namespace Pheral\Essential;
 use App\Exceptions\ExceptionHandler;
 use Pheral\Essential\Container\Pool;
 use Pheral\Essential\Core\Interfaces\Executable;
+use Pheral\Essential\Data\Base\DB;
 use Pheral\Essential\Data\Config;
 use Pheral\Essential\Exceptions\NetworkException;
 
@@ -60,8 +61,9 @@ class Application extends Pool
             throw new NetworkException(500, 'Application is still running');
         }
         $this->running = true;
-        $this->config = $this->makeSingleton('Config', Config::class);
-        $this->config->load('app');
+        $this->makeSingleton('Config', Config::class);
+        $this->makeSingleton('Connection', DB::class);
+        $this->config = Config::instance()->load('app');
     }
 
     public function run(Executable $core)

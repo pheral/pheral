@@ -8,8 +8,4 @@ abstract class Entity
     {
         return DB::query(static::class, $alias);
     }
-    public function newQuery($alias = ''): Query
-    {
-        return static::query($alias);
-    }
 }

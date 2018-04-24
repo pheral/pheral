@@ -50,14 +50,14 @@ class View
     }
     public function setData($data = [])
     {
-        if ($newData = array_wrap($data, false)) {
+        if ($newData = array_wrap($data)) {
             $this->data = array_merge($this->getData(), $newData);
         }
         return $this;
     }
     public function getData()
     {
-        return array_wrap($this->data, false);
+        return array_wrap($this->data);
     }
     public function setPath($path)
     {

@@ -92,7 +92,7 @@ abstract class Pool
         if ($reflection instanceof \ReflectionClass) {
             $constructor = $reflection->getConstructor();
             if ($constructor && $constructor->isPublic()) {
-                $args = array_wrap($params, false);
+                $args = array_wrap($params);
                 $concrete = $reflection->newInstanceArgs($args);
             } else {
                 $concrete = $reflection->newInstanceWithoutConstructor();
@@ -120,7 +120,7 @@ abstract class Pool
         if (!$settings = $this->getSettings($alias)) {
             $settings = [
                 'abstract' => $abstract,
-                'params' => array_wrap($params, false),
+                'params' => array_wrap($params),
                 'singleton' => $singleton ?? false,
             ];
             $this->settings[$alias] = $settings;

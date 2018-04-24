@@ -2,17 +2,18 @@
 
 namespace App\Controllers;
 
-use App\Models\Test;
+use App\Controllers\Abstracts\Controller;
 use Pheral\Essential\Network\Frame;
 
-class Help extends Front
+class Help extends Controller
 {
     public function index(Frame $frame, $param = 'default')
     {
         $content = view('templates.help.index', [
             'paramArgument' => $param,
             'paramRequest' => $frame->request()->get('param'),
-            'dbExample' => (new Test())->get(),
+//            'dbExample' => (new \App\Models\Example())->getTest(),
+//            'dbExample' => \App\Models\Example::query(\App\Entity\Test::class)->get(),
         ]);
 
         return $this->render([

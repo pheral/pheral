@@ -64,7 +64,7 @@ function ignore($argument)
 {
     return $argument;
 }
-function array_wrap($array, $force = true)
+function array_wrap($array, $force = false)
 {
     return is_array($array) ? $array : ($array || $force ? [$array] : []);
 }
@@ -165,7 +165,23 @@ function dot_array_has($array, $path)
     }
     return true;
 }
-
+function object_class($object)
+{
+    if (is_object($object)) {
+        $class = get_class($object);
+    } else {
+        $class = $object;
+    }
+    return $class;
+}
+function object_name($object)
+{
+    return string_end(object_class($object), '\\');
+}
+function object_vars($object)
+{
+    return get_class_vars(object_class($object));
+}
 function string_segments($string, $delimiter = '.')
 {
     return explode($delimiter, $string);
@@ -197,4 +213,32 @@ function string_end_cut(&$string, $delimiter = '.')
 function string_wrap($string, $force = true)
 {
     return is_string($string) ? $string : ($string || $force ? "{$string}" : "");
+}
+function string_camel_case($string, $ucFirst = false)
+{
+    $camel = '';
+    $words = explode(' ', preg_replace('/[^a-z0-9]/si', ' ', $string));
+
+    foreach ($words as $word) {
+        if (!strlen($word)) {
+            continue;
+        }
+        $camel .= ucfirst(strtolower($word));
+    }
+    if (!$ucFirst) {
+        $camel = lcfirst($camel);
+    }
+    return $camel;
+}
+function string_snake_case($string)
+{
+    $snake = '';
+    $origin = str_split($string);
+    foreach ($origin as $index => $char) {
+        if ($index && ctype_upper($char)) {
+            $snake .= '_';
+        }
+        $snake .= strtolower($origin[$index]);
+    }
+    return $snake;
 }

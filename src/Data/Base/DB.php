@@ -36,4 +36,15 @@ class DB
         }
         return static::$connect;
     }
+
+    public static function prepare($sql, $params = [])
+    {
+        $stmt = static::connect()->prepare($sql);
+        if ($params) {
+            $stmt->execute($params);
+        } else {
+            $stmt->execute();
+        }
+        return $stmt;
+    }
 }

@@ -37,9 +37,9 @@ class DB
         return static::$connect;
     }
 
-    public static function query($entity = '', $alias = ''): Query
+    public static function query($table = '', $alias = ''): Query
     {
-        return new Query($entity, $alias);
+        return new Query($table, $alias);
     }
 
     public static function execute($sql, $params = []): \PDOStatement

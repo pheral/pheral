@@ -8,10 +8,10 @@ use Pheral\Essential\Data\Base\Result\SelectResult;
 
 class Query extends QueryBuilder
 {
-    public function __construct($entity = null, $alias = null)
+    public function __construct($table = null, $alias = null)
     {
-        if ($entity) {
-            $this->table($entity, $alias);
+        if ($table) {
+            $this->table($table, $alias);
         }
     }
 
@@ -37,21 +37,21 @@ class Query extends QueryBuilder
     }
 
     /**
-     * @param string|null $entity
+     * @param string|null $table
      * @param array $fields
      * @return \Pheral\Essential\Data\Base\Result\SelectResult
      */
-    public function select($entity = null, $fields = [])
+    public function select($table = null, $fields = [])
     {
-        if ($entity && !$this->getTable()) {
-            $this->table($entity);
+        if ($table && !$this->getTable()) {
+            $this->table($table);
         }
         if ($fields) {
             $this->fields($fields);
         }
         $result = new SelectResult(
             DB::execute($this->sqlSelect(), $this->getParams()),
-            $entity ?? $this->getEntity()
+            $table ?? $this->getDataName()
         );
         return $result;
     }

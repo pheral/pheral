@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Entity\Test;
+use App\Data\Dummy;
+use App\Data\Test;
 use App\Models\Abstracts\Model;
 
 class Example extends Model
@@ -15,11 +16,12 @@ class Example extends Model
             ->row();
 
         $query = $this->newQuery()
-            ->fields(['t.id', 't.title', 'd.param'])
-            ->table('test', 't')
+            ->fields(['t.id', 't.title'])
+            ->table(Test::class, 't')
+            ->leftJoin(Dummy::class, 'd', 'd.test_id = t.id')
             ->where('title', '=', 'second')
             ->orWhere('title', '=', 'third')
-            ->leftJoin('dummy', 'd', 'd.test_id = t.id')
+            ->whereNull('d.id')
             ->limit(1)
             ->offset(1)
             ->orderBy('title', 'DESC')

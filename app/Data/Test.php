@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Entity;
+namespace App\Data;
 
-use App\Entity\Abstracts\Entity;
+use App\Data\Abstracts\Data;
 
 /**
  * @SuppressWarnings(CamelCasePropertyName)
  * @SuppressWarnings(ShortVariable)
  * @SuppressWarnings(LongVariable)
  */
-class Test extends Entity
+class Test extends Data
 {
     public $id;
     public $title;

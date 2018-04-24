@@ -9,9 +9,9 @@ trait QueryBuilderGetter
         return $this->params;
     }
 
-    protected function getEntity()
+    protected function getDataName()
     {
-        return $this->entity;
+        return $this->dataName;
     }
 
     protected function getDistinct()

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Entity\Abstracts;
+namespace App\Data\Abstracts;
 
-use Pheral\Essential\Data\Base\Entity as EssentialEntity;
+use Pheral\Essential\Layers\Data as EssentialData;
 
 /**
  * @SuppressWarnings(CamelCasePropertyName)
  * @SuppressWarnings(ShortVariable)
  * @SuppressWarnings(LongVariable)
  */
-abstract class Entity extends EssentialEntity
+abstract class Data extends EssentialData
 {
 
 }

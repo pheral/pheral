@@ -2,7 +2,7 @@
 
 namespace Pheral\Essential\Data\Base\Traits;
 
-use Pheral\Essential\Data\Base\Entity;
+use Pheral\Essential\Layers\Data;
 
 trait QueryBuilderSetter
 {
@@ -39,28 +39,28 @@ trait QueryBuilderSetter
     }
 
     /**
-     * @param string $entity
+     * @param string $table
      * @param string $alias
      * @return \Pheral\Essential\Data\Base\Query|static
      */
-    public function table($entity, $alias = '')
+    public function table($table, $alias = '')
     {
-        $table = $this->makeTable($entity, true);
-        if (!in_array($table, $this->tables)) {
-            $this->tables[] = $table . $this->makeAlias($alias);
+        $tableName = $this->makeTable($table, true);
+        if (!in_array($tableName, $this->tables)) {
+            $this->tables[] = $tableName . $this->makeAlias($alias);
         }
         return $this;
     }
 
     /**
-     * @param string $entity
+     * @param string $table
      * @param string $alias
      * @param string $expression
-     * @param string $type
      * @param array $wheres
+     * @param string $type
      * @return \Pheral\Essential\Data\Base\Query|static
      */
-    public function join($entity, $alias, $expression, $wheres = [], $type = 'INNER')
+    public function join($table, $alias, $expression, $wheres = [], $type = 'INNER')
     {
         $where = '';
         if ($wheres) {
@@ -83,13 +83,21 @@ trait QueryBuilderSetter
             }
             $where = ' ' . implode(' ', $parts);
         }
-        $table = $this->makeTable($entity) . $this->makeAlias($alias);
-        $this->joins[$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $expression . $where;
+        $tableName = $this->makeTable($table) . $this->makeAlias($alias);
+        $this->joins[$tableName] = strtoupper($type) . ' JOIN ' . $tableName . ' ON ' . $expression . $where;
         return $this;
     }
-    public function leftJoin($entity, $alias, $expression, $wheres = [])
+
+    /**
+     * @param string $table
+     * @param string $alias
+     * @param string $expression
+     * @param array $wheres
+     * @return \Pheral\Essential\Data\Base\Query|static
+     */
+    public function leftJoin($table, $alias, $expression, $wheres = [])
     {
-        return $this->join($entity, $alias, $expression, $wheres, 'LEFT');
+        return $this->join($table, $alias, $expression, $wheres, 'LEFT');
     }
 
     /**
@@ -322,19 +330,19 @@ trait QueryBuilderSetter
         return ':' . $holder . $this->holders[$holder];
     }
 
-    protected function makeTable($entity, $forceEntity = false)
+    protected function makeTable($table, $isFromTable = false)
     {
-        if (is_subclass_of($entity, Entity::class)) {
-            $table = string_snake_case(object_name($entity));
-            if ($forceEntity && !$this->entity) {
-                $this->entity = $entity;
+        if (is_subclass_of($table, Data::class)) {
+            $tableName = string_snake_case(object_name($table));
+            if ($isFromTable && !$this->dataName) {
+                $this->dataName = $table;
             }
-        } elseif (strpos($entity, '\\', true) !== false) {
-            $table = '';
+        } elseif (strpos($table, '\\', true) !== false) {
+            $tableName = '';
         } else {
-            $table = $entity;
+            $tableName = $table;
         }
-        return $table;
+        return $tableName;
     }
     protected function makeType($list, $type)
     {

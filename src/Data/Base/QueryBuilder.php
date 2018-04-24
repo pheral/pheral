@@ -10,7 +10,7 @@ class QueryBuilder
     use QueryBuilderGetter;
     use QueryBuilderSetter;
 
-    protected $entity;
+    protected $dataName;
 
     protected $distinct = false;
     protected $holders = [];

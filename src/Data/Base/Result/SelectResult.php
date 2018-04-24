@@ -2,17 +2,15 @@
 
 namespace Pheral\Essential\Data\Base\Result;
 
-use Pheral\Essential\Data\Base\Entity;
+use Pheral\Essential\Layers\Data;
 
 class SelectResult extends QueryResult
 {
-    protected $entity;
-
-    public function __construct($stmt, $entity = null)
+    public function __construct($stmt, $table = null)
     {
         parent::__construct($stmt);
-        if ($entity && is_subclass_of($entity, Entity::class)) {
-            $this->stmt->setFetchMode(\PDO::FETCH_CLASS, $entity);
+        if ($table && is_subclass_of($table, Data::class)) {
+            $this->stmt->setFetchMode(\PDO::FETCH_CLASS, $table);
         }
     }
 

@@ -13,7 +13,7 @@ class DB
     /**
      * @return PDO
      */
-    public static function connect()
+    public static function connect(): \PDO
     {
         if (!static::$connect) {
             $cfg = config('database.connections.default');
@@ -37,7 +37,12 @@ class DB
         return static::$connect;
     }
 
-    public static function execute($sql, $params = [])
+    public static function query($entity = '', $alias = ''): Query
+    {
+        return new Query($entity, $alias);
+    }
+
+    public static function execute($sql, $params = []): \PDOStatement
     {
         $stmt = static::connect()->prepare(trim($sql));
         if ($params) {

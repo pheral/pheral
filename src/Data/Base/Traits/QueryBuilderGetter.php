@@ -32,8 +32,10 @@ trait QueryBuilderGetter
 
     protected function getTable()
     {
-        $tables = array_wrap($this->tables);
-        return implode(', ', $tables);
+        if ($tables = array_wrap($this->tables)) {
+            return implode(', ', $tables);
+        }
+        return '';
     }
 
     protected function getInto()
@@ -55,7 +57,7 @@ trait QueryBuilderGetter
     protected function getJoin()
     {
         if ($joins = $this->joins) {
-            return implode(' ', $joins);
+            return implode(' ', $joins) . ' ';
         }
         return '';
     }
@@ -69,7 +71,7 @@ trait QueryBuilderGetter
     protected function getWhere()
     {
         if ($wheres = array_wrap($this->wheres)) {
-            return 'WHERE ' . implode(' ', $wheres). ' ';
+            return 'WHERE ' . implode(' ', $wheres) . ' ';
         }
         return '';
     }
@@ -77,7 +79,7 @@ trait QueryBuilderGetter
     protected function getGroupBy()
     {
         if ($groups = $this->groups) {
-            return 'GROUP BY ' . implode(', ', $groups). ' ';
+            return 'GROUP BY ' . implode(', ', $groups) . ' ';
         }
         return '';
     }
@@ -85,7 +87,7 @@ trait QueryBuilderGetter
     protected function getHaving()
     {
         if ($having = array_wrap($this->having)) {
-            return 'HAVING ' . implode(' ', $having). ' ';
+            return 'HAVING ' . implode(' ', $having) . ' ';
         }
         return '';
     }
@@ -93,7 +95,7 @@ trait QueryBuilderGetter
     protected function getOrderBy()
     {
         if ($orders = $this->orders) {
-            return 'ORDER BY ' . implode(',', $orders);
+            return 'ORDER BY ' . implode(',', $orders) . ' ';
         }
         return '';
     }
@@ -109,7 +111,7 @@ trait QueryBuilderGetter
     protected function getOffset()
     {
         if ($offset = $this->offset) {
-            return 'LIMIT ' . $offset . ' ';
+            return 'OFFSET ' . $offset . ' ';
         }
         return '';
     }

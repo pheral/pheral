@@ -60,7 +60,7 @@ trait QueryBuilderSetter
      * @param array $wheres
      * @return \Pheral\Essential\Data\Base\Query|static
      */
-    public function join($entity, $alias, $expression, $type = 'inner', $wheres = [])
+    public function join($entity, $alias, $expression, $wheres = [], $type = 'INNER')
     {
         $where = '';
         if ($wheres) {
@@ -87,6 +87,10 @@ trait QueryBuilderSetter
         $this->joins[$table] = strtoupper($type) . ' JOIN ' . $table . ' ON ' . $expression . $where;
         return $this;
     }
+    public function leftJoin($entity, $alias, $expression, $wheres = [])
+    {
+        return $this->join($entity, $alias, $expression, $wheres, 'LEFT');
+    }
 
     /**
      * @param string $field
@@ -98,7 +102,7 @@ trait QueryBuilderSetter
     public function where($field, $operator = '=', $value = null, $type = 'AND')
     {
         if (is_null($value)) {
-            $nullOperator = in_array($operator, ['!=', 'NOT', 'IS NOT']) ? 'IS NOT' : 'IS';
+            $nullOperator = in_array($operator, ['=', 'IS']) ? 'IS' : 'IS NOT';
             return $this->whereConst($field, $nullOperator, $type);
         }
         $holder = $this->makeHolder($field);
@@ -235,7 +239,7 @@ trait QueryBuilderSetter
      * @param string $direction
      * @return \Pheral\Essential\Data\Base\Query|static
      */
-    public function groupBy($field, $direction = 'ASC')
+    public function groupBy($field, $direction = null)
     {
         $this->groups[] = $field . ($direction ? ' ' . $direction : '');
         return $this;
@@ -309,11 +313,13 @@ trait QueryBuilderSetter
 
     protected function makeHolder($field)
     {
-        if (!array_has($this->holders, $field)) {
-            $this->holders[$field] = 0;
+        $field = string_end($field);
+        $holder = string_snake_case($field);
+        if (!array_has($this->holders, $holder)) {
+            $this->holders[$holder] = 0;
         }
-        $this->holders[$field] += 1;
-        return ':' . $field . $this->holders[$field];
+        $this->holders[$holder] += 1;
+        return ':' . $holder . $this->holders[$holder];
     }
 
     protected function makeTable($entity, $forceEntity = false)

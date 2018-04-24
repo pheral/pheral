@@ -90,7 +90,7 @@ class QueryBuilder
         $search = array_keys($params);
         $replace = array_values($params);
         array_walk($replace, function (&$param) {
-            $param = '&quot;' . $param . '&quot;';
+            $param = '"' . $param . '"';
         });
         return str_replace($search, $replace, $sql);
     }

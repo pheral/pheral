@@ -14,7 +14,6 @@ class Example extends Model
             ->where('title', '=', 'second')
             ->orWhere('title', '=', 'first');
         $result = $query->select(Test::class);
-        $data = $result->all();
-        return $data;
+        return $result->all();
     }
 }

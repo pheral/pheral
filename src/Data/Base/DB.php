@@ -18,12 +18,12 @@ class DB
         if (!static::$connect) {
             $cfg = config('database.connections.default');
             try {
-                $user = array_get($cfg, 'user');
-                $pass = array_get($cfg, 'pass');
-                $driver = array_get($cfg, 'driver');
-                $base = array_get($cfg, 'base');
-                $host = array_get($cfg, 'host');
-                $charset = array_get($cfg, 'charset');
+                $driver = array_get($cfg, 'driver', 'mysql');
+                $host = array_get($cfg, 'host', 'localhost');
+                $user = array_get($cfg, 'user', 'pheral');
+                $pass = array_get($cfg, 'pass', 'pheral');
+                $base = array_get($cfg, 'base', 'pheral');
+                $charset = array_get($cfg, 'charset', 'utf8');
                 $dsn = "{$driver}:dbname={$base};host={$host};charset{$charset}";
                 $opt = [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,

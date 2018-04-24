@@ -2,134 +2,57 @@
 
 namespace Pheral\Essential\Data\Base;
 
-use \PDO;
+use Pheral\Essential\Data\Base\Result\InsertResult;
+use Pheral\Essential\Data\Base\Result\QueryResult;
+use Pheral\Essential\Data\Base\Result\SelectResult;
 
-class Query
+class Query extends QueryBuilder
 {
-    protected $entity;
-
-    protected $table;
-
-    protected $select = [];
-
-    protected $from;
-
-    protected $wheres = [];
-
-    protected $params = [];
-
-    public function __construct($entity = '')
+    public function __construct($entity = null, $alias = null)
     {
         if ($entity) {
-            $this->setEntity($entity);
+            $this->table($entity, $alias);
         }
     }
 
-    public function setEntity($entity)
+    public function insert()
     {
-        $this->entity = $entity;
+        return new InsertResult(
+            DB::execute($this->sqlInsert(), $this->getParams())
+        );
     }
 
-    public function getEntity()
+    public function update()
     {
-        return $this->entity;
+        return new QueryResult(
+            DB::execute($this->sqlUpdate(), $this->getParams())
+        );
     }
 
-    public function getTable()
+    public function delete()
     {
-        if ($this->table) {
-            return $this->table;
-        }
-        $this->table = string_snake_case(object_name($this->getEntity()));
-        return $this->table;
-    }
-
-    public function get()
-    {
-        $stmt = DB::prepare($this->getSql(), $this->params);
-
-        $entity = $this->getEntity();
-        if ($entity && is_subclass_of($entity, Entity::class)) {
-            return $stmt->fetchAll(PDO::FETCH_CLASS, $entity);
-        }
-
-        return $stmt->fetchAll();
+        return new QueryResult(
+            DB::execute($this->sqlDelete(), $this->getParams())
+        );
     }
 
     /**
+     * @param string|null $entity
      * @param array $fields
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Data\Base\Result\SelectResult
      */
-    public function select($fields = [])
+    public function select($entity = null, $fields = [])
     {
-        if (!$fields) {
-            $fields = '*';
+        if ($entity && !$this->getTable()) {
+            $this->table($entity);
         }
-        $this->select = $fields;
-        return $this;
-    }
-
-    /**
-     * @param string $table
-     * @return \Pheral\Essential\Data\Base\Query|static
-     */
-    public function from($table = '')
-    {
-        if (!$table) {
-            $table = $this->getTable();
+        if ($fields) {
+            $this->fields($fields);
         }
-        $this->from = $table;
-        return $this;
-    }
-
-    public function where($field, $operator = '', $value = null)
-    {
-        $placeholder = ':' . $field;
-        $this->wheres[] = $field . $operator . $placeholder;
-        $this->params[$placeholder] = $value;
-        return $this;
-    }
-
-    public function getSql()
-    {
-        $select = $this->getSelect();
-        $from = $this->getFrom();
-        $wheres = $this->getWheres();
-        $query = $select . ' ' . $from
-            . ($wheres ? ' ' . $wheres : '');
-        return $query;
-    }
-
-    protected function getWheres()
-    {
-        if (!$wheres = $this->wheres) {
-            return '';
-        }
-
-        return 'WHERE ' . implode(' AND ', $wheres);
-    }
-
-    protected function getSelect()
-    {
-        if (!$select = array_wrap($this->select)) {
-            $select = ['*'];
-        }
-        $fields = [];
-        foreach ($select as $key => $field) {
-            if (!is_numeric($key)) {
-                $fields[] = $key .'.' . $field;
-            } else {
-                $fields[] = $field;
-            }
-        }
-        return 'SELECT ' . implode(', ', $fields);
-    }
-
-    protected function getFrom()
-    {
-        if (!$table = $this->from) {
-            $table = $this->getTable();
-        }
-        return 'FROM ' . $table;
+        $result = new SelectResult(
+            DB::execute($this->sqlSelect(), $this->getParams()),
+            $entity ?? $this->getEntity()
+        );
+        return $result;
     }
 }

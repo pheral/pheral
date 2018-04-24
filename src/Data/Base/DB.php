@@ -37,9 +37,9 @@ class DB
         return static::$connect;
     }
 
-    public static function prepare($sql, $params = [])
+    public static function execute($sql, $params = [])
     {
-        $stmt = static::connect()->prepare($sql);
+        $stmt = static::connect()->prepare(trim($sql));
         if ($params) {
             $stmt->execute($params);
         } else {

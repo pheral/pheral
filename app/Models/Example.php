@@ -9,9 +9,12 @@ class Example extends Model
 {
     public function getTest()
     {
-        return $this->newQuery(Test::class)
-            ->select(['id', 'title'])
+        $query = $this->newQuery()
+            ->fields(['id', 'title'])
             ->where('title', '=', 'second')
-            ->get();
+            ->orWhere('title', '=', 'first');
+        $result = $query->select(Test::class);
+        $data = $result->all();
+        return $data;
     }
 }

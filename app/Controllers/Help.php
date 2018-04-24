@@ -13,7 +13,6 @@ class Help extends Controller
             'paramArgument' => $param,
             'paramRequest' => $frame->request()->get('param'),
 //            'dbExample' => (new \App\Models\Example())->getTest(),
-//            'dbExample' => \App\Models\Example::query(\App\Entity\Test::class)->get(),
         ]);
 
         return $this->render([

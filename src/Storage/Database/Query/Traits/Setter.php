@@ -38,6 +38,15 @@ trait Setter
         return $this->fields(array_merge($this->fields, $fields));
     }
 
+    protected function dataTable($table, $alias = '')
+    {
+        $tableName = $this->makeTable($table, true);
+        if (!in_array($tableName, $this->tables)) {
+            $this->tables[] = $tableName . $this->makeAlias($alias);
+        }
+        return $this;
+    }
+
     /**
      * @param string $table
      * @param string $alias
@@ -45,7 +54,7 @@ trait Setter
      */
     public function table($table, $alias = '')
     {
-        $tableName = $this->makeTable($table, true);
+        $tableName = $this->makeTable($table);
         if (!in_array($tableName, $this->tables)) {
             $this->tables[] = $tableName . $this->makeAlias($alias);
         }
@@ -330,12 +339,12 @@ trait Setter
         return ':' . $holder . $this->holders[$holder];
     }
 
-    protected function makeTable($table, $isFromTable = false)
+    protected function makeTable($table, $isDataTable = false)
     {
         if (is_subclass_of($table, Data::class)) {
             $tableName = string_snake_case(object_name($table));
-            if ($isFromTable && !$this->dataName) {
-                $this->dataName = $table;
+            if ($isDataTable && !$this->dataTable) {
+                $this->dataTable = $table;
             }
         } elseif (strpos($table, '\\', true) !== false) {
             $tableName = '';

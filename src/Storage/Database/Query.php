@@ -17,21 +17,18 @@ class Query extends Builder
     }
 
     /**
-     * @param string|null $table
+     * @param string|null $dataTable
      * @param array $fields
      * @return \Pheral\Essential\Storage\Database\Result\SelectResult
      */
-    public function select($table = null, $fields = [])
+    public function select($dataTable = null)
     {
-        if ($table && !$this->getTable()) {
-            $this->table($table);
-        }
-        if ($fields) {
-            $this->fields($fields);
+        if ($dataTable && !$this->getTable()) {
+            $this->dataTable($dataTable);
         }
         $result = new SelectResult(
             DB::execute($this->sqlSelect(), $this->getParams()),
-            $table ?? $this->getDataName()
+            $dataTable ?? $this->getDataTable()
         );
         return $result;
     }

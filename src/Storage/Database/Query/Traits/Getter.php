@@ -9,9 +9,9 @@ trait Getter
         return $this->params;
     }
 
-    protected function getDataName()
+    protected function getDataTable()
     {
-        return $this->dataName;
+        return $this->dataTable;
     }
 
     protected function getDistinct()

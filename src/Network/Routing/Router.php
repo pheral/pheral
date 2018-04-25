@@ -60,8 +60,8 @@ class Router
         $method = $method ? strtoupper($method) : $this->currentMethod;
         $path = parse_url($url, PHP_URL_PATH);
         foreach ($this->data as $pattern => $options) {
-            $methodOption = strtoupper(array_get($options, 'method'));
-            if ($methodOption && $methodOption !== $method) {
+            $methodOption = strtoupper(array_get($options, 'method', 'any'));
+            if ($methodOption != 'ANY' && $methodOption !== $method) {
                 continue;
             }
             if ($path === $pattern) {

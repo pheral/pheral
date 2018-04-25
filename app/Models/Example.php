@@ -16,7 +16,7 @@ class Example extends Model
             ->row();
 
         $query = $this->newQuery()
-            ->fields(['t.id', 't.title'])
+            ->fields(['t.id', 't.title', 'd.param'])
             ->table(Test::class, 't')
             ->leftJoin(Dummy::class, 'd', 'd.test_id = t.id')
             ->where('title', '=', 'second')

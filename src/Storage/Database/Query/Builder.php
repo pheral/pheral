@@ -9,7 +9,7 @@ class Builder
 {
     use Getter, Setter;
 
-    protected $dataName;
+    protected $dataTable;
 
     protected $distinct = false;
     protected $holders = [];
@@ -28,7 +28,7 @@ class Builder
     public function __construct($table = null, $alias = null)
     {
         if ($table) {
-            $this->table($table, $alias);
+            $this->dataTable($table, $alias);
         }
     }
 

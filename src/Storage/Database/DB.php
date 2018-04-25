@@ -40,8 +40,8 @@ class DB
         }
         return $stmt;
     }
-    public static function query($table = '', $alias = '')
+    public static function query($dataTable = '', $alias = '')
     {
-        return new Query($table, $alias);
+        return new Query($dataTable, $alias);
     }
 }

@@ -6,8 +6,8 @@ use Pheral\Essential\Storage\Database\DB;
 
 abstract class Model
 {
-    public function newQuery($table = '', $alias = '')
+    public function newQuery($dataTable = '', $alias = '')
     {
-        return DB::query($table, $alias);
+        return DB::query($dataTable, $alias);
     }
 }

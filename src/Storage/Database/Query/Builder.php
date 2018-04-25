@@ -25,10 +25,10 @@ class Builder
     protected $limit;
     protected $offset;
 
-    public function __construct($table = null, $alias = null)
+    public function __construct($dataTable = null, $alias = null)
     {
-        if ($table) {
-            $this->dataTable($table, $alias);
+        if ($dataTable) {
+            $this->dataTable($dataTable, $alias);
         }
     }
 

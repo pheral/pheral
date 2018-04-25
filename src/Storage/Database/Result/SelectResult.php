@@ -1,6 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Storage\DataBase\Result;
+namespace Pheral\Essential\Storage\Database\Result;
 
 use Pheral\Essential\Layers\Data;
 

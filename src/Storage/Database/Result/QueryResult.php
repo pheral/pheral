@@ -1,6 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Storage\DataBase\Result;
+namespace Pheral\Essential\Storage\Database\Result;
 
 class QueryResult
 {
@@ -16,5 +16,13 @@ class QueryResult
     public function countFields()
     {
         return $this->stmt->columnCount();
+    }
+    public function sql()
+    {
+        return $this->stmt->queryString;
+    }
+    public function params()
+    {
+        return $this->stmt->debugDumpParams();
     }
 }

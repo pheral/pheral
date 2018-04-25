@@ -1,8 +1,8 @@
 <?php
 
-namespace Pheral\Essential\Storage\DataBase\Traits;
+namespace Pheral\Essential\Storage\Database\Query\Traits;
 
-trait QueryBuilderGetter
+trait Getter
 {
     public function getParams()
     {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Pheral\Essential\Storage\DataBase\Result;
+namespace Pheral\Essential\Storage\Database\Result;
 
-use Pheral\Essential\Storage\DataBase\DB;
+use Pheral\Essential\Storage\Database\DB;
 
 class InsertResult extends QueryResult
 {

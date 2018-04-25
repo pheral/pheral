@@ -1,9 +1,7 @@
 <?php
 
-namespace Pheral\Essential\Storage\DataBase;
+namespace Pheral\Essential\Storage\Database;
 
-use \PDO;
-use \PDOException;
 use Pheral\Essential\Exceptions\NetworkException;
 
 class DB
@@ -22,11 +20,11 @@ class DB
                 $charset = array_get($cfg, 'charset', 'utf8');
                 $dsn = "{$driver}:dbname={$base};host={$host};charset{$charset}";
                 $opt = [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+                    \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
                 ];
-                self::$instance = new PDO($dsn, $user, $pass, $opt);
-            } catch (PDOException $e) {
+                self::$instance = new \PDO($dsn, $user, $pass, $opt);
+            } catch (\PDOException $e) {
                 throw new NetworkException(500, $e->getMessage());
             }
         }
@@ -42,7 +40,7 @@ class DB
         }
         return $stmt;
     }
-    public static function query($table = '', $alias = ''): Query
+    public static function query($table = '', $alias = '')
     {
         return new Query($table, $alias);
     }

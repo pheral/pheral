@@ -2,12 +2,11 @@
 
 namespace Pheral\Essential\Layers;
 
-use Pheral\Essential\Storage\DataBase\DB;
-use Pheral\Essential\Storage\DataBase\Query;
+use Pheral\Essential\Storage\Database\DB;
 
 abstract class Model
 {
-    public function newQuery($table = '', $alias = ''): Query
+    public function newQuery($table = '', $alias = '')
     {
         return DB::query($table, $alias);
     }

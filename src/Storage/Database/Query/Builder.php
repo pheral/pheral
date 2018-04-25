@@ -1,14 +1,13 @@
 <?php
 
-namespace Pheral\Essential\Storage\DataBase;
+namespace Pheral\Essential\Storage\Database\Query;
 
-use Pheral\Essential\Storage\DataBase\Traits\QueryBuilderGetter;
-use Pheral\Essential\Storage\DataBase\Traits\QueryBuilderSetter;
+use Pheral\Essential\Storage\Database\Query\Traits\Getter;
+use Pheral\Essential\Storage\Database\Query\Traits\Setter;
 
-class QueryBuilder
+class Builder
 {
-    use QueryBuilderGetter;
-    use QueryBuilderSetter;
+    use Getter, Setter;
 
     protected $dataName;
 
@@ -25,6 +24,13 @@ class QueryBuilder
     protected $orders = [];
     protected $limit;
     protected $offset;
+
+    public function __construct($table = null, $alias = null)
+    {
+        if ($table) {
+            $this->table($table, $alias);
+        }
+    }
 
     public function sqlInsert($withParams = false)
     {

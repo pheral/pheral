@@ -31,6 +31,8 @@ class Example extends Model
             $query->whereNotIn('t.id', [$first->id]);
         }
 
-        return $query->select()->all();
+        $result = $query->select();
+
+        return $result->all();
     }
 }

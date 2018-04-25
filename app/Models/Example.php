@@ -33,6 +33,9 @@ class Example extends Model
 
         $result = $query->select();
 
-        return $result->all();
+        return [
+            'RESULT 1' => $first,
+            'RESULT 2' => $result->all()
+        ];
     }
 }

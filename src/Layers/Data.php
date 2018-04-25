@@ -2,8 +2,8 @@
 
 namespace Pheral\Essential\Layers;
 
-use Pheral\Essential\Data\Base\DB;
-use Pheral\Essential\Data\Base\Query;
+use Pheral\Essential\Storage\DataBase\DB;
+use Pheral\Essential\Storage\DataBase\Query;
 
 abstract class Data
 {

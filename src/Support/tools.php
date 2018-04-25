@@ -2,11 +2,11 @@
 
 if (!function_exists('app')) {
     /**
-     * @return \Pheral\Essential\Application|\Pheral\Essential\Container\Pool
+     * @return \Pheral\Essential\Application
      */
     function app()
     {
-        return \Pheral\Essential\Container\Pool::instance();
+        return \Pheral\Essential\Application::instance();
     }
 }
 
@@ -14,7 +14,7 @@ if (!function_exists('config')) {
     /**
      * @param string $key
      * @param null $default
-     * @return \Pheral\Essential\Data\Config|mixed
+     * @return \Pheral\Essential\Storage\Config|mixed
      */
     function config($key = '', $default = null)
     {
@@ -36,11 +36,11 @@ if (!function_exists('server')) {
     /**
      * @param string $key
      * @param null $default
-     * @return \Pheral\Essential\Data\Server|mixed
+     * @return \Pheral\Essential\Storage\Server|mixed
      */
     function server($key = '', $default = null)
     {
-        $server = \Pheral\Essential\Data\Server::instance();
+        $server = \Pheral\Essential\Storage\Server::instance();
         return $key ? $server->get($key, $default) : $server;
     }
 }
@@ -49,11 +49,11 @@ if (!function_exists('session')) {
     /**
      * @param string $key
      * @param null $default
-     * @return \Pheral\Essential\Data\Session|mixed
+     * @return \Pheral\Essential\Storage\Session|mixed
      */
     function session($key = '', $default = null)
     {
-        $session = \Pheral\Essential\Data\Session::instance();
+        $session = \Pheral\Essential\Storage\Session::instance();
         return $key ? $session->get($key, $default) : $session;
     }
 }
@@ -62,11 +62,11 @@ if (!function_exists('cookies')) {
     /**
      * @param string $key
      * @param null $default
-     * @return \Pheral\Essential\Data\Cookies|mixed
+     * @return \Pheral\Essential\Storage\Cookies|mixed
      */
     function cookies($key = '', $default = null)
     {
-        $cookies = \Pheral\Essential\Data\Cookies::instance();
+        $cookies = \Pheral\Essential\Storage\Cookies::instance();
         return $key ? $cookies->get($key, $default) : $cookies;
     }
 }
@@ -75,11 +75,11 @@ if (!function_exists('request')) {
     /**
      * @param string $key
      * @param null $default
-     * @return \Pheral\Essential\Data\Request|mixed
+     * @return \Pheral\Essential\Storage\Request|mixed
      */
     function request($key = '', $default = null)
     {
-        $request = \Pheral\Essential\Data\Request::instance();
+        $request = \Pheral\Essential\Storage\Request::instance();
         return $key ? $request->get($key, $default) : $request;
     }
 }
@@ -138,6 +138,6 @@ if (!function_exists('error404')) {
      */
     function error404($message = '')
     {
-        error($message, 404);
+        app()->error($message, 404);
     }
 }

@@ -1,11 +1,10 @@
 <?php
 
-namespace Pheral\Essential\Data;
-
-use Pheral\Essential\Container\Pool;
+namespace Pheral\Essential\Storage;
 
 class Server
 {
+    private static $instance;
     protected $data = [];
     protected $headers;
     protected $referer;
@@ -13,16 +12,20 @@ class Server
     protected $requestMethod;
     protected $isXmlHttpRequest;
     protected $isSecure;
-    public function __construct()
+    private function __construct()
     {
         $this->data = ${'_SERVER'};
-
-        Pool::singleton('Headers', Headers::class, [$this->data]);
-        $this->headers = Headers::instance();
+        $this->headers = Headers::instance($this->data);
     }
-    public static function instance(): Server
+    private function __clone()
     {
-        return Pool::get('Server');
+    }
+    public static function instance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
     public function all(): array
     {

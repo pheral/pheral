@@ -1,10 +1,10 @@
 <?php
 
-namespace Pheral\Essential\Data\Base;
+namespace Pheral\Essential\Storage\DataBase;
 
-use Pheral\Essential\Data\Base\Result\InsertResult;
-use Pheral\Essential\Data\Base\Result\QueryResult;
-use Pheral\Essential\Data\Base\Result\SelectResult;
+use Pheral\Essential\Storage\DataBase\Result\InsertResult;
+use Pheral\Essential\Storage\DataBase\Result\QueryResult;
+use Pheral\Essential\Storage\DataBase\Result\SelectResult;
 
 class Query extends QueryBuilder
 {
@@ -39,7 +39,7 @@ class Query extends QueryBuilder
     /**
      * @param string|null $table
      * @param array $fields
-     * @return \Pheral\Essential\Data\Base\Result\SelectResult
+     * @return \Pheral\Essential\Storage\DataBase\Result\SelectResult
      */
     public function select($table = null, $fields = [])
     {

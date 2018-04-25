@@ -1,6 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Data\Base;
+namespace Pheral\Essential\Storage\DataBase;
 
 use \PDO;
 use \PDOException;
@@ -8,14 +8,10 @@ use Pheral\Essential\Exceptions\NetworkException;
 
 class DB
 {
-    protected static $connect;
-
-    /**
-     * @return PDO
-     */
-    public static function connect(): \PDO
+    private static $instance;
+    public static function instance(): \PDO
     {
-        if (!static::$connect) {
+        if (!self::$instance) {
             $cfg = config('database.connections.default');
             try {
                 $driver = array_get($cfg, 'driver', 'mysql');
@@ -29,27 +25,25 @@ class DB
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
                 ];
-                static::$connect = new PDO($dsn, $user, $pass, $opt);
+                self::$instance = new PDO($dsn, $user, $pass, $opt);
             } catch (PDOException $e) {
                 throw new NetworkException(500, $e->getMessage());
             }
         }
-        return static::$connect;
+        return self::$instance;
     }
-
-    public static function query($table = '', $alias = ''): Query
-    {
-        return new Query($table, $alias);
-    }
-
     public static function execute($sql, $params = []): \PDOStatement
     {
-        $stmt = static::connect()->prepare(trim($sql));
+        $stmt = self::instance()->prepare(trim($sql));
         if ($params) {
             $stmt->execute($params);
         } else {
             $stmt->execute();
         }
         return $stmt;
+    }
+    public static function query($table = '', $alias = ''): Query
+    {
+        return new Query($table, $alias);
     }
 }

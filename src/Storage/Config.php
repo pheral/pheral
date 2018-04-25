@@ -1,16 +1,24 @@
 <?php
 
-namespace Pheral\Essential\Data;
-
-use Pheral\Essential\Container\Pool;
+namespace Pheral\Essential\Storage;
 
 class Config
 {
+    private static $instance;
     protected $path;
     protected $data = [];
-    public static function instance(): Config
+    private function __construct()
     {
-        return Pool::get('Config');
+    }
+    private function __clone()
+    {
+    }
+    public static function instance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
     protected function path()
     {
@@ -19,7 +27,6 @@ class Config
         }
         return $this->path;
     }
-
     public function load($dotPath = '')
     {
         if (!$segments = explode('.', $dotPath)) {

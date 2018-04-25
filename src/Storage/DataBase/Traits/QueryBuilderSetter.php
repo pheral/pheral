@@ -1,6 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Data\Base\Traits;
+namespace Pheral\Essential\Storage\DataBase\Traits;
 
 use Pheral\Essential\Layers\Data;
 
@@ -8,7 +8,7 @@ trait QueryBuilderSetter
 {
     /**
      * @param string $field
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function distinct($field = '')
     {
@@ -21,7 +21,7 @@ trait QueryBuilderSetter
 
     /**
      * @param array $fields
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function fields($fields = [])
     {
@@ -31,7 +31,7 @@ trait QueryBuilderSetter
 
     /**
      * @param array $fields
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function fieldsAdd($fields = [])
     {
@@ -41,7 +41,7 @@ trait QueryBuilderSetter
     /**
      * @param string $table
      * @param string $alias
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function table($table, $alias = '')
     {
@@ -58,7 +58,7 @@ trait QueryBuilderSetter
      * @param string $expression
      * @param array $wheres
      * @param string $type
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function join($table, $alias, $expression, $wheres = [], $type = 'INNER')
     {
@@ -93,7 +93,7 @@ trait QueryBuilderSetter
      * @param string $alias
      * @param string $expression
      * @param array $wheres
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function leftJoin($table, $alias, $expression, $wheres = [])
     {
@@ -105,7 +105,7 @@ trait QueryBuilderSetter
      * @param string $operator
      * @param mixed $value
      * @param string $type
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function where($field, $operator = '=', $value = null, $type = 'AND')
     {
@@ -123,7 +123,7 @@ trait QueryBuilderSetter
      * @param string $field
      * @param string $operator
      * @param null $value
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function orWhere($field, $operator = '=', $value = null)
     {
@@ -135,7 +135,7 @@ trait QueryBuilderSetter
      * @param string $operator
      * @param array $values
      * @param string $type
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     protected function whereList($field, $operator = 'IN', $values = [], $type = 'AND')
     {
@@ -154,7 +154,7 @@ trait QueryBuilderSetter
      * @param $field
      * @param $values
      * @param string $type
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function whereIn($field, $values, $type = 'AND')
     {
@@ -164,7 +164,7 @@ trait QueryBuilderSetter
     /**
      * @param $field
      * @param $values
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function orWhereIn($field, $values)
     {
@@ -175,7 +175,7 @@ trait QueryBuilderSetter
      * @param $field
      * @param $values
      * @param string $type
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function whereNotIn($field, $values, $type = 'AND')
     {
@@ -185,7 +185,7 @@ trait QueryBuilderSetter
     /**
      * @param $field
      * @param $values
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function orWhereNotIn($field, $values)
     {
@@ -196,7 +196,7 @@ trait QueryBuilderSetter
      * @param $field
      * @param string $operator
      * @param string $type
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     protected function whereConst($field, $operator = 'IS', $type = 'AND')
     {
@@ -207,7 +207,7 @@ trait QueryBuilderSetter
     /**
      * @param $field
      * @param string $type
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function whereNull($field, $type = 'AND')
     {
@@ -216,7 +216,7 @@ trait QueryBuilderSetter
 
     /**
      * @param $field
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function orWhereNull($field)
     {
@@ -226,7 +226,7 @@ trait QueryBuilderSetter
     /**
      * @param $field
      * @param string $type
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function whereNotNull($field, $type = 'AND')
     {
@@ -235,7 +235,7 @@ trait QueryBuilderSetter
 
     /**
      * @param $field
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function orWhereNotNull($field)
     {
@@ -245,7 +245,7 @@ trait QueryBuilderSetter
     /**
      * @param $field
      * @param string $direction
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function groupBy($field, $direction = null)
     {
@@ -258,7 +258,7 @@ trait QueryBuilderSetter
      * @param string $operator
      * @param null $value
      * @param string $type
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function having($field, $operator = '=', $value = null, $type = 'AND')
     {
@@ -272,7 +272,7 @@ trait QueryBuilderSetter
      * @param $field
      * @param string $operator
      * @param null $value
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function orHaving($field, $operator = '=', $value = null)
     {
@@ -282,7 +282,7 @@ trait QueryBuilderSetter
     /**
      * @param $field
      * @param null $direction
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function orderBy($field, $direction = null)
     {
@@ -293,7 +293,7 @@ trait QueryBuilderSetter
     /**
      * @param int $limit
      * @param null $offset
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function limit($limit, $offset = null)
     {
@@ -306,7 +306,7 @@ trait QueryBuilderSetter
 
     /**
      * @param int $offset
-     * @return \Pheral\Essential\Data\Base\Query|static
+     * @return \Pheral\Essential\Storage\DataBase\Query|static
      */
     public function offset($offset)
     {

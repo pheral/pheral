@@ -3,7 +3,6 @@
 namespace Pheral\Essential\Core;
 
 use Pheral\Essential\Core\Interfaces\Executable;
-use Pheral\Essential\Container\Pool;
 use Pheral\Essential\Exceptions\NetworkException;
 use Pheral\Essential\Network\Frame;
 use Pheral\Essential\Network\Output\Response;
@@ -23,7 +22,7 @@ class Network implements Executable
 
     public function execute()
     {
-        $this->frame = Pool::singleton('Frame', Frame::class);
+        $this->frame = Frame::instance();
         if ($route = $this->frame->route()) {
             $controller = $this->getController($route);
             $action = $this->getAction($route, $controller);
@@ -40,7 +39,19 @@ class Network implements Executable
 
     protected function getController(Route $route)
     {
-        return Pool::make($route->controller());
+        $abstract = $route->controller();
+        try {
+            $reflection = new \ReflectionClass($abstract);
+        } catch (\ReflectionException $exception) {
+            throw new NetworkException(500, "class {$abstract} does not exists");
+        }
+        $constructor = $reflection->getConstructor();
+        if ($constructor && $constructor->isPublic()) {
+            $controller = $reflection->newInstance();
+        } else {
+            $controller = $reflection->newInstanceWithoutConstructor();
+        }
+        return $controller;
     }
 
     protected function getAction(Route $route, $controller)
@@ -70,8 +81,10 @@ class Network implements Executable
                 if ($param->hasType()) {
                     $type = $param->getType();
                     if (!$type->isBuiltin()) {
-                        $abstract = string_wrap($type);
-                        $value = Pool::make($abstract, null, $params ?? []);
+                        $value = null;
+                        // todo Injectable
+//                        $abstract = string_wrap($type);
+//                        $value = Pool::make($abstract, null, $params ?? []);
                     }
                 }
                 $params[$param->name] = $value ?? null;

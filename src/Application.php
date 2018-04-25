@@ -3,30 +3,60 @@
 namespace Pheral\Essential;
 
 use App\Exceptions\ExceptionHandler;
-use Pheral\Essential\Container\Pool;
 use Pheral\Essential\Core\Interfaces\Executable;
-use Pheral\Essential\Data\Base\DB;
-use Pheral\Essential\Data\Config;
+use Pheral\Essential\Storage\Config;
 use Pheral\Essential\Exceptions\NetworkException;
 
-class Application extends Pool
+class Application
 {
-    /**
-     * @var string $path
-     */
-    protected $path;
-
-    /**
-     * @var \Pheral\Essential\Data\Config
-     */
-    protected $config;
+    private static $instance;
 
     protected $running = false;
 
-    public function __construct($path = '')
+    protected $path;
+
+    /**
+     * @var \Pheral\Essential\Storage\Config
+     */
+    protected $config;
+
+    private function __construct($path = '')
     {
-        parent::__construct();
         $this->path = realpath($path);
+    }
+
+    public static function instance($path = '')
+    {
+        if (!self::$instance) {
+            self::$instance = new self($path);
+        }
+        return self::$instance;
+    }
+
+    protected function boot()
+    {
+        if ($this->running) {
+            $this->error('Application is still running');
+        }
+        $this->running = true;
+        $this->config = Config::instance()->load('app');
+    }
+
+    public function run(Executable $core)
+    {
+        try {
+            $this->boot();
+            $core->execute();
+            $this->terminate($core);
+        } catch (\Throwable $exception) {
+            (new ExceptionHandler())->display($exception);
+        }
+    }
+
+    protected function terminate(Executable $core)
+    {
+        $core->terminate();
+        $this->running = false;
     }
 
     public function path($path = '')
@@ -53,33 +83,5 @@ class Application extends Pool
     public function error($message, $code = 500)
     {
         throw new NetworkException($code, $message);
-    }
-
-    protected function boot()
-    {
-        if ($this->running) {
-            throw new NetworkException(500, 'Application is still running');
-        }
-        $this->running = true;
-        $this->makeSingleton('Config', Config::class);
-        $this->makeSingleton('Connection', DB::class);
-        $this->config = Config::instance()->load('app');
-    }
-
-    public function run(Executable $core)
-    {
-        try {
-            $this->boot();
-            $core->execute();
-            $this->terminate($core);
-        } catch (\Throwable $exception) {
-            (new ExceptionHandler())->display($exception);
-        }
-    }
-
-    protected function terminate(Executable $core)
-    {
-        $core->terminate();
-        $this->running = false;
     }
 }

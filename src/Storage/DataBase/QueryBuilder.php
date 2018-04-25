@@ -1,9 +1,9 @@
 <?php
 
-namespace Pheral\Essential\Data\Base;
+namespace Pheral\Essential\Storage\DataBase;
 
-use Pheral\Essential\Data\Base\Traits\QueryBuilderGetter;
-use Pheral\Essential\Data\Base\Traits\QueryBuilderSetter;
+use Pheral\Essential\Storage\DataBase\Traits\QueryBuilderGetter;
+use Pheral\Essential\Storage\DataBase\Traits\QueryBuilderSetter;
 
 class QueryBuilder
 {

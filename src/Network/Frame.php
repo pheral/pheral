@@ -2,61 +2,38 @@
 
 namespace Pheral\Essential\Network;
 
-use Pheral\Essential\Data\Config;
-use Pheral\Essential\Data\Cookies;
-use Pheral\Essential\Data\Server;
-use Pheral\Essential\Data\Session;
-use Pheral\Essential\Data\Request;
+use Pheral\Essential\Storage\Config;
+use Pheral\Essential\Storage\Cookies;
+use Pheral\Essential\Storage\Server;
+use Pheral\Essential\Storage\Session;
+use Pheral\Essential\Storage\Request;
 use Pheral\Essential\Network\Routing\Router;
-use Pheral\Essential\Container\Pool;
 
 class Frame
 {
+    private static $instance;
     protected $requestMethod;
     protected $currentUrl;
     protected $previousUrl;
     protected $protocol;
     protected $requestUri;
     protected $queryString;
-
-    /**
-     * @var \Pheral\Essential\Data\Server $server
-     */
+    protected $config;
     protected $server;
-
-    /**
-     * @var \Pheral\Essential\Data\Session $session
-     */
     protected $session;
-
-    /**
-     * @var \Pheral\Essential\Data\Cookies $cookies
-     */
     protected $cookies;
-
-    /**
-     * @var \Pheral\Essential\Data\Request $request
-     */
     protected $request;
-
     /**
      * @var \Pheral\Essential\Network\Routing\Route|null $route
      */
     protected $route;
-
-    public static function instance(): Frame
+    private function __construct()
     {
-        return Pool::get('Frame');
-    }
-
-    public function __construct()
-    {
-        $this->server = Pool::singleton('Server', Server::class);
-        $this->session = Pool::singleton('Session', Session::class);
-        $this->cookies = Pool::singleton('Cookies', Cookies::class);
-        $this->request = Pool::singleton('Request', Request::class);
-        Pool::singleton('Router', Router::class);
-
+        $this->config = Config::instance();
+        $this->server = Server::instance();
+        $this->session = Session::instance();
+        $this->cookies = Cookies::instance();
+        $this->request = Request::instance();
         $this->protocol = $this->server->isSecure() ? 'https' : 'http';
         $this->currentUrl = $this->protocol . '://' . $this->server->getHost() . $this->server->getRequestUri();
         $this->session->setCurrentUrl($this->currentUrl)->refreshRedirected();
@@ -69,7 +46,16 @@ class Frame
         }
         $this->route = Router::instance()->load()->find($this->currentUrl, $this->requestMethod);
     }
-
+    private function __clone()
+    {
+    }
+    public static function instance(): Frame
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
     public function getProtocol()
     {
         return $this->protocol;
@@ -104,7 +90,7 @@ class Frame
     }
     public function config(): Config
     {
-        return Config::instance();
+        return $this->config;
     }
     public function server(): Server
     {

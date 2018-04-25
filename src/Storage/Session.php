@@ -1,23 +1,28 @@
 <?php
 
-namespace Pheral\Essential\Data;
-
-use Pheral\Essential\Container\Pool;
+namespace Pheral\Essential\Storage;
 
 class Session
 {
+    private static $instance;
     protected $data = [];
     protected $isRedirected;
-    public function __construct()
+    private function __construct()
     {
         if (!session_id()) {
             session_start();
         }
         $this->data =& ${'_SESSION'};
     }
-    public static function instance(): Session
+    private function __clone()
     {
-        return Pool::get('Session');
+    }
+    public static function instance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
     public function all(): array
     {

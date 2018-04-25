@@ -2,13 +2,18 @@
 
 namespace Pheral\Essential\Network\Routing;
 
-use Pheral\Essential\Container\Pool;
-
 class Router
 {
+    private static $instance;
     protected $currentMethod;
     protected $data = [];
     protected $sources;
+    private function __construct()
+    {
+    }
+    private function __clone()
+    {
+    }
     protected function sources()
     {
         if (is_null($this->sources)) {
@@ -28,10 +33,12 @@ class Router
         }
         return $this->sources;
     }
-
-    public static function instance(): Router
+    public static function instance()
     {
-        return Pool::get('Router');
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
     public function load()
     {

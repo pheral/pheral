@@ -1,19 +1,24 @@
 <?php
 
-namespace Pheral\Essential\Data;
-
-use Pheral\Essential\Container\Pool;
+namespace Pheral\Essential\Storage;
 
 class Cookies
 {
+    private static $instance;
     protected $data = [];
-    public function __construct()
+    private function __construct()
     {
         $this->data =& ${'_COOKIE'};
     }
-    public static function instance(): Cookies
+    private function __clone()
     {
-        return Pool::get('Cookies');
+    }
+    public static function instance()
+    {
+        if (!self::$instance) {
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
     public function all(): array
     {

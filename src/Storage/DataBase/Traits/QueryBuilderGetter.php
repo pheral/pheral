@@ -1,6 +1,6 @@
 <?php
 
-namespace Pheral\Essential\Data\Base\Traits;
+namespace Pheral\Essential\Storage\DataBase\Traits;
 
 trait QueryBuilderGetter
 {

@@ -15,6 +15,7 @@ function stop()
  * @param $args
  * @param null $from
  * @param bool $trace
+ * @param bool $html
  */
 function inspect($args, $from = null, $trace = false, $html = true)
 {

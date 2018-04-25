@@ -1,13 +1,12 @@
 <?php
 
-namespace Pheral\Essential\Data;
-
-use Pheral\Essential\Container\Pool;
+namespace Pheral\Essential\Storage;
 
 class Headers
 {
+    private static $instance;
     protected $data = [];
-    public function __construct($data = [])
+    private function __construct($data = [])
     {
         foreach ($data as $key => $value) {
             if (strpos($key, 'HTTP_') !== 0) {
@@ -19,9 +18,15 @@ class Headers
             $this->data[$headerName] = $value;
         }
     }
-    public static function instance(): Headers
+    private function __clone()
     {
-        return Pool::get('Headers');
+    }
+    public static function instance($data = [])
+    {
+        if (!self::$instance) {
+            self::$instance = new self($data);
+        }
+        return self::$instance;
     }
     public function all(): array
     {

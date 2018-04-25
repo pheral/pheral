@@ -166,6 +166,20 @@ function dot_array_has($array, $path)
     }
     return true;
 }
+function is_numeric_array($array, $byValues = false)
+{
+    if (!is_array($array)) {
+        return false;
+    }
+    $result = false;
+    foreach ($array as $key => $value) {
+        if (is_numeric($byValues ? $key : $value)) {
+            $result = true;
+            break;
+        }
+    }
+    return $result;
+}
 function object_class($object)
 {
     if (is_object($object)) {

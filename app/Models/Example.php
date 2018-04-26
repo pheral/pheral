@@ -15,10 +15,10 @@ class Example extends Model
             ->insert()
             ->lastInsertId();
     }
-    public function getTest($firstTestId, $secondTestId)
+    public function getTest()
     {
         $first = Test::query()
-            ->where('id', '=', $firstTestId)
+            ->where('title', '=', 'first')
             ->select()
             ->row();
 
@@ -27,7 +27,7 @@ class Example extends Model
             ->table(Test::class, 't')
             ->leftJoin(Dummy::class, 'd', 'd.test_id = t.id')
             ->where('t.title', '=', 'second')
-            ->orWhere('t.id', '=', $secondTestId)
+            ->orWhere('t.title', '!=', 'first')
             ->whereNull('d.id')
             ->limit(1)
             ->offset(1)

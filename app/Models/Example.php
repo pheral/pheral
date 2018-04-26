@@ -73,26 +73,26 @@ class Example extends Model
             'TRUNCATE test' => $truncateTest,
         ];
     }
-    public function addTestRow($title = null)
+    protected function addTestRow($title = null)
     {
         $query = Test::query()->values(['title' => $title ?? microtime()]);
         $result = $query->insert();
         return $result->lastInsertId();
     }
-    public function getTestRow($testId)
+    protected function getTestRow($testId)
     {
         return Test::query()
             ->where('id', '=', $testId)
             ->select()
             ->row();
     }
-    public function getTestList()
+    protected function getTestList()
     {
         return $this->newQuery()
             ->select(Test::class)
             ->all();
     }
-    public function getMixedList($excludeTestRow = null)
+    protected function getMixedList($excludeTestRow = null)
     {
         $query = $this->newQuery()
             ->fields(['t.id', 't.title', 'd.param'])
@@ -110,7 +110,7 @@ class Example extends Model
         $result = $query->select();
         return $result->all();
     }
-    public function editTestRow($testId, $newTitle = 'updated')
+    protected function editTestRow($testId, $newTitle = 'updated')
     {
         $query = Test::query()
             ->sets(['title' => $newTitle])

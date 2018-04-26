@@ -18,7 +18,7 @@ class Router
     {
         if (is_null($this->sources)) {
             $sources = [];
-            if ($relativePath = config('routes.path', 'sources/routes')) {
+            if ($relativePath = config('app.routes', 'private/routes')) {
                 if ($absolutePath = app()->path($relativePath)) {
                     $dir = dir($absolutePath);
                     while (false !== ($source = $dir->read())) {

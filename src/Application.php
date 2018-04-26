@@ -4,8 +4,8 @@ namespace Pheral\Essential;
 
 use App\Exceptions\ExceptionHandler;
 use Pheral\Essential\Core\Interfaces\Executable;
-use Pheral\Essential\Storage\Config;
 use Pheral\Essential\Exceptions\NetworkException;
+use Pheral\Essential\Storage\Config;
 
 class Application
 {
@@ -16,9 +16,9 @@ class Application
     protected $path;
 
     /**
-     * @var \Pheral\Essential\Storage\Config
+     * @var \Pheral\Essential\Core\Interfaces\Executable
      */
-    protected $config;
+    protected $core;
 
     private function __construct($path = '')
     {
@@ -39,11 +39,12 @@ class Application
             $this->error('Application is still running');
         }
         $this->running = true;
-        $this->config = Config::instance()->load('app');
+        Config::instance()->load('app');
     }
 
     public function run(Executable $core)
     {
+        $this->core = $core;
         try {
             $this->boot();
             $core->execute();
@@ -69,10 +70,11 @@ class Application
 
     public function config($key = '', $default = null)
     {
+        $config = Config::instance();
         if ($key) {
-            return $this->config->get($key, $default);
+            return $config->get($key, $default);
         }
-        return $this->config;
+        return $config;
     }
 
     /**

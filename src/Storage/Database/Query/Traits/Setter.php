@@ -323,6 +323,30 @@ trait Setter
         return $this;
     }
 
+    /**
+     * @param array $values
+     * @param array $onlyFields
+     * @return \Pheral\Essential\Storage\Database\Query|static
+     */
+    public function values($values = [], $onlyFields = [])
+    {
+        $holders = [];
+        $foundedFields = [];
+        foreach ($values as $field => $value) {
+            $holder = $this->makeHolder($field);
+            $holders[] = $holder;
+            $this->params[$holder] = $value;
+            $foundedFields[] = $field;
+        }
+        $this->values[] = '(' . implode(',', $holders) . ')';
+
+        if (!$this->fields) {
+            $this->fields($onlyFields ? $onlyFields : $foundedFields);
+        }
+
+        return $this;
+    }
+
     protected function makeAlias($alias)
     {
         return $alias ? ' AS ' . $alias : '';

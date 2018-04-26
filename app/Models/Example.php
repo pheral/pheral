@@ -8,10 +8,17 @@ use App\Models\Abstracts\Model;
 
 class Example extends Model
 {
-    public function getTest()
+    public function addTest($title = null)
+    {
+        return Test::query()
+            ->values(['title' => $title ?? microtime()])
+            ->insert()
+            ->lastInsertId();
+    }
+    public function getTest($firstTestId, $secondTestId)
     {
         $first = Test::query()
-            ->where('title', '=', 'first')
+            ->where('id', '=', $firstTestId)
             ->select()
             ->row();
 
@@ -19,13 +26,13 @@ class Example extends Model
             ->fields(['t.id', 't.title', 'd.param'])
             ->table(Test::class, 't')
             ->leftJoin(Dummy::class, 'd', 'd.test_id = t.id')
-            ->where('title', '=', 'second')
-            ->orWhere('title', '=', 'third')
+            ->where('t.title', '=', 'second')
+            ->orWhere('t.id', '=', $secondTestId)
             ->whereNull('d.id')
             ->limit(1)
             ->offset(1)
-            ->orderBy('title', 'DESC')
-            ->groupBy('id');
+            ->orderBy('t.title', 'DESC')
+            ->groupBy('t.id');
 
         if (isset($first->id)) {
             $query->whereNotIn('t.id', [$first->id]);

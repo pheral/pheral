@@ -18,7 +18,7 @@ class DB
                 $pass = array_get($cfg, 'pass', 'pheral');
                 $base = array_get($cfg, 'base', 'pheral');
                 $charset = array_get($cfg, 'charset', 'utf8');
-                $dsn = "{$driver}:dbname={$base};host={$host};charset{$charset}";
+                $dsn = "{$driver}:dbname={$base};host={$host};charset={$charset}";
                 $opt = [
                     \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
                     \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,

@@ -41,7 +41,11 @@ trait Getter
     protected function getInto()
     {
         if ($table = $this->getTable()) {
-            return 'INTO '. $table . ' ';
+            $sql = 'INTO '. $table;
+            if ($fields = array_wrap($this->fields)) {
+                $sql .= ' (' . implode(', ', $fields) . ')';
+            }
+            return $sql . ' ';
         }
         return '';
     }
@@ -95,7 +99,7 @@ trait Getter
     protected function getOrderBy()
     {
         if ($orders = $this->orders) {
-            return 'ORDER BY ' . implode(',', $orders) . ' ';
+            return 'ORDER BY ' . implode(', ', $orders) . ' ';
         }
         return '';
     }
@@ -124,13 +128,9 @@ trait Getter
 
     protected function getValues()
     {
-        $values = '';
+        if ($values = $this->values) {
+            return 'VALUES ' . implode(', ', $values) . ' ';
+        }
         return $values;
-    }
-
-    protected function getOnDuplicateKey()
-    {
-        $onDuplicateKey = '';
-        return $onDuplicateKey;
     }
 }

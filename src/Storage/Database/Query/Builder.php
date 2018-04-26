@@ -24,6 +24,7 @@ class Builder
     protected $orders = [];
     protected $limit;
     protected $offset;
+    protected $values = [];
 
     public function __construct($dataTable = null, $alias = null)
     {
@@ -36,9 +37,7 @@ class Builder
     {
         $sql = 'INSERT '
             . $this->getInto()
-            . $this->getSets()
-            . $this->getValues()
-            . $this->getOnDuplicateKey();
+            . $this->getValues();
 
         return $this->makeSql($sql, $withParams);
     }

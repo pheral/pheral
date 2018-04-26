@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Data;
+namespace App\DataTables;
 
-use App\Data\Abstracts\Data;
+use App\DataTables\Abstracts\DataTable;
 
 /**
  * @SuppressWarnings(CamelCasePropertyName)
  * @SuppressWarnings(ShortVariable)
  * @SuppressWarnings(LongVariable)
  */
-class Dummy extends Data
+class Dummy extends DataTable
 {
     public $id;
     public $test_id;

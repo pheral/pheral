@@ -4,7 +4,7 @@ namespace Pheral\Essential\Layers;
 
 use Pheral\Essential\Storage\Database\DB;
 
-abstract class Data
+abstract class DataTable
 {
     public static function query($alias = '')
     {

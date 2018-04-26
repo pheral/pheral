@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Data\Dummy;
-use App\Data\Test;
+use App\DataTables\Dummy;
+use App\DataTables\Test;
 use App\Models\Abstracts\Model;
 
 class Example extends Model

@@ -2,7 +2,7 @@
 
 namespace Pheral\Essential\Storage\Database\Query\Traits;
 
-use Pheral\Essential\Layers\Data;
+use Pheral\Essential\Layers\DataTable;
 
 trait Setter
 {
@@ -365,7 +365,7 @@ trait Setter
 
     protected function makeTable($table, $isDataTable = false)
     {
-        if (is_subclass_of($table, Data::class)) {
+        if (is_subclass_of($table, DataTable::class)) {
             $tableName = string_snake_case(object_name($table));
             if ($isDataTable && !$this->dataTable) {
                 $this->dataTable = $table;

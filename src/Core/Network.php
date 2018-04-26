@@ -82,9 +82,6 @@ class Network implements Executable
                     $type = $param->getType();
                     if (!$type->isBuiltin()) {
                         $value = null;
-                        // todo Injectable
-//                        $abstract = string_wrap($type);
-//                        $value = Pool::make($abstract, null, $params ?? []);
                     }
                 }
                 $params[$param->name] = $value ?? null;

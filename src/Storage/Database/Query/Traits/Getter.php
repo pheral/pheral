@@ -30,30 +30,30 @@ trait Getter
         return implode(', ', $fields) . ' ';
     }
 
-    protected function getTable()
+    protected function getTables()
     {
         if ($tables = array_wrap($this->tables)) {
-            return implode(', ', $tables);
+            return implode(', ', $tables) . ' ';
         }
         return '';
     }
 
     protected function getInto()
     {
-        if ($table = $this->getTable()) {
-            $sql = 'INTO '. $table;
+        if ($tables = $this->getTables()) {
+            $sql = 'INTO '. $tables;
             if ($fields = array_wrap($this->fields)) {
-                $sql .= ' (' . implode(', ', $fields) . ')';
+                $sql .= '(' . implode(', ', $fields) . ') ';
             }
-            return $sql . ' ';
+            return $sql;
         }
         return '';
     }
 
     protected function getFrom()
     {
-        if ($table = $this->getTable()) {
-            return 'FROM ' . $table . ' ';
+        if ($tables = $this->getTables()) {
+            return 'FROM ' . $tables;
         }
         return '';
     }
@@ -122,8 +122,10 @@ trait Getter
 
     protected function getSets()
     {
-        $sets = '';
-        return $sets;
+        if ($sets = $this->sets) {
+            return 'SET ' . implode(', ', $sets) . ' ';
+        }
+        return '';
     }
 
     protected function getValues()

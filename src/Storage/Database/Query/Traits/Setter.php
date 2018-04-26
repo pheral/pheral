@@ -272,7 +272,7 @@ trait Setter
     public function having($field, $operator = '=', $value = null, $type = 'AND')
     {
         $holder = $this->makeHolder($field);
-        $this->having[] = $this->makeType($this->having, $type) . $field . $operator . $holder;
+        $this->having[] = $this->makeType($this->having, $type) . $field . ' ' . $operator . ' ' . $holder;
         $this->params[$holder] = $value;
         return $this;
     }
@@ -323,6 +323,16 @@ trait Setter
         return $this;
     }
 
+    public function sets($sets = [])
+    {
+        foreach ($sets as $field => $value) {
+            $holder = $this->makeHolder($field);
+            $this->sets[] = $field . ' = ' . $holder;
+            $this->params[$holder] = $value;
+        }
+        return $this;
+    }
+
     /**
      * @param array $values
      * @param array $onlyFields
@@ -338,7 +348,7 @@ trait Setter
             $this->params[$holder] = $value;
             $foundedFields[] = $field;
         }
-        $this->values[] = '(' . implode(',', $holders) . ')';
+        $this->values[] = '(' . implode(', ', $holders) . ')';
 
         if (!$this->fields) {
             $this->fields($onlyFields ? $onlyFields : $foundedFields);

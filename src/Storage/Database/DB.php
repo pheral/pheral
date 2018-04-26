@@ -3,6 +3,7 @@
 namespace Pheral\Essential\Storage\Database;
 
 use Pheral\Essential\Exceptions\NetworkException;
+use Pheral\Essential\Storage\Database\Result\QueryResult;
 
 class DB
 {
@@ -40,8 +41,9 @@ class DB
         }
         return $stmt;
     }
-    public static function query($dataTable = '', $alias = '')
+    public static function query($sql, $params = [])
     {
-        return new Query($dataTable, $alias);
+        $stmt = self::execute($sql, $params);
+        return new QueryResult($stmt);
     }
 }

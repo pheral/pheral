@@ -11,16 +11,10 @@ class Help extends Controller
     {
         $frame = Frame::instance();
 
-        $model = new \App\Models\Example();
-
         $content = view('templates.help.index', [
             'paramArgument' => $param,
             'paramRequest' => $frame->request()->get('param'),
-            'dbExampleAdd' => [
-                'firstTestId' => $model->addTest('first'),
-                'secondTestId' => $model->addTest('second')
-            ],
-            'dbExampleGet' => $model->getTest(),
+            'dbExample' => (new \App\Models\Example())->test()
         ]);
 
         return $this->render([

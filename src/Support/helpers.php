@@ -197,6 +197,34 @@ function object_vars($object)
 {
     return get_class_vars(object_class($object));
 }
+function string_substr($string, $start, $length = null)
+{
+    return mb_substr($string, $start, $length, 'UTF-8');
+}
+function string_first($string)
+{
+    return string_substr($string, 0, 1);
+}
+function string_last($string)
+{
+    return string_substr($string, -1);
+}
+function string_upper($string)
+{
+    return mb_strtoupper($string, 'UTF-8');
+}
+function string_lower($string)
+{
+    return mb_strtolower($string, 'UTF-8');
+}
+function string_upper_first($string)
+{
+    return string_upper(string_first($string)) . string_substr($string, 1);
+}
+function string_lower_first($string)
+{
+    return string_lower(string_first($string)) . string_substr($string, 1);
+}
 function string_segments($string, $delimiter = '.')
 {
     return explode($delimiter, $string);
@@ -206,17 +234,17 @@ function string_start($string, $delimiter = '.')
     $segments = string_segments($string, $delimiter);
     return current($segments);
 }
+function string_end($string, $delimiter = '.')
+{
+    $segments = string_segments($string, $delimiter);
+    return end($segments);
+}
 function string_start_cut(&$string, $delimiter = '.')
 {
     $segments = string_segments($string, $delimiter);
     $segment = array_shift($segments);
     $string = implode($delimiter, $segments);
     return $segment;
-}
-function string_end($string, $delimiter = '.')
-{
-    $segments = string_segments($string, $delimiter);
-    return end($segments);
 }
 function string_end_cut(&$string, $delimiter = '.')
 {

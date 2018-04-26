@@ -2,12 +2,12 @@
 
 namespace Pheral\Essential\Layers;
 
-use Pheral\Essential\Storage\Database\DB;
+use Pheral\Essential\Storage\Database\Query;
 
 abstract class DataTable
 {
     public static function query($alias = '')
     {
-        return DB::query(static::class, $alias);
+        return new Query(static::class, $alias);
     }
 }

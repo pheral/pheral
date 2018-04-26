@@ -23,7 +23,7 @@ class Query extends Builder
      */
     public function select($dataTable = null)
     {
-        if ($dataTable && !$this->getTable()) {
+        if ($dataTable && !$this->getTables()) {
             $this->dataTable($dataTable);
         }
         $result = new SelectResult(

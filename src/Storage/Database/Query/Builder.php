@@ -25,6 +25,7 @@ class Builder
     protected $limit;
     protected $offset;
     protected $values = [];
+    protected $sets = [];
 
     public function __construct($dataTable = null, $alias = null)
     {
@@ -45,7 +46,7 @@ class Builder
     public function sqlUpdate($withParams = false)
     {
         $sql = 'UPDATE '
-            . $this->getTable()
+            . $this->getTables()
             . $this->getSets()
             . $this->getWhere()
             . $this->getOrderBy()
@@ -57,10 +58,11 @@ class Builder
     public function sqlDelete($withParams = false)
     {
         $sql = 'DELETE '
-            . $this->getFields()
             . $this->getFrom()
             . $this->getUsing()
-            . $this->getWhere();
+            . $this->getWhere()
+            . $this->getOrderBy()
+            . $this->getLimit();
 
         return $this->makeSql($sql, $withParams);
     }

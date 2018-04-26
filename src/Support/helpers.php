@@ -51,12 +51,24 @@ function debug(...$args)
 {
     inspect($args, inspect_from());
 }
+function debug_trace(...$args)
+{
+    inspect($args, inspect_from(), true);
+}
 function debug_stop(...$args)
 {
     inspect($args, inspect_from(), true);
     stop();
 }
 function debug_raw(...$args)
+{
+    inspect($args, inspect_from(), false, false);
+}
+function debug_trace_raw(...$args)
+{
+    inspect($args, inspect_from(), true, false);
+}
+function debug_stop_raw(...$args)
 {
     inspect($args, inspect_from(), true, false);
     stop();

@@ -2,7 +2,7 @@
 
 namespace Pheral\Essential\Storage\Database\Query\Traits;
 
-use Pheral\Essential\Layers\DataTable;
+use Pheral\Essential\Storage\Database\DB;
 
 trait Setter
 {
@@ -38,11 +38,15 @@ trait Setter
         return $this->fields(array_merge($this->fields, $fields));
     }
 
-    protected function dataTable($table, $alias = '')
+    /**
+     * @param string $table
+     * @param string $alias
+     * @return \Pheral\Essential\Storage\Database\Query|static
+     */
+    protected function addTable($table, $alias)
     {
-        $tableName = $this->makeTable($table, true);
-        if (!in_array($tableName, $this->tables)) {
-            $this->tables[] = $tableName . $this->makeAlias($alias);
+        if ($table && !in_array($table, $this->tables)) {
+            $this->tables[] = $table . $this->makeAlias($alias);
         }
         return $this;
     }
@@ -52,13 +56,22 @@ trait Setter
      * @param string $alias
      * @return \Pheral\Essential\Storage\Database\Query|static
      */
+    protected function dataTable($table, $alias = '')
+    {
+        if (!$this->dataTable) {
+            $this->dataTable = $table;
+        }
+        return $this->addTable(DB::tableName($table), $alias);
+    }
+
+    /**
+     * @param string $table
+     * @param string $alias
+     * @return \Pheral\Essential\Storage\Database\Query|static
+     */
     public function table($table, $alias = '')
     {
-        $tableName = $this->makeTable($table);
-        if (!in_array($tableName, $this->tables)) {
-            $this->tables[] = $tableName . $this->makeAlias($alias);
-        }
-        return $this;
+        return $this->addTable(DB::tableName($table), $alias);
     }
 
     /**
@@ -92,7 +105,7 @@ trait Setter
             }
             $where = ' ' . implode(' ', $parts);
         }
-        $tableName = $this->makeTable($table) . $this->makeAlias($alias);
+        $tableName = DB::tableName($table) . $this->makeAlias($alias);
         $this->joins[$tableName] = strtoupper($type) . ' JOIN ' . $tableName . ' ON ' . $expression . $where;
         return $this;
     }
@@ -373,20 +386,6 @@ trait Setter
         return ':' . $holder . $this->holders[$holder];
     }
 
-    protected function makeTable($table, $isDataTable = false)
-    {
-        if (is_subclass_of($table, DataTable::class)) {
-            $tableName = string_snake_case(object_name($table));
-            if ($isDataTable && !$this->dataTable) {
-                $this->dataTable = $table;
-            }
-        } elseif (strpos($table, '\\', true) !== false) {
-            $tableName = '';
-        } else {
-            $tableName = $table;
-        }
-        return $tableName;
-    }
     protected function makeType($list, $type)
     {
         return (!empty($list) ? $type . ' ' : '');

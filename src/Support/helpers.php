@@ -193,6 +193,10 @@ function object_name($object)
 {
     return string_end(object_class($object), '\\');
 }
+function class_name($fullClassName)
+{
+    return string_end($fullClassName, '\\');
+}
 function object_vars($object)
 {
     return get_class_vars(object_class($object));
@@ -260,16 +264,15 @@ function string_wrap($string, $force = true)
 function string_camel_case($string, $ucFirst = false)
 {
     $camel = '';
-    $words = explode(' ', preg_replace('/[^a-z0-9]/si', ' ', $string));
-
+    $words = string_segments(preg_replace('/[^a-z0-9]/si', ' ', $string), ' ');
     foreach ($words as $word) {
         if (!strlen($word)) {
             continue;
         }
-        $camel .= ucfirst(strtolower($word));
+        $camel .= string_upper_first(string_lower($word));
     }
     if (!$ucFirst) {
-        $camel = lcfirst($camel);
+        $camel = string_lower_first($camel);
     }
     return $camel;
 }
@@ -281,7 +284,7 @@ function string_snake_case($string)
         if ($index && ctype_upper($char)) {
             $snake .= '_';
         }
-        $snake .= strtolower($origin[$index]);
+        $snake .= string_lower($origin[$index]);
     }
     return $snake;
 }

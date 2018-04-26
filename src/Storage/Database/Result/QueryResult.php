@@ -17,9 +17,18 @@ class QueryResult
     {
         return $this->stmt->columnCount();
     }
-    public function sql()
+    public function sql($params = [])
     {
-        return $this->stmt->queryString;
+        $sql = $this->stmt->queryString;
+        if ($params) {
+            $search = array_keys($params);
+            $replace = array_values($params);
+            array_walk($replace, function (&$param) {
+                $param = '"' . $param . '"';
+            });
+            $sql = str_replace($search, $replace, $sql);
+        }
+        return $sql;
     }
     public function params()
     {

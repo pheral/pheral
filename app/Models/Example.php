@@ -11,27 +11,8 @@ class Example extends Model
 {
     public function test()
     {
-        $createTest = DB::query(
-            'CREATE TABLE IF NOT EXISTS test ('
-            .'id INT NOT NULL AUTO_INCREMENT,'
-            .'title VARCHAR(45) NULL,'
-            .'PRIMARY KEY (id)'
-            .')'
-        );
-        $createDummy = DB::query(
-            'CREATE TABLE IF NOT EXISTS dummy ('
-            .'id INT NOT NULL AUTO_INCREMENT,'
-            .'test_id INT NULL,'
-            .'param VARCHAR(45) NULL,'
-            .'PRIMARY KEY (id),'
-            .'INDEX dummy_test_id_index (test_id ASC),'
-            .'CONSTRAINT dummy_test_id_foreign'
-            .' FOREIGN KEY (test_id)'
-            .' REFERENCES test (id)'
-            .' ON DELETE CASCADE'
-            .' ON UPDATE CASCADE'
-            .')'
-        );
+        // CREATE
+        $creates = $this->createTables();
         // INSERT
         $firstTestId = $this->addTestRow('first');
         $secondTestId = $this->addTestRow('second');
@@ -51,12 +32,13 @@ class Example extends Model
         foreach ($testList as $testRow) {
             $drops[$testRow->title] = $this->deleteTestRow($testRow->id);
         }
-        $dropDummy = DB::query('DROP TABLE dummy');
-        $truncateTest = DB::query('TRUNCATE TABLE test');
+        // DROP
+        $dropDummy = $this->dropTable('dummy');
+        // TRUNCATE
+        $truncateTest = $this->truncateTable('test');
         // results
         return [
-            'CREATE test' => $createTest,
-            'CREATE dummy' => $createDummy,
+            'CREATE' => $creates,
             'INSERT' => [
                 'firstTestId' => $firstTestId,
                 'secondTestId' => $secondTestId,
@@ -116,18 +98,46 @@ class Example extends Model
             ->sets(['title' => $newTitle])
             ->where('id', '=', $testId);
         $result = $query->update();
-        if ($result->count()) {
-            return $newTitle;
-        }
-        return 'not affected';
+        return $result->count() ? 'updated' : 'not updated';
     }
     protected function deleteTestRow($testId)
     {
         $query = Test::query()->where('id', '=', $testId);
         $result = $query->delete();
-        if ($result->count()) {
-            return 'deleted';
-        }
-        return 'not affected';
+        return $result->count() ? 'deleted' : 'not deleted';
+    }
+    protected function createTables()
+    {
+        $creates = [];
+        $sqlTest = 'CREATE TABLE IF NOT EXISTS test ('
+            .'id INT NOT NULL AUTO_INCREMENT,'
+            .'title VARCHAR(45) NULL,'
+            .'PRIMARY KEY (id)'
+            .')';
+        $creates['test'] = DB::query($sqlTest) ? 'created' : 'not created';
+        $sqlDummy = 'CREATE TABLE IF NOT EXISTS dummy ('
+            .'id INT NOT NULL AUTO_INCREMENT,'
+            .'test_id INT NULL,'
+            .'param VARCHAR(45) NULL,'
+            .'PRIMARY KEY (id),'
+            .'INDEX dummy_test_id_index (test_id ASC),'
+            .'CONSTRAINT dummy_test_id_foreign'
+            .' FOREIGN KEY (test_id)'
+            .' REFERENCES test (id)'
+            .' ON DELETE CASCADE'
+            .' ON UPDATE CASCADE'
+            .')';
+        $creates['dummy'] = DB::query($sqlDummy) ? 'created' : 'not created';
+        return $creates;
+    }
+    protected function dropTable($tableName)
+    {
+        $sql = 'DROP TABLE ' . $tableName;
+        return DB::query($sql) ? 'dropped' : 'not dropped';
+    }
+    protected function truncateTable($tableName)
+    {
+        $sql = 'TRUNCATE TABLE ' . $tableName;
+        return DB::query($sql) ? 'truncated' : 'not truncated';
     }
 }

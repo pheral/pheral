@@ -3,11 +3,13 @@
 namespace Pheral\Essential\Storage\Database;
 
 use Pheral\Essential\Exceptions\NetworkException;
+use Pheral\Essential\Layers\DataTable;
 use Pheral\Essential\Storage\Database\Result\QueryResult;
 
 class DB
 {
     private static $instance;
+    private static $tableNames = [];
     public static function instance(): \PDO
     {
         if (!self::$instance) {
@@ -45,5 +47,20 @@ class DB
     {
         $stmt = self::execute($sql, $params);
         return new QueryResult($stmt);
+    }
+    public static function tableName($table)
+    {
+        if (strpos($table, '\\', true) === false) {
+            return $table;
+        }
+        if ($tableName = array_get(self::$tableNames, $table)) {
+            return $tableName;
+        }
+        if (is_subclass_of($table, DataTable::class)) {
+            $tableName = string_snake_case(object_name($table));
+            self::$tableNames[$table] = $tableName;
+            return $tableName;
+        }
+        return '';
     }
 }

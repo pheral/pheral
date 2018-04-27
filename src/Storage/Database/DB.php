@@ -9,6 +9,7 @@ use Pheral\Essential\Storage\Database\Result\QueryResult;
 class DB
 {
     private static $instance;
+    private static $history = [];
     private static $tableNames = [];
     public static function instance(): \PDO
     {
@@ -35,6 +36,7 @@ class DB
     }
     public static function execute($sql, $params = []): \PDOStatement
     {
+        self::$history[] = self::makeSql($sql, $params);
         $stmt = self::instance()->prepare(trim($sql));
         if ($params) {
             $stmt->execute($params);
@@ -48,6 +50,10 @@ class DB
         $stmt = self::execute($sql, $params);
         return new QueryResult($stmt);
     }
+    public static function history()
+    {
+        return self::$history;
+    }
     public static function tableName($table)
     {
         if (strpos($table, '\\', true) === false) {
@@ -57,10 +63,22 @@ class DB
             return $tableName;
         }
         if (is_subclass_of($table, DataTable::class)) {
-            $tableName = string_snake_case(object_name($table));
+            $tableName = string_snake_case(class_name($table));
             self::$tableNames[$table] = $tableName;
             return $tableName;
         }
         return '';
+    }
+    protected static function makeSql($sql, $params = [])
+    {
+        if ($params) {
+            $search = array_keys($params);
+            $replace = array_values($params);
+            array_walk($replace, function (&$param) {
+                $param = '"' . $param . '"';
+            });
+            $sql = str_replace($search, $replace, $sql);
+        }
+        return trim($sql);
     }
 }

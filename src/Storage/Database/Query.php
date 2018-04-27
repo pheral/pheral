@@ -9,8 +9,11 @@ use Pheral\Essential\Storage\Database\Result\SelectResult;
 
 class Query extends Builder
 {
-    public function insert()
+    public function insert($values)
     {
+        if ($values && !$this->values) {
+            $this->values($values);
+        }
         return new InsertResult(
             DB::execute($this->sqlInsert(), $this->getParams())
         );
@@ -18,12 +21,11 @@ class Query extends Builder
 
     /**
      * @param string|null $dataTable
-     * @param array $fields
      * @return \Pheral\Essential\Storage\Database\Result\SelectResult
      */
     public function select($dataTable = null)
     {
-        if ($dataTable && !$this->getTables()) {
+        if ($dataTable && !$this->dataTable) {
             $this->dataTable($dataTable);
         }
         $result = new SelectResult(

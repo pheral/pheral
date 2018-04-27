@@ -73,9 +73,9 @@ function debug_stop_raw(...$args)
     inspect($args, inspect_from(), true, false);
     stop();
 }
-function ignore($argument)
+function ignore(...$arguments)
 {
-    return $argument;
+    return $arguments;
 }
 function array_wrap($array, $force = false)
 {
@@ -192,88 +192,92 @@ function is_numeric_array($array, $byValues = false)
     }
     return $result;
 }
-function object_class($object)
-{
-    if (is_object($object)) {
-        $class = get_class($object);
-    } else {
-        $class = $object;
-    }
-    return $class;
-}
-function object_name($object)
-{
-    return string_end(object_class($object), '\\');
-}
-function class_name($fullClassName)
+function class_name(string $fullClassName)
 {
     return string_end($fullClassName, '\\');
 }
-function object_vars($object)
+function class_vars(string $fullClassName)
 {
-    return get_class_vars(object_class($object));
+    return get_class_vars($fullClassName);
 }
-function string_substr($string, $start, $length = null)
+function object_class($data): string
+{
+    if (is_object($data)) {
+        $fullClassName = get_class($data);
+    } else {
+        $fullClassName = $data;
+    }
+    return $fullClassName;
+}
+function object_name($object): string
+{
+    return class_name(object_class($object));
+}
+function object_vars($object): array
+{
+    return class_vars(object_class($object));
+}
+function string_substr(string $string, $start, $length = null)
 {
     return mb_substr($string, $start, $length, 'UTF-8');
 }
-function string_first($string)
+function string_first(string $string): string
 {
     return string_substr($string, 0, 1);
 }
-function string_last($string)
+function string_last(string $string): string
 {
     return string_substr($string, -1);
 }
-function string_upper($string)
+function string_upper(string $string): string
 {
     return mb_strtoupper($string, 'UTF-8');
 }
-function string_lower($string)
+function string_lower(string $string): string
 {
     return mb_strtolower($string, 'UTF-8');
 }
-function string_upper_first($string)
+function string_upper_first(string $string): string
 {
     return string_upper(string_first($string)) . string_substr($string, 1);
 }
-function string_lower_first($string)
+function string_lower_first(string $string): string
 {
     return string_lower(string_first($string)) . string_substr($string, 1);
 }
-function string_segments($string, $delimiter = '.')
+function string_segments(string $string, string $delimiter = '.')
 {
     return explode($delimiter, $string);
 }
-function string_start($string, $delimiter = '.')
+function string_start(string $string, string $delimiter = '.'): string
 {
     $segments = string_segments($string, $delimiter);
     return current($segments);
 }
-function string_end($string, $delimiter = '.')
+function string_end(string $string, string $delimiter = '.'): string
 {
     $segments = string_segments($string, $delimiter);
     return end($segments);
 }
-function string_start_cut(&$string, $delimiter = '.')
+function string_start_cut(string &$string, string $delimiter = '.'): string
 {
     $segments = string_segments($string, $delimiter);
     $segment = array_shift($segments);
     $string = implode($delimiter, $segments);
     return $segment;
 }
-function string_end_cut(&$string, $delimiter = '.')
+function string_end_cut(string &$string, string $delimiter = '.'): string
 {
     $segments = string_segments($string, $delimiter);
     $segment = array_pop($segments);
     $string = implode($delimiter, $segments);
     return $segment;
 }
-function string_wrap($string, $force = true)
+function string_wrap(string $string, $force = true): string
 {
     return is_string($string) ? $string : ($string || $force ? "{$string}" : "");
 }
-function string_camel_case($string, $ucFirst = false)
+function string_camel_case(string $string, bool $ucFirst = false): string
 {
     $camel = '';
     $words = string_segments(preg_replace('/[^a-z0-9]/si', ' ', $string), ' ');
@@ -288,7 +292,7 @@ function string_camel_case($string, $ucFirst = false)
     }
     return $camel;
 }
-function string_snake_case($string)
+function string_snake_case(string $string): string
 {
     $snake = '';
     $origin = str_split($string);

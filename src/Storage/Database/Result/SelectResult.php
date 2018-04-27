@@ -14,11 +14,17 @@ class SelectResult extends QueryResult
         }
     }
 
+    /**
+     * @return \Pheral\Essential\Layers\DataTable[]|\stdClass[]|array|mixed
+     */
     public function all()
     {
         return $this->stmt->fetchAll();
     }
 
+    /**
+     * @return \Pheral\Essential\Layers\DataTable|\stdClass|mixed
+     */
     public function row()
     {
         return $this->stmt->fetch();

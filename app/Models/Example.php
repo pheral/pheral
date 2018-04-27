@@ -9,62 +9,124 @@ use Pheral\Essential\Storage\Database\DB;
 
 class Example extends Model
 {
+    protected $canCreate = true;
+    protected $canInsert = true;
+    protected $canUpdate = true;
+    protected $canDelete = true;
+    protected $canDrop = true;
+    protected $canTruncate = true;
     public function test()
     {
-        // CREATE
-        $creates = $this->createTables();
-        // INSERT
-        $firstTestId = $this->addTestRow('first');
-        $secondTestId = $this->addTestRow('second');
-        $thirdTestId = $this->addTestRow('third');
+        $results = [];
+
+        if ($this->canCreate) {
+            $results['CREATE'] = $this->createTables();
+        }
+
+        if ($this->canInsert) {
+            // INSERT
+            $firstTestId = $this->addTestRow('first');
+            $firstDummyId = $this->addDummyRow($firstTestId, 'experimental');
+            $results['INSERT'] = [
+                'firstTestId' => $firstTestId,
+                'secondTestId' => $this->addTestRow('second'),
+                'thirdTestId' => $this->addTestRow('third'),
+                'firstDummyId' => $firstDummyId,
+            ];
+            $firstTest = $this->getTestRow($firstTestId);
+            $firstDummy = $this->getDummyRow($firstDummyId);
+        } else {
+            $firstTest = $this->getTestRowByTitle('first');
+            $firstDummy = $this->getDummyRowByParam('experimental');
+        };
+
         // SELECT
         $testList = $this->getTestList();
-        $firstTest = $this->getTestRow($firstTestId);
         $mixedList = $this->getMixedList($firstTest);
-        // UPDATE
-        $edits = [];
-        foreach ($mixedList as $mixedRow) {
-            $newTitle = $mixedRow->title . '-updated';
-            $edits[$mixedRow->title.'Test'] = $this->editTestRow($mixedRow->id, $newTitle);
-        }
-        // DELETE
-        $drops = [];
-        foreach ($testList as $testRow) {
-            $drops[$testRow->title] = $this->deleteTestRow($testRow->id);
-        }
-        // DROP
-        $dropDummy = $this->dropTable('dummy');
-        // TRUNCATE
-        $truncateTest = $this->truncateTable('test');
-        // results
-        return [
-            'CREATE' => $creates,
-            'INSERT' => [
-                'firstTestId' => $firstTestId,
-                'secondTestId' => $secondTestId,
-                'thirdTestId' => $thirdTestId,
-            ],
-            'SELECT' => [
-                'testList' => $testList,
-                'firstTest' => $firstTest,
-                'mixedList' => $mixedList,
-            ],
-            'UPDATE' => $edits,
-            'DELETE' => $drops,
-            'DROP dummy' => $dropDummy,
-            'TRUNCATE test' => $truncateTest,
+        $results['SELECT'] = [
+            'ALL `test`' => $testList,
+            'FIRST `test`' => $firstTest,
+            'FIRST `dummy`' => $firstDummy,
+            'MIXED' => $mixedList,
         ];
+
+        if ($this->canUpdate) {
+            // UPDATE
+            $updates = [];
+            foreach ($mixedList as $mixedRow) {
+                $newTitle = $mixedRow->title . '-updated';
+                $updates[$mixedRow->title.'Test'] = $this->editTestRow($mixedRow->id, $newTitle);
+            }
+            $results['UPDATE'] = $updates;
+        }
+
+        if ($this->canDelete) {
+            // DELETE
+            $deletes = [];
+            foreach ($testList as $testRow) {
+                $deletes[$testRow->title] = $this->deleteTestRow($testRow->id);
+            }
+            $results['DELETE'] = $deletes;
+        }
+
+        if ($this->canDrop) {
+            // DROP
+            $results['DROP'] = [
+                'dummy' => $this->dropTable('dummy'),
+            ];
+        }
+
+        if ($this->canTruncate) {
+            // TRUNCATE
+            $results['TRUNCATE'] = [
+                'test' => $this->truncateTable('test'),
+            ];
+        }
+
+        debug(\Pheral\Essential\Storage\Database\DB::history());
+
+        return $results;
     }
     protected function addTestRow($title = null)
     {
-        $query = Test::query()->values(['title' => $title ?? microtime()]);
-        $result = $query->insert();
-        return $result->lastInsertId();
+        return Test::query()
+            ->insert(['title' => $title ?? microtime()])
+            ->lastInsertId();
     }
     protected function getTestRow($testId)
     {
         return Test::query()
             ->where('id', '=', $testId)
+            ->select()
+            ->row();
+    }
+    protected function getTestRowByTitle($testTitle)
+    {
+        return Test::query()
+            ->where('title', '=', $testTitle)
+            ->select()
+            ->row();
+    }
+    protected function addDummyRow($testId, $param = null)
+    {
+        return Dummy::query()
+            ->insert([
+                'test_id' => $testId,
+                'param' => $param,
+            ])
+            ->lastInsertId();
+    }
+    protected function getDummyRow($dummyId)
+    {
+        return Dummy::query()
+            ->where('id', '=', $dummyId)
+            ->select()
+            ->row();
+    }
+    protected function getDummyRowByParam($param)
+    {
+        return Dummy::query()
+            ->where('param', '=', $param)
             ->select()
             ->row();
     }

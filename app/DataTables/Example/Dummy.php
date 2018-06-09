@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataTables;
+namespace App\DataTables\Example;
 
 use App\DataTables\Abstracts\DataTable;
 

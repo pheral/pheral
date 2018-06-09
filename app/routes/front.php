@@ -2,8 +2,14 @@
 
 $router = \Pheral\Essential\Network\Routing\Router::instance();
 
-$router->add('/{param?}', [
-    'controller' => \App\Controllers\Help::class,
+$router->add('/', [
+    'controller' => \App\Controllers\Home::class,
+    'action' => 'index',
+    'method' => 'get'
+]);
+
+$router->add('/example/{param?}', [
+    'controller' => \App\Controllers\Example::class,
     'action' => 'index',
     'method' => 'any'
 ]);

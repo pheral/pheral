@@ -2,8 +2,8 @@
 
 namespace Pheral\Essential\Validation;
 
+use Pheral\Essential\Exceptions\NetworkException;
 use Pheral\Essential\Storage\Config;
-use Pheral\Essential\Validation\Interfaces\TypeInterface;
 use Pheral\Essential\Validation\Types\BoolType;
 use Pheral\Essential\Validation\Types\FloatType;
 use Pheral\Essential\Validation\Types\IntType;
@@ -11,46 +11,43 @@ use Pheral\Essential\Validation\Types\StringType;
 
 class TypeManager
 {
-    private static $instance;
-    private $types = [];
-    private $map = [
+    protected static $init = false;
+    protected static $types = [
         'string' => StringType::class,
         'integer' => IntType::class,
         'float' => FloatType::class,
         'bool' => BoolType::class,
     ];
-    private function __construct()
+    protected static function init()
     {
         $customTypes = Config::instance()->get('validation.types', []);
-        $this->map = array_merge($this->map, $customTypes);
-    }
-    public static function instance()
-    {
-        if (!self::$instance) {
-            self::$instance = new self();
-        }
-        return self::$instance;
+        self::$types = array_merge(self::$types, $customTypes);
+        return true;
     }
     /**
      * @param string $typeName
      * @return \Pheral\Essential\Validation\Interfaces\TypeInterface
      */
-    public function get($typeName)
+    public static function get($typeName)
     {
-        if ($type = ($this->types[$typeName] ?? null)) {
+        if (!self::$init) {
+            self::$init = self::init();
+        }
+        if ($type = self::$types[$typeName] ?? false) {
             return $type;
         }
-        $className = $this->map[$typeName] ?? null;
-        return $this->set($typeName, new $className);
+        throw new NetworkException(500, 'Invalid type');
     }
-
-    /**
-     * @param string $typeName
-     * @param \Pheral\Essential\Validation\Interfaces\TypeInterface $type
-     * @return \Pheral\Essential\Validation\Interfaces\TypeInterface
-     */
-    protected function set($typeName, TypeInterface $type)
+    public static function validate($typeName, $value)
     {
-        return $this->types[$typeName] = $type;
+        return self::get($typeName)::validate($value);
+    }
+    public static function convert($typeName, $value)
+    {
+        return self::get($typeName)::convert($value);
+    }
+    public static function extract($typeName, $value)
+    {
+        return self::get($typeName)::extract($value);
     }
 }

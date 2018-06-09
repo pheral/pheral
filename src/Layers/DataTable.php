@@ -19,12 +19,11 @@ abstract class DataTable
     }
     public function __set($field, $value)
     {
-        if (!$typeName = (static::$scheme[$field] ?? null)) {
+        if (!$type = (static::$scheme[$field] ?? null)) {
             return ;
         }
-        $type = TypeManager::instance()->get($typeName);
-        if ($type::validate($value)) {
-            $validValue = $type::convert($value);
+        if (TypeManager::validate($type, $value)) {
+            $validValue = TypeManager::convert($type, $value);
         } elseif (isset(static::$required[$field])) {
             return;
         }

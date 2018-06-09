@@ -2,6 +2,8 @@
 
 namespace Pheral\Essential\Layers;
 
+use Pheral\Essential\Network\Frame;
+
 abstract class Controller
 {
     protected $path = '';
@@ -12,11 +14,11 @@ abstract class Controller
     public function render($data = [], $path = '')
     {
         $path = $path ? $path : $this->path;
-        return view($path, $data);
+        return View::make($path, $data);
     }
     public function isAjax()
     {
-        return frame()->isAjaxRequest();
+        return Frame::instance()->isAjaxRequest();
     }
     public function ajaxRequired()
     {

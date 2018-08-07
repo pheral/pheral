@@ -8,7 +8,7 @@ class BoolType extends TypeAbstract
 {
     public static function validate($value)
     {
-        if (!is_bool($value) && !is_int($value)) {
+        if (!is_bool($value) && !is_numeric($value)) {
             return false;
         }
         return true;

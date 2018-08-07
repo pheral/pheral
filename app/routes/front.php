@@ -13,3 +13,8 @@ $router->add('/example/{param?}', [
     'action' => 'index',
     'method' => 'any'
 ]);
+
+$router->add('/reports', [
+    'controller' => \App\Controllers\Reports::class,
+    'action' => 'index',
+]);

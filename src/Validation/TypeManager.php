@@ -8,6 +8,9 @@ use Pheral\Essential\Validation\Types\BoolType;
 use Pheral\Essential\Validation\Types\FloatType;
 use Pheral\Essential\Validation\Types\IntType;
 use Pheral\Essential\Validation\Types\StringType;
+use Pheral\Essential\Validation\Types\TimeType;
+use Pheral\Essential\Validation\Types\DateType;
+use Pheral\Essential\Validation\Types\DateTimeType;
 
 class TypeManager
 {
@@ -17,6 +20,9 @@ class TypeManager
         'integer' => IntType::class,
         'float' => FloatType::class,
         'bool' => BoolType::class,
+        'time' => TimeType::class,
+        'date' => DateType::class,
+        'datetime' => DateTimeType::class,
     ];
     protected static function init()
     {

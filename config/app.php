@@ -2,5 +2,5 @@
 
 return [
     'routes' => 'app/routes',
-    'views' => 'app/views'
+    'views' => 'app/views',
 ];

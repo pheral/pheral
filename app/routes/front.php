@@ -14,7 +14,7 @@ $router->add('/example/{param?}', [
     'method' => 'any'
 ]);
 
-$router->add('/reports', [
-    'controller' => \App\Controllers\Reports::class,
+$router->add('/fitness', [
+    'controller' => \App\Controllers\Fitness::class,
     'action' => 'index',
 ]);

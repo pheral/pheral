@@ -11,6 +11,7 @@ class DB
     private static $instance;
     private static $history = [];
     private static $tableNames = [];
+    private static $prefix = '';
     public static function instance(): \PDO
     {
         if (!self::$instance) {
@@ -54,6 +55,14 @@ class DB
     {
         return self::$history;
     }
+    public static function setPrefix(string $prefix)
+    {
+        self::$prefix = $prefix;
+    }
+    public static function prefix()
+    {
+        return self::$prefix ? self::$prefix . '_' : '';
+    }
     public static function tableName($table)
     {
         if (strpos($table, '\\', true) === false) {
@@ -63,7 +72,7 @@ class DB
             return $tableName;
         }
         if (is_subclass_of($table, DataTable::class)) {
-            $tableName = string_snake_case(class_name($table));
+            $tableName = self::prefix() . string_snake_case(class_name($table));
             self::$tableNames[$table] = $tableName;
             return $tableName;
         }

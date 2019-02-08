@@ -21,18 +21,17 @@ class Query extends Builder
 
     /**
      * @param string|null $dataTable
+     * @param string $alias
      * @return \Pheral\Essential\Storage\Database\Result\SelectResult
      */
-    public function select($dataTable = null)
+    public function select($dataTable = null, $alias = '')
     {
         if ($dataTable && !$this->dataTable) {
-            $this->dataTable($dataTable);
+            $this->dataTable($dataTable, $alias);
         }
-        $result = new SelectResult(
-            DB::execute($this->sqlSelect(), $this->getParams()),
-            $dataTable ?? $this->getDataTable()
-        );
-        return $result;
+        $table = $dataTable ?? $this->getDataTable();
+        $statement = DB::execute($this->sqlSelect(), $this->getParams());
+        return new SelectResult($statement, $table, $this->relations);
     }
 
     public function update()

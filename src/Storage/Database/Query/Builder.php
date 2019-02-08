@@ -14,6 +14,7 @@ class Builder
     protected $distinct = false;
     protected $holders = [];
     protected $params = [];
+    protected $relations = [];
 
     protected $fields = [];
     protected $tables = [];

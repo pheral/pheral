@@ -35,6 +35,9 @@ trait Setter
      */
     public function fieldsAdd($fields = [])
     {
+        if (!$this->fields) {
+            $this->fields(['*']);
+        }
         return $this->fields(array_merge($this->fields, $fields));
     }
 
@@ -67,9 +70,10 @@ trait Setter
     /**
      * @param string $table
      * @param string $alias
+     * @param bool $isDataTable
      * @return \Pheral\Essential\Storage\Database\Query|static
      */
-    public function table($table, $alias = '')
+    public function table($table, $alias = '', $isDataTable = false)
     {
         return $this->addTable(DB::tableName($table), $alias);
     }
@@ -368,6 +372,33 @@ trait Setter
         }
 
         return $this;
+    }
+
+    public function with($relations)
+    {
+        $this->relations = array_merge_recursive($this->relations, $this->makeRelationsTree($relations));
+        return $this;
+    }
+
+    protected function makeRelationsTree($relations)
+    {
+        $relationsTree = [];
+        $relations = array_wrap($relations);
+        foreach ($relations as $relationKey => $relationValue) {
+            if (!is_numeric($relationKey) && is_string($relationKey)) {
+                $relationName = $relationKey;
+            } elseif (is_string($relationValue)) {
+                $relationName = $relationValue;
+                $relationValue = null;
+            } else {
+                continue;
+            }
+            if (is_array($relationValue)) {
+                $relationValue = $this->makeRelationsTree($relationValue);
+            }
+            $relationsTree[$relationName] = $relationValue;
+        }
+        return $relationsTree;
     }
 
     protected function makeAlias($alias)

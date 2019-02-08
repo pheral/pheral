@@ -1,4 +1,8 @@
 <h2>Home</h2>
 <div>
-    <p>Hello world.</p>
+    <ul>
+        <li>
+            <a href="/fitness">Fitness</a>
+        </li>
+    </ul>
 </div>

@@ -9,6 +9,7 @@ abstract class DataTable
 {
     protected static $scheme = [];
     protected static $required = [];
+    protected $enclosed = [];
     public function __construct(array $params = [])
     {
         if ($params) {
@@ -20,6 +21,7 @@ abstract class DataTable
     public function __set($field, $value)
     {
         if (!$type = (static::$scheme[$field] ?? null)) {
+            $this->enclosed[$field] = $value;
             return ;
         }
         if (TypeManager::validate($type, $value)) {
@@ -29,8 +31,38 @@ abstract class DataTable
         }
         $this->{$field} = $validValue ?? null;
     }
+    public function __get($field)
+    {
+        return array_get($this->enclosed, $field);
+    }
+
     public static function query($alias = '')
     {
         return new Query(static::class, $alias);
+    }
+    public static function relations()
+    {
+        return [];
+    }
+    public static function makeList($data, $dataTable = null)
+    {
+        $list = [];
+        foreach ($data as $index => $row) {
+            $list[$index] = static::make($row, $dataTable);
+        }
+        return $list;
+    }
+
+    /**
+     * @param $data
+     * @param null $dataTable
+     * @return \Pheral\Essential\Layers\DataTable|static
+     */
+    public static function make($data, $dataTable = null)
+    {
+        if (is_subclass_of($dataTable, DataTable::class)) {
+            return new $dataTable((array)$data);
+        }
+        return new static((array)$data);
     }
 }

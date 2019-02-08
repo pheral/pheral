@@ -2,6 +2,8 @@
 
 namespace Pheral\Essential\Storage\Database\Query\Traits;
 
+use Pheral\Essential\Storage\Database\DB;
+
 trait Getter
 {
     public function getParams()

@@ -107,6 +107,29 @@ function array_only($array, $keys)
     }
     return $only;
 }
+function array_first($array)
+{
+    if ($array && is_array($array)) {
+        return reset($array);
+    }
+    return null;
+}
+function array_last($array)
+{
+    if ($array && is_array($array)) {
+        return end($array);
+    }
+    return null;
+}
+function array_pluck($array, $value)
+{
+    $pluck = [];
+    foreach ($array as $data) {
+        $subArray = (array) $data;
+        $pluck[] = array_get($subArray, $value);
+    }
+    return $pluck;
+}
 function array_except($array, $keys)
 {
     return array_expel($array, $keys);

@@ -61,12 +61,7 @@ class HasMany extends TwoTableRelationAbstract
      */
     public function apply($relationName, $callable = null)
     {
-        $query = $this->getQuery()
-            ->with($this->targetRelations);
-        if (is_callable($callable)) {
-            $callable($query);
-        }
-        $targets = $query->select()->all();
+        $targets = $this->getAll($callable);
         $targetsByHolder = [];
         foreach ($targets as $target) {
             $targetsByHolder[$target->{$this->targetKeyToHolder}][] = $target;

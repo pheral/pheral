@@ -74,12 +74,7 @@ class BelongsToThrough extends ThreeTableRelationAbstract
      */
     public function apply($relationName, $callable = null)
     {
-        $query = $this->getQuery()
-            ->with($this->targetRelations);
-        if (is_callable($callable)) {
-            $callable($query);
-        }
-        $targets = $query->select()->all();
+        $targets = $this->getAll($callable);
         $targetsByPivots = [];
         foreach ($targets as $target) {
             $targetsByPivots[$target->pivot_key] = $target;

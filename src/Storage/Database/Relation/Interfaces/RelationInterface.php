@@ -25,7 +25,21 @@ interface RelationInterface
     /**
      * @param string $relationName
      * @param callable|null $callable
-     * @return array
+     * @return \Pheral\Essential\Layers\DataTable|array
+     */
+    public function getRow($callable = null);
+
+    /**
+     * @param string $relationName
+     * @param callable|null $callable
+     * @return \Pheral\Essential\Layers\DataTable[]|array
+     */
+    public function getAll($callable = null);
+
+    /**
+     * @param string $relationName
+     * @param callable|null $callable
+     * @return \Pheral\Essential\Layers\DataTable[]|array
      */
     public function apply($relationName, $callable = null);
 }

@@ -3,6 +3,7 @@
 namespace Pheral\Essential\Layers;
 
 use Pheral\Essential\Storage\Database\Query;
+use Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface;
 use Pheral\Essential\Validation\TypeManager;
 
 abstract class DataTable
@@ -40,15 +41,32 @@ abstract class DataTable
     {
         return new Query(static::class, $alias);
     }
+
+    /**
+     * @return \Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface[]|array
+     */
     public static function relations()
     {
         return [];
     }
-    public static function makeList($data, $dataTable = null)
+
+    /**
+     * @param string $relationName
+     * @return \Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface|null
+     */
+    public function relation($relationName)
+    {
+        $relation = array_get(static::relations(), $relationName);
+        if ($relation instanceof RelationInterface) {
+            $relation->setHolder(static::class, [$this]);
+        }
+        return $relation;
+    }
+    public static function makeRows($data, $dataTable = null)
     {
         $list = [];
         foreach ($data as $index => $row) {
-            $list[$index] = static::make($row, $dataTable);
+            $list[$index] = static::makeRow($row, $dataTable);
         }
         return $list;
     }
@@ -58,7 +76,7 @@ abstract class DataTable
      * @param null $dataTable
      * @return \Pheral\Essential\Layers\DataTable|static
      */
-    public static function make($data, $dataTable = null)
+    public static function makeRow($data, $dataTable = null)
     {
         if (is_subclass_of($dataTable, DataTable::class)) {
             return new $dataTable((array)$data);

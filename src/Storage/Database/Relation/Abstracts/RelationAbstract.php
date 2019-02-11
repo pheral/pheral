@@ -24,11 +24,30 @@ abstract class RelationAbstract implements RelationInterface
         return null;
     }
 
+    protected function getResult($callable = null)
+    {
+        $query = $this->getQuery();
+        if (is_callable($callable)) {
+            $callable($query);
+        }
+        return $query->with($this->targetRelations)->select();
+    }
+
     public function setTargetRelations($relations = [])
     {
         if ($relations) {
             $this->targetRelations = $relations;
         }
         return $this;
+    }
+
+    public function getRow($callable = null)
+    {
+        return $this->getResult($callable)->row();
+    }
+
+    public function getAll($callable = null)
+    {
+        return $this->getResult($callable)->all();
     }
 }

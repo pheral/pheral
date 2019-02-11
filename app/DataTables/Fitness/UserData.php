@@ -11,7 +11,7 @@ class UserData extends DataTable
         'id' => 'integer',
         'user_id' => 'integer',
         'option_id' => 'integer',
-        'value' => 'float',
+        'value' => 'string',
         'created_at' => 'datetime',
     ];
 

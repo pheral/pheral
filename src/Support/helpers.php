@@ -194,15 +194,29 @@ function dot_array_has($array, $path)
 }
 function data_pluck($data, $value, $key = '')
 {
-    $pluck = [];
+    $pieces = [];
     $elements = (array)$data;
     foreach ($elements as $elementIndex => $elementData) {
         $element = (array)$elementData;
         $elementValue = array_get($element, $value);
         $elementKey = $key ? array_get($element, $key) : $elementIndex;
-        $pluck[$elementKey] = $elementValue;
+        $pieces[$elementKey] = $elementValue;
     }
-    return array_unique($pluck);
+    return array_unique($pieces);
+}
+function data_group($data, $key)
+{
+    $groups = [];
+    $elements = (array)$data;
+    foreach ($elements as $elementIndex => $elementData) {
+        $element = (array)$elementData;
+        $elementKey = array_get($element, $key);
+        if (!array_has($groups, $elementKey)) {
+            $groups[$elementKey] = [];
+        }
+        $groups[$elementKey][$elementIndex] = $elementData;
+    }
+    return $groups;
 }
 function is_numeric_array($array, $byValues = false)
 {

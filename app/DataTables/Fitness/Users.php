@@ -5,6 +5,10 @@ namespace App\DataTables\Fitness;
 use App\DataTables\Abstracts\DataTable;
 use Pheral\Essential\Storage\Database\Relations;
 
+/**
+ * Class Users
+ * @property integer $id
+ */
 class Users extends DataTable
 {
     protected static $scheme = [

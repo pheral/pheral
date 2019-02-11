@@ -57,14 +57,16 @@ class SelectResult extends QueryResult
             foreach ($this->relations as $relationName => $relationData) {
                 $relation = array_get($relations, $relationName);
                 if ($relation instanceof RelationInterface) {
+                    $targetRelations = [];
+                    $targetConditions = null;
                     if (is_callable($relationData)) {
                         $targetConditions = $relationData;
                     } else {
                         $targetRelations = $relationData;
                     }
                     $result = $relation->setHolder($this->dataTable, array_wrap($result))
-                        ->setTargetRelations($targetRelations ?? [])
-                        ->apply($relationName, $targetConditions ?? null);
+                        ->setTargetRelations($targetRelations)
+                        ->apply($relationName, $targetConditions);
                     if ($isOneRow) {
                         $result = array_shift($result);
                     }

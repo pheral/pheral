@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\DataTables\Fitness\Genders;
 use App\DataTables\Fitness\Practices;
 use App\DataTables\Fitness\Users;
 use App\Models\Abstracts\Model;
 use Pheral\Essential\Storage\Database\DB;
+use Pheral\Essential\Storage\Database\Query;
 
 class Fitness extends Model
 {
@@ -24,7 +26,10 @@ class Fitness extends Model
         $practices = Practices::query()
             ->where('user_id', '=', $user->id)
             ->with([
-                    'user',
+                    'user' => [
+                        'gender',
+                        'level',
+                    ],
                     'status',
                     'activity',
                     'workout' => [
@@ -39,6 +44,9 @@ class Fitness extends Model
                                         'priority',
                                         'muscle' => 'group',
                                     ],
+                                    'levels' => function (Query $query) use ($user) {
+                                        $query->where('pivot.user_id', '=', $user->id);
+                                    },
                                 ],
                             ],
                         ],

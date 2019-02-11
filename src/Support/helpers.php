@@ -121,15 +121,6 @@ function array_last($array)
     }
     return null;
 }
-function array_pluck($array, $value)
-{
-    $pluck = [];
-    foreach ($array as $data) {
-        $subArray = (array) $data;
-        $pluck[] = array_get($subArray, $value);
-    }
-    return $pluck;
-}
 function array_except($array, $keys)
 {
     return array_expel($array, $keys);
@@ -200,6 +191,18 @@ function dot_array_has($array, $path)
         return dot_array_has(array_get($array, $key), $path);
     }
     return true;
+}
+function data_pluck($data, $value, $key = '')
+{
+    $pluck = [];
+    $elements = (array)$data;
+    foreach ($elements as $elementIndex => $elementData) {
+        $element = (array)$elementData;
+        $elementValue = array_get($element, $value);
+        $elementKey = $key ? array_get($element, $key) : $elementIndex;
+        $pluck[$elementKey] = $elementValue;
+    }
+    return array_unique($pluck);
 }
 function is_numeric_array($array, $byValues = false)
 {

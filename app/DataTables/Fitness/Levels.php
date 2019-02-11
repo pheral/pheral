@@ -18,9 +18,13 @@ class Levels extends DataTable
     {
         return [
             // targets:
-            'user' => Relations::hasMany(Users::class)->setKeys('level_id'),
+            'user' => Relations::hasMany(Users::class)
+                ->setKeys('level_id'),
+            'exercises' => Relations::hasManyMembers(Exercises::class, UserExercise::class)
+                ->setKeys('level_id', 'exercise_id'),
             // pivot:
-            'exerciseLevels' => Relations::hasMany(ExerciseLevel::class)->setKeys('level_id'),
+            'userExercises' => Relations::hasMany(UserExercise::class)
+                ->setKeys('level_id'),
         ];
     }
 }

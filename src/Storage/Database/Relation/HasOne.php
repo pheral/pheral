@@ -47,10 +47,10 @@ class HasOne extends TwoTableRelationAbstract
      */
     public function getQuery()
     {
-        $holderPrimaryValues = array_pluck($this->holderRows, $this->holderKey);
+        $holderValues = data_pluck($this->holderRows, $this->holderKey);
         $query = (new Query($this->targetClass, 'target'))
             ->fields(['target.*'])
-            ->whereIn('target.' . $this->targetKeyToHolder, array_unique($holderPrimaryValues));
+            ->whereIn('target.' . $this->targetKeyToHolder, $holderValues);
         return $query;
     }
 
@@ -61,12 +61,12 @@ class HasOne extends TwoTableRelationAbstract
      */
     public function apply($relationName, $callable = null)
     {
-        $relationQuery = $this->getQuery()
+        $query = $this->getQuery()
             ->with($this->targetRelations);
         if (is_callable($callable)) {
-            $callable($relationQuery);
+            $callable($query);
         }
-        $targets = $relationQuery->select()->all();
+        $targets = $query->select()->all();
         $targetsByHolder = [];
         foreach ($targets as $target) {
             $targetsByHolder[$target->{$this->targetKeyToHolder}] = $target;

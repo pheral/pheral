@@ -47,10 +47,10 @@ class BelongsTo extends TwoTableRelationAbstract
      */
     public function getQuery()
     {
-        $holderForeignValues = array_pluck($this->holderRows, $this->holderKeyToTarget);
+        $holderValues = data_pluck($this->holderRows, $this->holderKeyToTarget);
         $query = (new Query($this->targetClass, 'target'))
             ->fields(['target.*'])
-            ->whereIn('target.' . $this->targetKey, array_unique($holderForeignValues));
+            ->whereIn('target.' . $this->targetKey, $holderValues);
         return $query;
     }
 

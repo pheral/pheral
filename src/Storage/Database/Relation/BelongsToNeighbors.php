@@ -54,14 +54,14 @@ class BelongsToNeighbors extends ThreeTableRelationAbstract
      */
     public function getQuery()
     {
-        $holderKeyValues = array_pluck($this->holderRows, $this->holderKeyToPivot);
+        $holderValues = data_pluck($this->holderRows, $this->holderKeyToPivot);
         $query = (new Query($this->targetClass, 'target'))
             ->fields([
                 'target.*',
                 'pivot.' . $this->pivotKey . ' as pivot_key',
             ])
             ->join($this->pivotClass, 'pivot', 'pivot.' . $this->pivotKey . ' = target.' . $this->targetKeyToPivot)
-            ->whereIn('pivot.' . $this->pivotKey, array_unique($holderKeyValues));
+            ->whereIn('pivot.' . $this->pivotKey, $holderValues);
         return $query;
     }
 

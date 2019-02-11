@@ -38,8 +38,6 @@ class Users extends DataTable
             // pivots:
             'userExercises' => Relations::hasMany(UserExercise::class)
                 ->setKeys('user_id'),
-            'exerciseLevels' => Relations::hasMany(ExerciseLevel::class)
-                ->setKeys('user_id'),
         ];
     }
 }

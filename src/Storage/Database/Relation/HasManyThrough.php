@@ -56,14 +56,14 @@ class HasManyThrough extends ThreeTableRelationAbstract
      */
     public function getQuery()
     {
-        $holderPrimaryValues = array_pluck($this->holderRows, $this->holderKey);
+        $holderValues = data_pluck($this->holderRows, $this->holderKey);
         $query = (new Query($this->targetClass, 'target'))
             ->fields([
                 'target.*',
                 'pivot.' . $this->pivotKeyToHolder . ' as pivot_key_to_holder',
             ])
             ->join($this->pivotClass, 'pivot', 'pivot.' . $this->pivotKey . ' = target.' . $this->targetKeyToPivot)
-            ->whereIn('pivot.' . $this->pivotKeyToHolder, array_unique($holderPrimaryValues));
+            ->whereIn('pivot.' . $this->pivotKeyToHolder, $holderValues);
         return $query;
     }
 

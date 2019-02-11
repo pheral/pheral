@@ -19,9 +19,14 @@ class WorkoutExercise extends DataTable
     {
         return [
             // targets:
-            'workout' => Relations::belongsTo(Workouts::class)->setKeys('workout_id'),
-            'step' => Relations::belongsTo(WorkoutSteps::class)->setKeys('step_id'),
-            'exercise' => Relations::belongsTo(Exercises::class)->setKeys('exercise_id'),
+            'workout' => Relations::belongsTo(Workouts::class)
+                ->setKeys('workout_id'),
+            'step' => Relations::belongsTo(WorkoutSteps::class)
+                ->setKeys('step_id'),
+            'exercise' => Relations::belongsTo(Exercises::class)
+                ->setKeys('exercise_id'),
+            'values' => Relations::hasMany(PracticeValues::class)
+                ->setKeys('workout_exercise_id'),
         ];
     }
 }

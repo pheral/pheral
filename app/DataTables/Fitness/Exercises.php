@@ -21,11 +21,9 @@ class Exercises extends DataTable
             // targets:
             'goal' => Relations::belongsTo(ExerciseGoals::class)
                 ->setKeys('goal_id'),
-            'values' => Relations::hasMany(PracticeValues::class)
-                ->setKeys('exercise_id'),
             'users' => Relations::hasManyMembers(Users::class, UserExercise::class)
                 ->setKeys('exercise_id', 'user_id'),
-            'levels' => Relations::hasManyMembers(Levels::class, ExerciseLevel::class)
+            'levels' => Relations::hasManyMembers(Levels::class, UserExercise::class)
                 ->setKeys('exercise_id', 'level_id'),
             'units' => Relations::hasManyMembers(Units::class, ExerciseUnit::class)
                 ->setKeys('exercise_id', 'unit_id'),
@@ -37,11 +35,11 @@ class Exercises extends DataTable
                 ->setKeys('exercise_id', 'workout_id'),
             'workoutSteps' => Relations::hasManyMembers(WorkoutSteps::class, WorkoutExercise::class)
                 ->setKeys('exercise_id', 'step_id'),
+            'values' => Relations::hasManyThrough(PracticeValues::class, WorkoutExercise::class)
+                ->setKeys('exercise_id', 'workout_exercise_id'),
 
             // pivots:
             'userExercises' => Relations::hasMany(UserExercise::class)
-                ->setKeys('exercise_id'),
-            'exerciseLevels' => Relations::hasMany(ExerciseLevel::class)
                 ->setKeys('exercise_id'),
             'exerciseUnits' => Relations::hasMany(ExerciseUnit::class)
                 ->setKeys('exercise_id'),

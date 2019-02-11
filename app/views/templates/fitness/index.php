@@ -63,9 +63,14 @@
                             <ol class="list">
                             <? foreach ($practice->workout->steps as $step) : ?>
                                 <li>
-                                <? foreach ($step->exercises as $exercise) : ?>
-                                    <?= $exercise->title ?>
-                                    <!-- TODO $practice->values -->
+                                <? foreach ($step->workoutExercises as $workoutExercise) : ?>
+                                    <?= $workoutExercise->exercise->title ?>
+                                    <div>
+                                        <? foreach ($workoutExercise->values as $practiceValue) : ?>
+                                            <?= $practiceValue->value ?> (<?= $practiceValue->unit->title ?>)<br />
+                                        <? endforeach; ?>
+                                        <hr />
+                                    </div>
                                     <br />
                                 <? endforeach; ?>
                                 </li>

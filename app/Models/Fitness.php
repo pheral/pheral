@@ -30,17 +30,19 @@ class Fitness extends Model
                     'workout' => [
                         'activity',
                         'steps' => [
-                            'exercises' => [
-                                'goal',
-                                'units',
-                                'exerciseMuscles' => [
-                                    'priority',
-                                    'muscle' => 'group',
+                            'workoutExercises' => [
+                                'values' => 'unit',
+                                'exercise' => [
+                                    'goal',
+                                    'units',
+                                    'exerciseMuscles' => [
+                                        'priority',
+                                        'muscle' => 'group',
+                                    ],
                                 ],
                             ],
                         ],
                     ],
-                    'values',
             ])
             ->select()
             ->all();

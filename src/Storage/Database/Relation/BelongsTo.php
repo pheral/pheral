@@ -47,7 +47,7 @@ class BelongsTo extends TwoTableRelationAbstract
      */
     public function getQuery()
     {
-        $holderValues = data_pluck($this->holderRows, $this->holderKeyToTarget);
+        $holderValues = array_unique(data_pluck($this->holderRows, $this->holderKeyToTarget));
         $query = (new Query($this->targetClass, 'target'))
             ->fields(['target.*'])
             ->whereIn('target.' . $this->targetKey, $holderValues);
@@ -67,7 +67,10 @@ class BelongsTo extends TwoTableRelationAbstract
             $targetsByKey[$target->{$this->targetKey}] = $target;
         }
         foreach ($this->holderRows as $index => $holderRow) {
-            $holderRow->{$relationName} = array_get($targetsByKey, $holderRow->{$this->holderKeyToTarget});
+            if ($targetRow = array_get($targetsByKey, $holderRow->{$this->holderKeyToTarget})) {
+                $targetRow = clone $targetRow;
+            }
+            $holderRow->{$relationName} = $targetRow;
             $this->holderRows[$index] = $holderRow;
         }
         return $this->holderRows;

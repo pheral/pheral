@@ -56,7 +56,7 @@ class HasManyThrough extends ThreeTableRelationAbstract
      */
     public function getQuery()
     {
-        $holderValues = data_pluck($this->holderRows, $this->holderKey);
+        $holderValues = array_unique(data_pluck($this->holderRows, $this->holderKey));
         $query = (new Query($this->targetClass, 'target'))
             ->fields([
                 'target.*',
@@ -80,7 +80,12 @@ class HasManyThrough extends ThreeTableRelationAbstract
             $targetsByHolder[$target->pivot_key_to_holder][] = $target;
         }
         foreach ($this->holderRows as $index => $holderRow) {
-            $holderRow->{$relationName} = array_get($targetsByHolder, $holderRow->{$this->holderKey}, []);
+            if ($targetRows = array_get($targetsByHolder, $holderRow->{$this->holderKey}, [])) {
+                foreach ($targetRows as $targetIndex => $targetRow) {
+                    $targetRows[$targetIndex] = clone $targetRow;
+                }
+            }
+            $holderRow->{$relationName} = $targetRows;
             $this->holderRows[$index] = $holderRow;
         }
         return $this->holderRows;

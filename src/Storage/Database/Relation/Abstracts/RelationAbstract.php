@@ -8,7 +8,6 @@ use Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface;
 
 abstract class RelationAbstract implements RelationInterface
 {
-    protected $holderRows;
     protected $targetRelations;
 
     protected function parseTableName($table)

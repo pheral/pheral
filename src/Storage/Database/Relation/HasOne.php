@@ -47,7 +47,7 @@ class HasOne extends TwoTableRelationAbstract
      */
     public function getQuery()
     {
-        $holderValues = data_pluck($this->holderRows, $this->holderKey);
+        $holderValues = array_unique(data_pluck($this->holderRows, $this->holderKey));
         $query = (new Query($this->targetClass, 'target'))
             ->fields(['target.*'])
             ->whereIn('target.' . $this->targetKeyToHolder, $holderValues);
@@ -64,10 +64,16 @@ class HasOne extends TwoTableRelationAbstract
         $targets = $this->getAll($callable);
         $targetsByHolder = [];
         foreach ($targets as $target) {
-            $targetsByHolder[$target->{$this->targetKeyToHolder}] = $target;
+            $holderKey = $target->{$this->targetKeyToHolder};
+            if (!array_has($targetsByHolder, $holderKey)) {
+                $targetsByHolder[$holderKey] = $target;
+            }
         }
         foreach ($this->holderRows as $index => $holderRow) {
-            $holderRow->{$relationName} = array_get($targetsByHolder, $holderRow->{$this->holderKey});
+            if ($targetRow = array_get($targetsByHolder, $holderRow->{$this->holderKey})) {
+                $targetRow = clone $targetRow;
+            }
+            $holderRow->{$relationName} = $targetRow;
             $this->holderRows[$index] = $holderRow;
         }
         return $this->holderRows;

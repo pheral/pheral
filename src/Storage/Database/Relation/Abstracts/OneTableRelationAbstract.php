@@ -4,6 +4,8 @@ namespace Pheral\Essential\Storage\Database\Relation\Abstracts;
 
 abstract class OneTableRelationAbstract extends RelationAbstract
 {
+    protected $holderRows;
+
     protected $holderClass;
     protected $holderTable;
     protected $holderKey;

@@ -56,7 +56,7 @@ class BelongsToThrough extends ThreeTableRelationAbstract
      */
     public function getQuery()
     {
-        $holderValues = data_pluck($this->holderRows, $this->holderKeyToPivot);
+        $holderValues = array_unique(data_pluck($this->holderRows, $this->holderKeyToPivot));
         $query = (new Query($this->targetClass, 'target'))
             ->fields([
                 'target.*',
@@ -80,7 +80,10 @@ class BelongsToThrough extends ThreeTableRelationAbstract
             $targetsByPivots[$target->pivot_key] = $target;
         }
         foreach ($this->holderRows as $index => $holderRow) {
-            $holderRow->{$relationName} = array_get($targetsByPivots, $holderRow->{$this->holderKeyToPivot});
+            if ($targetRow = array_get($targetsByPivots, $holderRow->{$this->holderKeyToPivot})) {
+                $targetRow = clone $targetRow;
+            }
+            $holderRow->{$relationName} = $targetRow;
             $this->holderRows[$index] = $holderRow;
         }
         return $this->holderRows;

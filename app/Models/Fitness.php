@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\DataTables\Fitness\Practices;
-use App\DataTables\Fitness\PracticeValues;
 use App\DataTables\Fitness\Users;
 use App\Models\Abstracts\Model;
 use Pheral\Essential\Storage\Database\DB;
@@ -34,47 +33,47 @@ class Fitness extends Model
         $practices = Practices::query('p')
             ->where('user_id', '=', $user->id)
             ->with([
-                    'status',
-                    'activity',
-                    'workout' => [
-                        'activity',
-                        'steps' => [
-                            'workoutExercises' => [
-                                'values',
-                                'exercise' => [
-                                    'goal',
-                                    'units',
-                                    'exerciseMuscles' => [
-                                        'priority',
-                                        'muscle' => 'group',
+                'status',
+                'activity',
+                'workout' => [
+                    'steps' => function (Query $query) {
+                        $query
+                            ->orderBy('target.position', 'ASC')
+                            ->with([
+                                'workoutExercises' => [
+                                    'values',
+                                    'exercise' => [
+                                        'goal',
+                                        'units',
                                     ],
-                                    'levels' => function (Query $query) use ($user) {
-                                        $query->where('pivot.user_id', '=', $user->id);
-                                    },
                                 ],
-                            ],
-                        ],
-                    ],
+                            ]);
+                    },
+                ],
             ])
             ->select()
             ->all();
-
+        // debug(DB::history());
         foreach ($practices as $practice) {
             $practice->user = $user;
-            $practice->maxAttempts = 0;
+            $practice->maxAttempts = 1;
             foreach ($practice->workout->steps as $step) {
                 $stepRows = 0;
-                foreach ($step->workoutExercises as $workoutExercise) {
+                foreach ($step->workoutExercises as $indexExercise => $workoutExercise) {
+                    $exercise = $workoutExercise->exercise;
+                    $exercise->isFirstInStep = !$indexExercise;
                     $exerciseRows = 0;
                     $valuesByUnits = data_group($workoutExercise->values, 'unit_id');
                     $maxAttempts = max(data_pluck($workoutExercise->values, 'attempt'));
                     $practice->maxAttempts = max($practice->maxAttempts, $maxAttempts);
-                    foreach ($workoutExercise->exercise->units as $exerciseUnit) {
-                        $exerciseRows +=1;
-                        $exerciseUnit->values = array_get($valuesByUnits, $exerciseUnit->id);
+                    foreach ($exercise->units as $indexUnit => $unit) {
+                        $exerciseRows += 1;
+                        $unitValues = array_get($valuesByUnits, $unit->id);
+                        $unit->values = data_pluck($unitValues, 'value', 'attempt');
+                        $unit->isFirstInExercise = !$indexUnit;
                     }
                     if ($exerciseRows > 1) {
-                        $workoutExercise->exercise->rowspan = $exerciseRows;
+                        $exercise->rowspan = $exerciseRows;
                     }
                     $stepRows += $exerciseRows;
                 }
@@ -83,9 +82,6 @@ class Fitness extends Model
                 }
             };
         }
-
-//        debug($practices, DB::history());
-
         return $practices;
     }
 }

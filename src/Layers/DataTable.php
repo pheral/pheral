@@ -19,6 +19,23 @@ abstract class DataTable
             }
         }
     }
+    public function __clone()
+    {
+        if ($this->enclosed) {
+            foreach ($this->enclosed as $key => $value) {
+                if (is_object($value)) {
+                    $this->enclosed[$key] = clone $value;
+                }
+                if (is_array($value) || $value instanceof \ArrayAccess) {
+                    foreach ($value as $nestedKey => $nestedValue) {
+                        if (is_object($nestedValue)) {
+                            $this->enclosed[$key][$nestedKey] = clone $nestedValue;
+                        }
+                    }
+                }
+            }
+        }
+    }
     public function __set($field, $value)
     {
         if (!$type = (static::$scheme[$field] ?? null)) {

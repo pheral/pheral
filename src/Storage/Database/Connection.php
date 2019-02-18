@@ -8,14 +8,14 @@ use Pheral\Essential\Storage\Profiler;
 
 class Connection
 {
-    public $connectionName;
-    public $tablePrefix;
-    protected $tableNames = [];
+    public $name;
+    public $prefix;
+    protected $tables = [];
     protected $pdo;
-    public function __construct(string $connectionName)
+    public function __construct(string $name)
     {
-        $this->connectionName = $connectionName;
-        $config = config('database.connections.' . $this->connectionName);
+        $this->name = $name;
+        $config = config('database.connections.' . $this->name);
         try {
             $driver = array_get($config, 'driver', 'mysql');
             $host = array_get($config, 'host', 'localhost');
@@ -29,7 +29,7 @@ class Connection
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
             ];
             $this->pdo = new \PDO($dsn, $user, $pass, $opt);
-            $this->tablePrefix = array_get($config, 'table_prefix', '');
+            $this->prefix = array_get($config, 'prefix', '');
         } catch (\PDOException $e) {
             throw new NetworkException(500, $e->getMessage());
         }
@@ -44,7 +44,7 @@ class Connection
     {
         Profiler::instance()->database()->push(
             $this->getSql($sql, $params),
-            $this->connectionName
+            $this->name
         );
         $stmt = $this->getPdo()->prepare(trim($sql));
         if ($params) {
@@ -86,13 +86,13 @@ class Connection
         if (strpos($table, '\\', true) === false) {
             return $table;
         }
-        if ($tableName = array_get($this->tableNames, $table)) {
+        if ($tableName = array_get($this->tables, $table)) {
             return $tableName;
         }
         if (is_subclass_of($table, DataTable::class)) {
-            $prefix = $this->tablePrefix ? $this->tablePrefix . '_' : '';
+            $prefix = $this->prefix ? $this->prefix . '_' : '';
             $tableName = $prefix . string_snake_case(class_name($table));
-            $this->tableNames[$table] = $tableName;
+            $this->tables[$table] = $tableName;
             return $tableName;
         }
         return '';

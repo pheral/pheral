@@ -14,18 +14,18 @@ class DBProfile
     public function get($connectionName = '')
     {
         if (!$connectionName) {
-            $connectionName = DB::connection()->connectionName;
+            $connectionName = DB::connection()->name;
         }
         return array_get($this->history, $connectionName, []);
     }
     public function push($sql, $connectionName = '')
     {
         if (!$connectionName) {
-            $connectionName = DB::connection()->connectionName;
+            $connectionName = DB::connection()->name;
         }
-        $connectHistory = array_get($this->history, $connectionName, []);
-        $connectHistory[] = $sql;
-        $this->history[$connectionName] = $connectHistory;
+        $history = array_get($this->history, $connectionName, []);
+        $history[] = $sql;
+        $this->history[$connectionName] = $history;
         return $this;
     }
     public function debug()

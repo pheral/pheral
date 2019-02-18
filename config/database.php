@@ -9,7 +9,7 @@ return [
             'user' => 'pheral',
             'pass' => 'pheral',
             'charset' => 'utf8',
-            'table_prefix' => 'fitness',
+            'prefix' => 'fitness',
         ],
     ],
     'default' => 'main',

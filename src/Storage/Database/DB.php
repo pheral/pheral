@@ -4,34 +4,30 @@ namespace Pheral\Essential\Storage\Database;
 
 class DB
 {
-    private static $connectionName;
+    private static $name;
     private static $connections = [];
-    public static function connection(string $connectionName = null): Connection
+    public static function connection(string $name = null): Connection
     {
-        $connectionName = self::getConnectionName($connectionName);
-        if (!$connection = array_get(self::$connections, $connectionName)) {
-            $connection = new Connection($connectionName);
-            self::$connections[$connectionName] = $connection;
+        if (!$name && !self::$name) {
+            self::$name = config('database.default');
+        }
+        $name = $name ? $name : self::$name;
+        if (!$connection = array_get(self::$connections, $name)) {
+            $connection = new Connection($name);
+            self::$connections[$name] = $connection;
         }
         return $connection;
     }
-    public static function getConnectionName(string $connectionName = null)
+    public static function setConnection(string $name)
     {
-        if (!$connectionName && !self::$connectionName) {
-            self::$connectionName = config('database.default');
-        }
-        return $connectionName ? $connectionName : self::$connectionName;
+        self::$name = $name;
     }
-    public static function setConnectionName(string $connectionName)
+    public static function query($table = null, $alias = '')
     {
-        self::$connectionName = $connectionName;
+        return self::connection()->query($table, $alias);
     }
-    public static function query($table = null, $alias = '', $connectionName = '')
+    public static function execute($sql, $params = [])
     {
-        return self::connection($connectionName)->query($table, $alias);
-    }
-    public static function execute($sql, $params = [], $connectionName = '')
-    {
-        return self::connection($connectionName)->query()->execute($sql, $params);
+        return self::query()->execute($sql, $params);
     }
 }

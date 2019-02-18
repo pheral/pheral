@@ -4,21 +4,28 @@ namespace Pheral\Essential\Storage\Database\Relation\Abstracts;
 
 abstract class TwoTableRelationAbstract extends OneTableRelationAbstract
 {
-    protected $targetClass;
-    protected $targetTable;
+    protected $target;
     protected $targetKey;
     protected $targetKeyToPivot;
     protected $targetKeyToHolder;
 
     /**
-     * @param string $table
+     * @param string $target
      * @return \Pheral\Essential\Storage\Database\Relation\Abstracts\TwoTableRelationAbstract|static
      */
-    protected function setTargetTable($table)
+    protected function setTarget($target)
     {
-        $this->targetTable = $this->parseTableName($table);
-        $this->targetClass = $this->parseTableClass($table);
+        $this->target = $target;
         return $this;
+    }
+
+    protected function getTarget()
+    {
+        $connect = $this->getConnect();
+        if (!$target = $connect->getTableClass($this->target)) {
+            $target = $connect->getTableName($this->target);
+        }
+        return $target;
     }
 
     /**

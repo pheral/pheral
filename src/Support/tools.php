@@ -118,6 +118,15 @@ if (!function_exists('view')) {
         return \Pheral\Essential\Layers\View::make($path, $data);
     }
 }
+if (!function_exists('profiler')) {
+    /**
+     * @return \Pheral\Essential\Storage\Profiler
+     */
+    function profiler()
+    {
+        return \Pheral\Essential\Storage\Profiler::instance();
+    }
+}
 
 if (!function_exists('error')) {
     /**

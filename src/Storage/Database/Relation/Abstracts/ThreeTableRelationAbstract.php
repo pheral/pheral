@@ -4,21 +4,33 @@ namespace Pheral\Essential\Storage\Database\Relation\Abstracts;
 
 abstract class ThreeTableRelationAbstract extends TwoTableRelationAbstract
 {
-    protected $pivotClass;
-    protected $pivotTable;
+    protected $pivot;
     protected $pivotKey;
     protected $pivotKeyToTarget;
     protected $pivotKeyToHolder;
 
     /**
-     * @param string $table
+     * @param string $pivot
      * @return \Pheral\Essential\Storage\Database\Relation\Abstracts\ThreeTableRelationAbstract|static
      */
-    protected function setPivotTable($table)
+    protected function setPivot($pivot)
     {
-        $this->pivotTable = $this->parseTableName($table);
-        $this->pivotClass = $this->parseTableClass($table);
+        $this->pivot = $pivot;
         return $this;
+    }
+
+    protected function pivotTable()
+    {
+        return $this->getConnect()->getTableName($this->pivot);
+    }
+
+    protected function getPivot()
+    {
+        $connect = $this->getConnect();
+        if (!$pivot = $connect->getTableClass($this->pivot)) {
+            $pivot = $connect->getTableName($this->pivot);
+        }
+        return $pivot;
     }
 
     /**

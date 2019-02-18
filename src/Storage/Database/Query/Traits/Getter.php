@@ -2,7 +2,7 @@
 
 namespace Pheral\Essential\Storage\Database\Query\Traits;
 
-use Pheral\Essential\Storage\Database\DB;
+use Pheral\Essential\Storage\Database\Connect;
 
 trait Getter
 {
@@ -136,5 +136,10 @@ trait Getter
             return 'VALUES ' . implode(', ', $values) . ' ';
         }
         return $values;
+    }
+
+    public function getConnect(): Connect
+    {
+        return $this->connect;
     }
 }

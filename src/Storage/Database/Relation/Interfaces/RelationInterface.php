@@ -2,12 +2,25 @@
 
 namespace Pheral\Essential\Storage\Database\Relation\Interfaces;
 
+use Pheral\Essential\Storage\Database\Connect;
+
 interface RelationInterface
 {
     /**
      * @return \Pheral\Essential\Storage\Database\Query
      */
     public function getQuery();
+
+    /**
+     * @param \Pheral\Essential\Storage\Database\Connect $connect
+     * @return \Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface|static
+     */
+    public function setConnect(Connect $connect);
+
+    /**
+     * @return \Pheral\Essential\Storage\Database\Connect $connect
+     */
+    public function getConnect(): Connect;
 
     /**
      * @param string $table

@@ -2,25 +2,27 @@
 
 namespace Pheral\Essential\Storage\Database\Relation\Abstracts;
 
-use Pheral\Essential\Layers\DataTable;
+use Pheral\Essential\Storage\Database\Connect;
 use Pheral\Essential\Storage\Database\DB;
 use Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface;
 
 abstract class RelationAbstract implements RelationInterface
 {
+    protected $connect;
     protected $targetRelations;
 
-    protected function parseTableName($table)
+    public function setConnect(Connect $connect)
     {
-        return DB::tableName($table);
+        $this->connect = $connect;
+        return $this;
     }
 
-    protected function parseTableClass($table)
+    public function getConnect(): Connect
     {
-        if (is_subclass_of($table, DataTable::class)) {
-            return $table;
+        if (!$this->connect) {
+            $this->connect = DB::connect();
         }
-        return null;
+        return $this->connect;
     }
 
     protected function getResult($callable = null)

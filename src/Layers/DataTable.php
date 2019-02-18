@@ -2,7 +2,7 @@
 
 namespace Pheral\Essential\Layers;
 
-use Pheral\Essential\Storage\Database\Query;
+use Pheral\Essential\Storage\Database\DB;
 use Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface;
 use Pheral\Essential\Validation\TypeManager;
 
@@ -54,9 +54,9 @@ abstract class DataTable
         return array_get($this->enclosed, $field);
     }
 
-    public static function query($alias = '')
+    public static function query($alias = '', $connectName = '')
     {
-        return new Query(static::class, $alias);
+        return DB::connect($connectName)->query(static::class, $alias);
     }
 
     /**
@@ -79,6 +79,7 @@ abstract class DataTable
         }
         return $relation;
     }
+
     public static function makeRows($data, $dataTable = null)
     {
         $list = [];

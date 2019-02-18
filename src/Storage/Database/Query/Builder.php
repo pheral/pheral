@@ -2,6 +2,7 @@
 
 namespace Pheral\Essential\Storage\Database\Query;
 
+use Pheral\Essential\Storage\Database\Connect;
 use Pheral\Essential\Storage\Database\Query\Traits\Getter;
 use Pheral\Essential\Storage\Database\Query\Traits\Setter;
 
@@ -9,6 +10,7 @@ class Builder
 {
     use Getter, Setter;
 
+    protected $connect;
     protected $dataTable;
 
     protected $distinct = false;
@@ -28,8 +30,9 @@ class Builder
     protected $values = [];
     protected $sets = [];
 
-    public function __construct($dataTable = null, $alias = null)
+    public function __construct(Connect $connect, $dataTable = null, $alias = null)
     {
+        $this->setConnect($connect);
         if ($dataTable) {
             $this->dataTable($dataTable, $alias);
         }

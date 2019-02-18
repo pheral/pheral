@@ -2,7 +2,6 @@
 
 namespace Pheral\Essential\Storage\Database\Relation;
 
-use Pheral\Essential\Storage\Database\Query;
 use Pheral\Essential\Storage\Database\Relation\Abstracts\ThreeTableRelationAbstract;
 
 /**
@@ -30,8 +29,8 @@ class HasManyThrough extends ThreeTableRelationAbstract
      */
     public function __construct($target, $pivot)
     {
-        $this->setPivotTable($pivot)
-            ->setTargetTable($target);
+        $this->setPivot($pivot)
+            ->setTarget($target);
     }
 
     /**
@@ -57,12 +56,13 @@ class HasManyThrough extends ThreeTableRelationAbstract
     public function getQuery()
     {
         $holderValues = array_unique(data_pluck($this->holderRows, $this->holderKey));
-        $query = (new Query($this->targetClass, 'target'))
+        $query = $this->getConnect()
+            ->query($this->getTarget(), 'target')
             ->fields([
                 'target.*',
                 'pivot.' . $this->pivotKeyToHolder . ' as pivot_key_to_holder',
             ])
-            ->join($this->pivotClass, 'pivot', 'pivot.' . $this->pivotKey . ' = target.' . $this->targetKeyToPivot)
+            ->join($this->getPivot(), 'pivot', 'pivot.' . $this->pivotKey . ' = target.' . $this->targetKeyToPivot)
             ->whereIn('pivot.' . $this->pivotKeyToHolder, $holderValues);
         return $query;
     }

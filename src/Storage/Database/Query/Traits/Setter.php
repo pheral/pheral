@@ -2,10 +2,20 @@
 
 namespace Pheral\Essential\Storage\Database\Query\Traits;
 
-use Pheral\Essential\Storage\Database\DB;
+use Pheral\Essential\Storage\Database\Connect;
 
 trait Setter
 {
+    /**
+     * @param \Pheral\Essential\Storage\Database\Connect $connect
+     * @return \Pheral\Essential\Storage\Database\Query|static
+     */
+    protected function setConnect(Connect $connect)
+    {
+        $this->connect = $connect;
+        return $this;
+    }
+
     /**
      * @param string $field
      * @return \Pheral\Essential\Storage\Database\Query|static
@@ -64,18 +74,17 @@ trait Setter
         if (!$this->dataTable) {
             $this->dataTable = $table;
         }
-        return $this->addTable(DB::tableName($table), $alias);
+        return $this->addTable($this->getTableName($table), $alias);
     }
 
     /**
      * @param string $table
      * @param string $alias
-     * @param bool $isDataTable
      * @return \Pheral\Essential\Storage\Database\Query|static
      */
-    public function table($table, $alias = '', $isDataTable = false)
+    public function table($table, $alias = '')
     {
-        return $this->addTable(DB::tableName($table), $alias);
+        return $this->addTable($this->getTableName($table), $alias);
     }
 
     /**
@@ -109,7 +118,7 @@ trait Setter
             }
             $where = ' ' . implode(' ', $parts);
         }
-        $tableName = DB::tableName($table) . $this->makeAlias($alias);
+        $tableName = $this->getTableName($table) . $this->makeAlias($alias);
         $this->joins[$tableName] = strtoupper($type) . ' JOIN ' . $tableName . ' ON ' . $expression . $where;
         return $this;
     }
@@ -420,5 +429,13 @@ trait Setter
     protected function makeType($list, $type)
     {
         return (!empty($list) ? $type . ' ' : '');
+    }
+
+    protected function getTableName($table)
+    {
+        if ($this->connect instanceof Connect) {
+            return $this->connect->getTableName($table);
+        }
+        return '';
     }
 }

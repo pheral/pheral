@@ -6,22 +6,30 @@ abstract class OneTableRelationAbstract extends RelationAbstract
 {
     protected $holderRows;
 
-    protected $holderClass;
-    protected $holderTable;
+    protected $holder;
     protected $holderKey;
     protected $holderKeyToTarget;
     protected $holderKeyToPivot;
 
     /**
-     * @param string $table
+     * @param string $holder
      * @param array $holderRows
      * @return \Pheral\Essential\Storage\Database\Relation\Abstracts\OneTableRelationAbstract|static
      */
-    public function setHolder($table, $holderRows)
+    public function setHolder($holder, $holderRows)
     {
-        $this->setHolderTable($table)
-            ->setHolderRows($holderRows);
+        $this->holder = $holder;
+        $this->setHolderRows($holderRows);
         return $this;
+    }
+
+    protected function getHolder()
+    {
+        $connect = $this->getConnect();
+        if (!$holder = $connect->getTableClass($this->holder)) {
+            $holder = $connect->getTableName($this->holder);
+        }
+        return $holder;
     }
 
     /**
@@ -31,17 +39,6 @@ abstract class OneTableRelationAbstract extends RelationAbstract
     protected function setHolderRows($holderRows)
     {
         $this->holderRows = $holderRows;
-        return $this;
-    }
-
-    /**
-     * @param string $table
-     * @return \Pheral\Essential\Storage\Database\Relation\Abstracts\OneTableRelationAbstract|static
-     */
-    protected function setHolderTable($table)
-    {
-        $this->holderTable = $this->parseTableName($table);
-        $this->holderClass = $this->parseTableClass($table);
         return $this;
     }
 

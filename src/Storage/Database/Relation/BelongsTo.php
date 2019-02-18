@@ -2,7 +2,6 @@
 
 namespace Pheral\Essential\Storage\Database\Relation;
 
-use Pheral\Essential\Storage\Database\Query;
 use Pheral\Essential\Storage\Database\Relation\Abstracts\TwoTableRelationAbstract;
 
 /**
@@ -26,7 +25,7 @@ class BelongsTo extends TwoTableRelationAbstract
      */
     public function __construct($target)
     {
-        $this->setTargetTable($target);
+        $this->setTarget($target);
     }
 
     /**
@@ -48,7 +47,8 @@ class BelongsTo extends TwoTableRelationAbstract
     public function getQuery()
     {
         $holderValues = array_unique(data_pluck($this->holderRows, $this->holderKeyToTarget));
-        $query = (new Query($this->targetClass, 'target'))
+        $query = $this->getConnect()
+            ->query($this->getTarget(), 'target')
             ->fields(['target.*'])
             ->whereIn('target.' . $this->targetKey, $holderValues);
         return $query;

@@ -17,6 +17,9 @@ class Fitness extends Controller
     {
         $user = $this->fitness->getUser();
         $practices = $this->fitness->getPractices($user);
+
+        // profiler()->database()->debug();
+
         return $this->render([
             'content' => view('templates.fitness.index', [
                 'practices' => $practices,

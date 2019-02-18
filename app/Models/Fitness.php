@@ -5,16 +5,10 @@ namespace App\Models;
 use App\DataTables\Fitness\Practices;
 use App\DataTables\Fitness\Users;
 use App\Models\Abstracts\Model;
-use Pheral\Essential\Storage\Database\DB;
 use Pheral\Essential\Storage\Database\Query;
 
 class Fitness extends Model
 {
-    public function __construct()
-    {
-        DB::setPrefix('fitness');
-    }
-
     public function getUser($email = null)
     {
         return Users::query()
@@ -53,7 +47,6 @@ class Fitness extends Model
             ])
             ->select()
             ->all();
-        // debug(DB::history());
         foreach ($practices as $practice) {
             $practice->user = $user;
             $practice->maxAttempts = 1;

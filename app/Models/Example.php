@@ -83,7 +83,7 @@ class Example extends Model
             ];
         }
 
-        debug(\Pheral\Essential\Storage\Database\DB::history());
+        profiler()->database()->debug();
 
         return $results;
     }
@@ -176,7 +176,7 @@ class Example extends Model
             .'title VARCHAR(45) NULL,'
             .'PRIMARY KEY (id)'
             .')';
-        $creates['test'] = DB::query($sqlTest) ? 'created' : 'not created';
+        $creates['test'] = DB::execute($sqlTest) ? 'created' : 'not created';
         $sqlDummy = 'CREATE TABLE IF NOT EXISTS dummy ('
             .'id INT NOT NULL AUTO_INCREMENT,'
             .'test_id INT NULL,'
@@ -189,17 +189,17 @@ class Example extends Model
             .' ON DELETE CASCADE'
             .' ON UPDATE CASCADE'
             .')';
-        $creates['dummy'] = DB::query($sqlDummy) ? 'created' : 'not created';
+        $creates['dummy'] = DB::execute($sqlDummy) ? 'created' : 'not created';
         return $creates;
     }
     protected function dropTable($tableName)
     {
         $sql = 'DROP TABLE ' . $tableName;
-        return DB::query($sql) ? 'dropped' : 'not dropped';
+        return DB::execute($sql) ? 'dropped' : 'not dropped';
     }
     protected function truncateTable($tableName)
     {
         $sql = 'TRUNCATE TABLE ' . $tableName;
-        return DB::query($sql) ? 'truncated' : 'not truncated';
+        return DB::execute($sql) ? 'truncated' : 'not truncated';
     }
 }

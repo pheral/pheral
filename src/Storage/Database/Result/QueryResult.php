@@ -2,11 +2,15 @@
 
 namespace Pheral\Essential\Storage\Database\Result;
 
+use Pheral\Essential\Storage\Database\Query;
+
 class QueryResult
 {
+    protected $query;
     protected $stmt;
-    public function __construct(\PDOStatement $stmt)
+    public function __construct(Query $query, \PDOStatement $stmt)
     {
+        $this->query = $query;
         $this->stmt = $stmt;
     }
     public function count()
@@ -17,18 +21,12 @@ class QueryResult
     {
         return $this->stmt->columnCount();
     }
-    public function sql($params = [])
+    public function getSql($params = [])
     {
-        $sql = $this->stmt->queryString;
-        if ($params) {
-            $search = array_keys($params);
-            $replace = array_values($params);
-            array_walk($replace, function (&$param) {
-                $param = '"' . $param . '"';
-            });
-            $sql = str_replace($search, $replace, $sql);
-        }
-        return $sql;
+        return $this->query->getConnect()->getSql(
+            $this->stmt->queryString,
+            $params
+        );
     }
     public function params()
     {

@@ -9,14 +9,22 @@ use Pheral\Essential\Storage\Database\Result\SelectResult;
 
 class Query extends Builder
 {
+    public function execute($sql, $params = [])
+    {
+        $statement = $this->getConnect()->execute($sql, $params);
+        return new QueryResult($this, $statement);
+    }
+
     public function insert($values)
     {
         if ($values && !$this->values) {
             $this->values($values);
         }
-        return new InsertResult(
-            DB::execute($this->sqlInsert(), $this->getParams())
+        $statement = $this->getConnect()->execute(
+            $this->sqlInsert(),
+            $this->getParams()
         );
+        return new InsertResult($this, $statement);
     }
 
     /**
@@ -30,21 +38,26 @@ class Query extends Builder
             $this->dataTable($dataTable, $alias);
         }
         $table = $dataTable ?? $this->getDataTable();
-        $statement = DB::execute($this->sqlSelect(), $this->getParams());
-        return new SelectResult($statement, $table, $this->relations);
+        $statement = $this->getConnect()->execute(
+            $this->sqlSelect(),
+            $this->getParams()
+        );
+        return new SelectResult($this, $statement, $table, $this->relations);
     }
 
     public function update()
     {
-        return new QueryResult(
-            DB::execute($this->sqlUpdate(), $this->getParams())
+        return $this->execute(
+            $this->sqlUpdate(),
+            $this->getParams()
         );
     }
 
     public function delete()
     {
-        return new QueryResult(
-            DB::execute($this->sqlDelete(), $this->getParams())
+        return $this->execute(
+            $this->sqlDelete(),
+            $this->getParams()
         );
     }
 }

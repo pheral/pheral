@@ -46,6 +46,7 @@ class SelectResult extends QueryResult
     protected function applyRelations($result, $isOneRow = false)
     {
         if ($result && $this->dataTable && $this->relations) {
+            $connection = $this->getQuery()->getConnection();
             $relations = call_user_func($this->dataTable . '::relations');
             foreach ($this->relations as $relationName => $relationData) {
                 $relation = array_get($relations, $relationName);
@@ -57,7 +58,7 @@ class SelectResult extends QueryResult
                     } else {
                         $targetRelations = $relationData;
                     }
-                    $result = $relation->setConnect($this->query->getConnect())
+                    $result = $relation->setConnection($connection)
                         ->setHolder($this->dataTable, array_wrap($result))
                         ->setTargetRelations($targetRelations)
                         ->apply($relationName, $targetConditions);

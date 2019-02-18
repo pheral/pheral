@@ -11,7 +11,7 @@ class Fitness extends Model
 {
     public function getUser($email = null)
     {
-        return Users::query()
+        return $this->newQuery(Users::class)
             ->with([
                 'gender',
                 'level',

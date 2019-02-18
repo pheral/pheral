@@ -55,7 +55,7 @@ class BelongsToNeighbors extends ThreeTableRelationAbstract
     {
         $holderValues = array_unique(data_pluck($this->holderRows, $this->holderKeyToPivot));
 
-        $query = $this->getConnect()
+        $query = $this->getConnection()
             ->query($this->getTarget(), 'target')
             ->fields([
                 'target.*',

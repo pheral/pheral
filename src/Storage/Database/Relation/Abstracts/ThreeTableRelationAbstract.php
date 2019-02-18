@@ -21,14 +21,14 @@ abstract class ThreeTableRelationAbstract extends TwoTableRelationAbstract
 
     protected function pivotTable()
     {
-        return $this->getConnect()->getTableName($this->pivot);
+        return $this->getConnection()->getTableName($this->pivot);
     }
 
     protected function getPivot()
     {
-        $connect = $this->getConnect();
-        if (!$pivot = $connect->getTableClass($this->pivot)) {
-            $pivot = $connect->getTableName($this->pivot);
+        $connection = $this->getConnection();
+        if (!$pivot = $connection->getTableClass($this->pivot)) {
+            $pivot = $connection->getTableName($this->pivot);
         }
         return $pivot;
     }

@@ -2,27 +2,23 @@
 
 namespace Pheral\Essential\Storage\Database\Relation\Abstracts;
 
-use Pheral\Essential\Storage\Database\Connect;
-use Pheral\Essential\Storage\Database\DB;
+use Pheral\Essential\Storage\Database\Connection;
 use Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface;
 
 abstract class RelationAbstract implements RelationInterface
 {
-    protected $connect;
+    protected $connection;
     protected $targetRelations;
 
-    public function setConnect(Connect $connect)
+    public function setConnection(Connection $connection)
     {
-        $this->connect = $connect;
+        $this->connection = $connection;
         return $this;
     }
 
-    public function getConnect(): Connect
+    public function getConnection(): Connection
     {
-        if (!$this->connect) {
-            $this->connect = DB::connect();
-        }
-        return $this->connect;
+        return $this->connection;
     }
 
     protected function getResult($callable = null)

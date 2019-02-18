@@ -54,9 +54,23 @@ abstract class DataTable
         return array_get($this->enclosed, $field);
     }
 
-    public static function query($alias = '', $connectName = '')
+    /**
+     * @param string $alias
+     * @param string $connectionName
+     * @return \Pheral\Essential\Storage\Database\Query
+     */
+    public static function query($alias = '', $connectionName = '')
     {
-        return DB::connect($connectName)->query(static::class, $alias);
+        return static::connection($connectionName)->query(static::class, $alias);
+    }
+
+    /**
+     * @param string|null $connectionName
+     * @return \Pheral\Essential\Storage\Database\Connection
+     */
+    public static function connection(string $connectionName = null)
+    {
+        return DB::connection($connectionName);
     }
 
     /**
@@ -69,13 +83,15 @@ abstract class DataTable
 
     /**
      * @param string $relationName
+     * @param string|null $connectionName
      * @return \Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface|null
      */
-    public function relation($relationName)
+    public function relation($relationName, string $connectionName = null)
     {
         $relation = array_get(static::relations(), $relationName);
         if ($relation instanceof RelationInterface) {
-            $relation->setHolder(static::class, [$this]);
+            $relation->setConnection(static::connection($connectionName))
+                ->setHolder(static::class, [$this]);
         }
         return $relation;
     }

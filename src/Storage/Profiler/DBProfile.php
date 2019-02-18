@@ -11,21 +11,21 @@ class DBProfile
     {
         return $this->history;
     }
-    public function get($connectName = '')
+    public function get($connectionName = '')
     {
-        if (!$connectName) {
-            $connectName = DB::connect()->connectName;
+        if (!$connectionName) {
+            $connectionName = DB::connection()->connectionName;
         }
-        return array_get($this->history, $connectName, []);
+        return array_get($this->history, $connectionName, []);
     }
-    public function push($sql, $connectName = '')
+    public function push($sql, $connectionName = '')
     {
-        if (!$connectName) {
-            $connectName = DB::connect()->connectName;
+        if (!$connectionName) {
+            $connectionName = DB::connection()->connectionName;
         }
-        $connectHistory = array_get($this->history, $connectName, []);
+        $connectHistory = array_get($this->history, $connectionName, []);
         $connectHistory[] = $sql;
-        $this->history[$connectName] = $connectHistory;
+        $this->history[$connectionName] = $connectHistory;
         return $this;
     }
     public function debug()

@@ -2,17 +2,17 @@
 
 namespace Pheral\Essential\Storage\Database\Query\Traits;
 
-use Pheral\Essential\Storage\Database\Connect;
+use Pheral\Essential\Storage\Database\Connection;
 
 trait Setter
 {
     /**
-     * @param \Pheral\Essential\Storage\Database\Connect $connect
+     * @param \Pheral\Essential\Storage\Database\Connection $connection
      * @return \Pheral\Essential\Storage\Database\Query|static
      */
-    protected function setConnect(Connect $connect)
+    protected function setConnection(Connection $connection)
     {
-        $this->connect = $connect;
+        $this->connection = $connection;
         return $this;
     }
 
@@ -433,8 +433,8 @@ trait Setter
 
     protected function getTableName($table)
     {
-        if ($this->connect instanceof Connect) {
-            return $this->connect->getTableName($table);
+        if ($this->connection instanceof Connection) {
+            return $this->connection->getTableName($table);
         }
         return '';
     }

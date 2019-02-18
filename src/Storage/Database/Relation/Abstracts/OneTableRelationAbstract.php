@@ -25,9 +25,9 @@ abstract class OneTableRelationAbstract extends RelationAbstract
 
     protected function getHolder()
     {
-        $connect = $this->getConnect();
-        if (!$holder = $connect->getTableClass($this->holder)) {
-            $holder = $connect->getTableName($this->holder);
+        $connection = $this->getConnection();
+        if (!$holder = $connection->getTableClass($this->holder)) {
+            $holder = $connection->getTableName($this->holder);
         }
         return $holder;
     }

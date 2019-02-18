@@ -11,7 +11,7 @@ class Query extends Builder
 {
     public function execute($sql, $params = [])
     {
-        $statement = $this->getConnect()->execute($sql, $params);
+        $statement = $this->getConnection()->execute($sql, $params);
         return new QueryResult($this, $statement);
     }
 
@@ -20,7 +20,7 @@ class Query extends Builder
         if ($values && !$this->values) {
             $this->values($values);
         }
-        $statement = $this->getConnect()->execute(
+        $statement = $this->getConnection()->execute(
             $this->sqlInsert(),
             $this->getParams()
         );
@@ -38,7 +38,7 @@ class Query extends Builder
             $this->dataTable($dataTable, $alias);
         }
         $table = $dataTable ?? $this->getDataTable();
-        $statement = $this->getConnect()->execute(
+        $statement = $this->getConnection()->execute(
             $this->sqlSelect(),
             $this->getParams()
         );

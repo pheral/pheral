@@ -6,6 +6,6 @@ class InsertResult extends QueryResult
 {
     public function lastInsertId()
     {
-        return $this->query->getConnect()->getPdo()->lastInsertId();
+        return $this->query->getConnection()->getPdo()->lastInsertId();
     }
 }

@@ -21,9 +21,9 @@ abstract class TwoTableRelationAbstract extends OneTableRelationAbstract
 
     protected function getTarget()
     {
-        $connect = $this->getConnect();
-        if (!$target = $connect->getTableClass($this->target)) {
-            $target = $connect->getTableName($this->target);
+        $connection = $this->getConnection();
+        if (!$target = $connection->getTableClass($this->target)) {
+            $target = $connection->getTableName($this->target);
         }
         return $target;
     }

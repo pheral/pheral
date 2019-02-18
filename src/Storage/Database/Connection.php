@@ -6,19 +6,16 @@ use Pheral\Essential\Exceptions\NetworkException;
 use Pheral\Essential\Layers\DataTable;
 use Pheral\Essential\Storage\Profiler;
 
-class Connect
+class Connection
 {
-    public $connectName;
+    public $connectionName;
     public $tablePrefix;
     protected $tableNames = [];
     protected $pdo;
-    public function __construct(string $connectName)
+    public function __construct(string $connectionName)
     {
-        $this->setPdo($connectName);
-    }
-    protected function setPdo(string $connectName)
-    {
-        $config = config('database.connections.' . $connectName);
+        $this->connectionName = $connectionName;
+        $config = config('database.connections.' . $this->connectionName);
         try {
             $driver = array_get($config, 'driver', 'mysql');
             $host = array_get($config, 'host', 'localhost');
@@ -32,26 +29,22 @@ class Connect
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_OBJ,
             ];
             $this->pdo = new \PDO($dsn, $user, $pass, $opt);
-            $this->connectName = $connectName;
             $this->tablePrefix = array_get($config, 'table_prefix', '');
         } catch (\PDOException $e) {
             throw new NetworkException(500, $e->getMessage());
         }
-        return $this;
     }
-    public function getPdo(): \PDO
-    {
-        return $this->pdo;
-    }
+
     public function query($table = null, $alias = '')
     {
         return new Query($this, $table, $alias);
     }
+
     public function execute($sql, $params = []): \PDOStatement
     {
         Profiler::instance()->database()->push(
             $this->getSql($sql, $params),
-            $this->connectName
+            $this->connectionName
         );
         $stmt = $this->getPdo()->prepare(trim($sql));
         if ($params) {
@@ -61,6 +54,12 @@ class Connect
         }
         return $stmt;
     }
+
+    public function getPdo(): \PDO
+    {
+        return $this->pdo;
+    }
+
     public function getSql($sql, $params = [])
     {
         if ($params) {
@@ -73,6 +72,7 @@ class Connect
         }
         return trim($sql);
     }
+
     public function getTableClass($table)
     {
         if (is_subclass_of($table, DataTable::class)) {
@@ -80,6 +80,7 @@ class Connect
         }
         return null;
     }
+
     public function getTableName($table)
     {
         if (strpos($table, '\\', true) === false) {

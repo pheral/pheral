@@ -13,6 +13,10 @@ class QueryResult
         $this->query = $query;
         $this->stmt = $stmt;
     }
+    public function getQuery()
+    {
+        return $this->query;
+    }
     public function count()
     {
         return $this->stmt->rowCount();
@@ -23,7 +27,7 @@ class QueryResult
     }
     public function getSql($params = [])
     {
-        return $this->query->getConnect()->getSql(
+        return $this->getQuery()->getConnection()->getSql(
             $this->stmt->queryString,
             $params
         );

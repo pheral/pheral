@@ -47,7 +47,7 @@ class HasOne extends TwoTableRelationAbstract
     public function getQuery()
     {
         $holderValues = array_unique(data_pluck($this->holderRows, $this->holderKey));
-        $query = $this->getConnect()
+        $query = $this->getConnection()
             ->query($this->getTarget(), 'target')
             ->fields(['target.*'])
             ->whereIn('target.' . $this->targetKeyToHolder, $holderValues);

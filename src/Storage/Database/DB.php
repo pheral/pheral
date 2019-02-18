@@ -4,34 +4,34 @@ namespace Pheral\Essential\Storage\Database;
 
 class DB
 {
-    private static $connectName;
-    private static $connects = [];
-    public static function connect(string $connectName = null): Connect
+    private static $connectionName;
+    private static $connections = [];
+    public static function connection(string $connectionName = null): Connection
     {
-        $connectName = self::getConnectName($connectName);
-        if (!$connect = array_get(self::$connects, $connectName)) {
-            $connect = new Connect($connectName);
-            self::$connects[$connectName] = $connect;
+        $connectionName = self::getConnectionName($connectionName);
+        if (!$connection = array_get(self::$connections, $connectionName)) {
+            $connection = new Connection($connectionName);
+            self::$connections[$connectionName] = $connection;
         }
-        return $connect;
+        return $connection;
     }
-    public static function getConnectName(string $connectName = null)
+    public static function getConnectionName(string $connectionName = null)
     {
-        if (!$connectName && !self::$connectName) {
-            self::$connectName = config('database.default');
+        if (!$connectionName && !self::$connectionName) {
+            self::$connectionName = config('database.default');
         }
-        return $connectName ? $connectName : self::$connectName;
+        return $connectionName ? $connectionName : self::$connectionName;
     }
-    public static function setConnectName(string $connectName)
+    public static function setConnectionName(string $connectionName)
     {
-        self::$connectName = $connectName;
+        self::$connectionName = $connectionName;
     }
-    public static function query($table = null, $alias = '', $connectName = '')
+    public static function query($table = null, $alias = '', $connectionName = '')
     {
-        return self::connect($connectName)->query($table, $alias);
+        return self::connection($connectionName)->query($table, $alias);
     }
-    public static function execute($sql, $params = [], $connectName = '')
+    public static function execute($sql, $params = [], $connectionName = '')
     {
-        return self::connect($connectName)->query()->execute($sql, $params);
+        return self::connection($connectionName)->query()->execute($sql, $params);
     }
 }

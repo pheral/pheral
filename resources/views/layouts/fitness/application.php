@@ -9,6 +9,11 @@
         <link href="/css/application.css" rel="stylesheet" type="text/css" />
     </head>
     <body>
+        <div class="nav-panel">
+            <div class="pull-right">
+                <a href="<?= url()->path('/fitness/auth/logout') ?>">Выйти</a>
+            </div>
+        </div>
         <div class="layout">
             <h1>Fitness</h1>
             <div>

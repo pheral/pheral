@@ -63,7 +63,8 @@ class Router
     }
     public function add($pattern, $options = [])
     {
-        array_set($this->data, $pattern, $options);
+        $routeMethod = strtoupper(array_get($options, 'method', 'any'));
+        array_set($this->data, $routeMethod.'@'.$pattern, $options);
         return $this;
     }
     public function find($url, $method = '')
@@ -73,16 +74,16 @@ class Router
         }
         $method = $method ? strtoupper($method) : $this->currentMethod;
         $path = parse_url($url, PHP_URL_PATH);
-        foreach ($this->data as $pattern => $options) {
-            $methodOption = strtoupper(array_get($options, 'method', 'any'));
-            if ($methodOption != 'ANY' && $methodOption !== $method) {
+        foreach ($this->data as $key => $options) {
+            list($routeMethod, $routePattern) = explode('@', $key);
+            if ($routeMethod != 'ANY' && $routeMethod !== $method) {
                 continue;
             }
-            if ($path === $pattern) {
+            if ($path === $routePattern) {
                 $route = $options;
                 break;
             }
-            $params = $this->parse($path, $pattern);
+            $params = $this->parse($path, $routePattern);
             if (is_null($params)) {
                 continue;
             }

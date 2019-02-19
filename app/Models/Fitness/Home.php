@@ -1,27 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Fitness;
 
 use App\DBTables\Fitness\Practices;
 use App\DBTables\Fitness\Users;
 use App\Models\Abstracts\Model;
 use Pheral\Essential\Storage\Database\Query;
 
-class Fitness extends Model
+class Home extends Model
 {
-    public function getUser($email = null)
-    {
-        return $this->newQuery(Users::class)
-            ->with([
-                'gender',
-                'level',
-                'data' => 'option'
-            ])
-            ->where('email', '=', $email ?? 'test@pheral.vhost')
-            ->select()
-            ->row();
-    }
-
     public function getPractices(Users $user)
     {
         $practices = Practices::query('p')
@@ -47,6 +34,7 @@ class Fitness extends Model
             ])
             ->select()
             ->all();
+        // profiler()->database()->debug();
         foreach ($practices as $practice) {
             $practice->user = $user;
             $practice->maxAttempts = 1;

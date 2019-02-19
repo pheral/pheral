@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\Abstracts\Controller;
 
-class Home extends Controller
+class HomeController extends Controller
 {
     public function index()
     {

@@ -36,3 +36,13 @@ table th, table td {border:none;border-collapse:collapse;}
 .text-right {text-align:right !important;}
 
 .list li {margin-left:20px;}
+
+.text-danger {color: red !important;}
+.text-warning {color: orange !important;}
+.text-success {color: green !important;}
+.text-info {color: cyan !important;}
+
+.nav-panel {display: block;height: 50px;border-bottom: 1px solid grey;}
+.nav-panel a {display: block; margin: 5px; padding:10px; border: 1px solid grey; color: #cc0000; background: #f1f1f1;}
+.nav-panel a:hover{color:black;background: #fdf1f1;}
+.pull-right {float: right;}

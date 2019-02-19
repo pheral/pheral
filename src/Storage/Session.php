@@ -59,6 +59,15 @@ class Session
         $this->set('_url.current', $url);
         return $this;
     }
+    public function getFlush(string $key)
+    {
+        return $this->cut('_flush.' . $key);
+    }
+    public function setFlush(string $key, $data)
+    {
+        $this->set('_flush.' . $key, $data);
+        return $this;
+    }
     public function refreshRedirected()
     {
         if (is_null($this->isRedirected)) {

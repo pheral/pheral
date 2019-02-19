@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Wrappers;
+namespace Pheral\Essential\Network\Wrappers;
 
-use App\Wrappers\Abstracts\Wrapper;
+use Pheral\Essential\Layers\Wrapper;
 use Pheral\Essential\Network\Frame;
 use Pheral\Essential\Network\Output\Response;
 

@@ -2,10 +2,10 @@
 
 return [
     'routes' => 'routes',
-    'views' => 'renders/views',
+    'views' => 'resources/views',
     'wrappers' => [
         'network' => [
-            \App\Wrappers\SessionUrls::class
+            \Pheral\Essential\Network\Wrappers\SessionUrls::class
         ],
     ]
 ];

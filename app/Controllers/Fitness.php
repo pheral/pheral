@@ -6,10 +6,11 @@ use App\Controllers\Abstracts\Controller;
 
 class Fitness extends Controller
 {
-    protected $path = 'layouts.fitness';
     protected $fitness;
+
     public function __construct()
     {
+        $this->path = 'layouts.fitness';
         $this->fitness = new \App\Models\Fitness();
     }
 

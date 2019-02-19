@@ -4,6 +4,8 @@ return [
     'routes' => 'routes',
     'views' => 'renders/views',
     'wrappers' => [
-        'network' => [],
+        'network' => [
+            \App\Wrappers\SessionUrls::class
+        ],
     ]
 ];

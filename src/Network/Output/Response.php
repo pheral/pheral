@@ -16,7 +16,7 @@ class Response
             $this->setContent($data);
         }
     }
-    public static function make($data = [])
+    public static function make($data)
     {
         return new static($data);
     }

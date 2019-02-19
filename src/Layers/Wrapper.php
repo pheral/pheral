@@ -2,24 +2,68 @@
 
 namespace Pheral\Essential\Layers;
 
+use Pheral\Essential\Network\Output\Redirect;
 use Pheral\Essential\Network\Output\Response;
 
 abstract class Wrapper
 {
-    public function handle(callable $callNextWrapper)
+    protected $callNext;
+
+    public function __construct(callable $callNext)
     {
-        //debug(static::class . '::handle($callNextWrapper); // actions before response generated');
+        $this->callNext = $callNext;
+    }
 
-        $response = $callNextWrapper();
+    public function handle()
+    {
+        $this->beforeController();
 
-        //debug(static::class . '::handle($callNextWrapper); // actions after response generated');
+        $callNext = $this->callNext;
+        if (is_callable($callNext)) {
+            $response = $callNext();
+        } else {
+            $response = $callNext;
+        }
+
+        $this->afterController();
 
         return $response;
     }
 
-    public function terminate(Response $response)
+    /**
+     * Actions BEFORE controller generated response
+     */
+    public function beforeController()
     {
-        //debug(static::class . '::terminate($callNextWrapper); // actions after response send');
+        //debug(static::class.'::'.__FUNCTION__.'()');
+    }
+
+    /**
+     * Actions AFTER controller generated response
+     */
+    public function afterController()
+    {
+        //debug(static::class.'::'.__FUNCTION__.'()');
+    }
+
+    /**
+     * Actions AFTER application send response
+     *
+     * @param \Pheral\Essential\Network\Output\Response $response
+     */
+    public function terminate(Response $response = null)
+    {
+        //debug(static::class.'::'.__FUNCTION__.'()');
         ignore($response);
+    }
+
+    protected function skipNext()
+    {
+        $this->callNext = null;
+    }
+
+    protected function skipNextByRedirect(Redirect $redirect)
+    {
+        $this->callNext = $redirect;
     }
 }

@@ -27,9 +27,11 @@ class Network implements Executable
     {
         $this->frame = Frame::instance();
         if ($route = $this->frame->route()) {
-            $this->wrappers = array_merge(config('app.wrappers.network', []), $route->wrappers());
-            $response = $this->wrappers
-                ? $this->handleRouteWrappers()
+            $routeWrappers = $route->wrappers();
+            $configWrappers = config('app.wrappers.network', []);
+            $wrappers = array_merge($configWrappers, $routeWrappers);
+            $response = $wrappers
+                ? $this->handleWrappers($wrappers)
                 : $this->handleRoute();
         } else {
             throw new NetworkException(404, 'Page not found');
@@ -102,33 +104,30 @@ class Network implements Executable
         return $params;
     }
 
-    protected function handleRouteWrappers()
+    protected function handleWrappers(array $wrappers)
     {
-        $callNextWrapper = function () use (&$callNextWrapper) {
-            if ($wrapperClass = next($this->wrappers)) {
-                return $this->handleWrapper($wrapperClass, $callNextWrapper);
+        $callNext = function () use (&$callNext, &$wrappers) {
+            if ($nextWrapper = next($wrappers)) {
+                return $this->handleWrapper($nextWrapper, $callNext);
             }
             return $this->handleRoute();
         };
-        $firstWrapperClass = reset($this->wrappers);
-        return $this->handleWrapper($firstWrapperClass, $callNextWrapper);
+        $wrapper = reset($wrappers);
+        return $this->handleWrapper($wrapper, $callNext);
     }
 
-    protected function handleWrapper($wrapperClass, callable $callNextWrapper)
+    protected function handleWrapper($wrapperClass, callable $callNext)
     {
-        $wrapper = new $wrapperClass();
+        $wrapper = new $wrapperClass($callNext);
         if (!$wrapper instanceof Wrapper) {
             throw new NetworkException(500, 'Settings error');
         }
-        return $wrapper->handle($callNextWrapper);
+        $this->wrappers[] = $wrapper;
+        return $wrapper->handle();
     }
 
-    protected function terminateWrapper($wrapperClass)
+    protected function terminateWrapper(Wrapper $wrapper)
     {
-        $wrapper = new $wrapperClass();
-        if (!$wrapper instanceof Wrapper) {
-            throw new NetworkException(500, 'Settings error');
-        }
         $wrapper->terminate($this->response);
     }
 
@@ -139,12 +138,6 @@ class Network implements Executable
             foreach ($wrappers as $wrapperClass) {
                 $this->terminateWrapper($wrapperClass);
             }
-        }
-        if (!$this->frame->isAjaxRequest() && $this->frame->isRequestMethod('GET')) {
-            $this->frame->session()->setPreviousUrl($this->frame->getCurrentUrl());
-        }
-        if ($this->response && $this->response->hasRedirect()) {
-            $this->frame->session()->setRedirectedUrl($this->response->redirect()->getUrl());
         }
     }
 }

@@ -3,6 +3,7 @@ function is_cli()
 {
     return PHP_SAPI === 'cli';
 }
+
 /**
  * @SuppressWarnings(ExitExpression)
  */
@@ -10,6 +11,28 @@ function stop()
 {
     exit;
 }
+
+function inspect_backtrace($backtrace, $from = null)
+{
+    if ($from) {
+        array_shift($backtrace);
+    }
+    $row = 0;
+    $backtrace = array_reverse($backtrace);
+    foreach ($backtrace as $call) {
+        echo '#' . ++$row . ' '
+            . array_get($call, 'class', '')
+            . array_get($call, 'type', '')
+            . array_get($call, 'function', '') . '()'
+            . ' called at ['
+            . array_get($call, 'file', '')
+            . ':'
+            . array_get($call, 'line', '')
+            .']'
+            . PHP_EOL;
+    }
+}
+
 /**
  * @SuppressWarnings(DevelopmentCodeFragment)
  * @param $args
@@ -19,7 +42,7 @@ function stop()
  */
 function inspect($args, $from = null, $trace = false, $html = true)
 {
-    $from = $from ?? inspect_from();
+    $inspectFrom = $from ?? inspect_from();
     if (!is_cli() && $html) {
         print '<pre style="border:1px solid red; background: #fffdf4;padding:5px;">';
     }
@@ -31,10 +54,11 @@ function inspect($args, $from = null, $trace = false, $html = true)
     if (!is_cli() && $html) {
         print '<p style="font-size:10px;">';
     }
-    print PHP_EOL . PHP_EOL . $from;
+    print PHP_EOL . PHP_EOL . $inspectFrom;
     if ($trace) {
         print PHP_EOL . PHP_EOL;
-        debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+        inspect_backtrace($backtrace, $from);
     }
     if (!is_cli() && $html) {
         print '</p></pre>';

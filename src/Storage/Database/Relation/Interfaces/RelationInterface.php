@@ -27,7 +27,7 @@ interface RelationInterface
      * @param array $holderRows
      * @return \Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface|static
      */
-    public function setHolder($table, $holderRows);
+    public function setHolder(string $table, array $holderRows = []);
 
     /**
      * @param array $relations
@@ -36,23 +36,21 @@ interface RelationInterface
     public function setTargetRelations($relations = []);
 
     /**
-     * @param string $relationName
      * @param callable|null $callable
-     * @return \Pheral\Essential\Layers\DataTable|array
+     * @return \Pheral\Essential\Storage\Database\DBTable|array
      */
     public function getRow($callable = null);
 
     /**
-     * @param string $relationName
      * @param callable|null $callable
-     * @return \Pheral\Essential\Layers\DataTable[]|array
+     * @return \Pheral\Essential\Storage\Database\DBTable[]|array
      */
     public function getAll($callable = null);
 
     /**
      * @param string $relationName
      * @param callable|null $callable
-     * @return \Pheral\Essential\Layers\DataTable[]|array
+     * @return \Pheral\Essential\Storage\Database\DBTable[]|array
      */
     public function apply($relationName, $callable = null);
 }

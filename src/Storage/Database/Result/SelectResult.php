@@ -2,27 +2,27 @@
 
 namespace Pheral\Essential\Storage\Database\Result;
 
-use Pheral\Essential\Layers\DataTable;
+use Pheral\Essential\Storage\Database\DBTable;
 use Pheral\Essential\Storage\Database\Query;
 use Pheral\Essential\Storage\Database\Relation\Interfaces\RelationInterface;
 
 class SelectResult extends QueryResult
 {
-    protected $dataTable;
+    protected $dbTable;
     protected $relations = [];
 
-    public function __construct(Query $query, \PDOStatement $stmt, $table = null, $relations = [])
+    public function __construct(Query $query, \PDOStatement $stmt, string $dbTable = null, $relations = [])
     {
         parent::__construct($query, $stmt);
-        if ($table && is_subclass_of($table, DataTable::class)) {
-            $this->stmt->setFetchMode(\PDO::FETCH_CLASS, $table);
-            $this->dataTable = $table;
+        if ($dbTable && is_subclass_of($dbTable, DBTable::class)) {
+            $this->stmt->setFetchMode(\PDO::FETCH_CLASS, $dbTable);
+            $this->dbTable = $dbTable;
         }
         $this->relations = $relations;
     }
 
     /**
-     * @return \Pheral\Essential\Layers\DataTable|\stdClass|mixed
+     * @return \Pheral\Essential\Storage\Database\DBTable|\stdClass|mixed
      */
     public function row()
     {
@@ -33,7 +33,7 @@ class SelectResult extends QueryResult
     }
 
     /**
-     * @return \Pheral\Essential\Layers\DataTable[]|\stdClass[]|array|mixed
+     * @return \Pheral\Essential\Storage\Database\DBTable[]|\stdClass[]|array|mixed
      */
     public function all()
     {
@@ -45,9 +45,9 @@ class SelectResult extends QueryResult
 
     protected function applyRelations($result, $isOneRow = false)
     {
-        if ($result && $this->dataTable && $this->relations) {
+        if ($result && $this->dbTable && $this->relations) {
             $connection = $this->getQuery()->getConnection();
-            $relations = call_user_func($this->dataTable . '::relations');
+            $relations = call_user_func($this->dbTable . '::relations');
             foreach ($this->relations as $relationName => $relationData) {
                 $relation = array_get($relations, $relationName);
                 if ($relation instanceof RelationInterface) {
@@ -59,7 +59,7 @@ class SelectResult extends QueryResult
                         $targetRelations = $relationData;
                     }
                     $result = $relation->setConnection($connection)
-                        ->setHolder($this->dataTable, array_wrap($result))
+                        ->setHolder($this->dbTable, array_wrap($result))
                         ->setTargetRelations($targetRelations)
                         ->apply($relationName, $targetConditions);
                     if ($isOneRow) {
@@ -73,7 +73,7 @@ class SelectResult extends QueryResult
 
     /**
      * @param string $field
-     * @return \Pheral\Essential\Layers\DataTable[]|\stdClass[]|array|mixed
+     * @return \Pheral\Essential\Storage\Database\DBTable[]|\stdClass[]|array|mixed
      */
     public function keyBy($field)
     {

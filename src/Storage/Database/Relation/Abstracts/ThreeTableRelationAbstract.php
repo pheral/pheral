@@ -13,18 +13,13 @@ abstract class ThreeTableRelationAbstract extends TwoTableRelationAbstract
      * @param string $pivot
      * @return \Pheral\Essential\Storage\Database\Relation\Abstracts\ThreeTableRelationAbstract|static
      */
-    protected function setPivot($pivot)
+    protected function setPivot(string $pivot)
     {
         $this->pivot = $pivot;
         return $this;
     }
 
-    protected function pivotTable()
-    {
-        return $this->getConnection()->getTableName($this->pivot);
-    }
-
-    protected function getPivot()
+    protected function getPivot(): string
     {
         $connection = $this->getConnection();
         if (!$pivot = $connection->getTableClass($this->pivot)) {

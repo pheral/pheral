@@ -3,7 +3,6 @@
 namespace Pheral\Essential\Storage\Database;
 
 use Pheral\Essential\Exceptions\NetworkException;
-use Pheral\Essential\Layers\DataTable;
 use Pheral\Essential\Storage\Profiler;
 
 class Connection
@@ -35,7 +34,7 @@ class Connection
         }
     }
 
-    public function query($table = null, $alias = '')
+    public function query(string $table = null, string $alias = null)
     {
         return new Query($this, $table, $alias);
     }
@@ -75,7 +74,7 @@ class Connection
 
     public function getTableClass($table)
     {
-        if (is_subclass_of($table, DataTable::class)) {
+        if (is_subclass_of($table, DBTable::class)) {
             return $table;
         }
         return null;
@@ -89,7 +88,7 @@ class Connection
         if ($tableName = array_get($this->tables, $table)) {
             return $tableName;
         }
-        if (is_subclass_of($table, DataTable::class)) {
+        if (is_subclass_of($table, DBTable::class)) {
             $prefix = $this->prefix ? $this->prefix . '_' : '';
             $tableName = $prefix . string_snake_case(class_name($table));
             $this->tables[$table] = $tableName;

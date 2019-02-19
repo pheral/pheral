@@ -16,14 +16,14 @@ abstract class OneTableRelationAbstract extends RelationAbstract
      * @param array $holderRows
      * @return \Pheral\Essential\Storage\Database\Relation\Abstracts\OneTableRelationAbstract|static
      */
-    public function setHolder($holder, $holderRows)
+    public function setHolder(string $holder, array $holderRows = [])
     {
         $this->holder = $holder;
         $this->setHolderRows($holderRows);
         return $this;
     }
 
-    protected function getHolder()
+    protected function getHolder(): string
     {
         $connection = $this->getConnection();
         if (!$holder = $connection->getTableClass($this->holder)) {

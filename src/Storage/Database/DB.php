@@ -22,7 +22,7 @@ class DB
     {
         self::$name = $name;
     }
-    public static function query($table = null, $alias = '')
+    public static function query(string $table = null, string $alias = null)
     {
         return self::connection()->query($table, $alias);
     }

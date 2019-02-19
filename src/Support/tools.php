@@ -118,6 +118,17 @@ if (!function_exists('view')) {
         return \Pheral\Essential\Layers\View::make($path, $data);
     }
 }
+
+if (!function_exists('url')) {
+    /**
+     * @return \Pheral\Essential\Network\Routing\Url
+     */
+    function url()
+    {
+        return \Pheral\Essential\Network\Routing\Url::instance();
+    }
+}
+
 if (!function_exists('profiler')) {
     /**
      * @return \Pheral\Essential\Storage\Profiler

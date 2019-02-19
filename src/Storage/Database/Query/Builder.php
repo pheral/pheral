@@ -11,7 +11,7 @@ class Builder
     use Getter, Setter;
 
     protected $connection;
-    protected $dataTable;
+    protected $dbTable;
 
     protected $distinct = false;
     protected $holders = [];
@@ -30,11 +30,11 @@ class Builder
     protected $values = [];
     protected $sets = [];
 
-    public function __construct(Connection $connection, $dataTable = null, $alias = null)
+    public function __construct(Connection $connection, string $dbTable = null, string $alias = null)
     {
         $this->setConnection($connection);
-        if ($dataTable) {
-            $this->dataTable($dataTable, $alias);
+        if ($dbTable) {
+            $this->setDBTable($dbTable, $alias);
         }
     }
 

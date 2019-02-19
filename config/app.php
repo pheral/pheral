@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'routes' => 'app/routes',
-    'views' => 'app/views',
+    'routes' => 'routes',
+    'views' => 'renders/views',
 ];

@@ -11,9 +11,9 @@ trait Getter
         return $this->params;
     }
 
-    protected function getDataTable()
+    protected function getDBTable()
     {
-        return $this->dataTable;
+        return $this->dbTable;
     }
 
     protected function getDistinct()

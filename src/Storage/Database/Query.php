@@ -28,16 +28,16 @@ class Query extends Builder
     }
 
     /**
-     * @param string|null $dataTable
+     * @param string|null $dbTable
      * @param string $alias
      * @return \Pheral\Essential\Storage\Database\Result\SelectResult
      */
-    public function select($dataTable = null, $alias = '')
+    public function select($dbTable = null, $alias = '')
     {
-        if ($dataTable && !$this->dataTable) {
-            $this->dataTable($dataTable, $alias);
+        if ($dbTable && !$this->dbTable) {
+            $this->setDBTable($dbTable, $alias);
         }
-        $table = $dataTable ?? $this->getDataTable();
+        $table = $dbTable ?? $this->getDBTable();
         $statement = $this->getConnection()->execute(
             $this->sqlSelect(),
             $this->getParams()

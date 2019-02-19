@@ -13,13 +13,13 @@ abstract class TwoTableRelationAbstract extends OneTableRelationAbstract
      * @param string $target
      * @return \Pheral\Essential\Storage\Database\Relation\Abstracts\TwoTableRelationAbstract|static
      */
-    protected function setTarget($target)
+    protected function setTarget(string $target)
     {
         $this->target = $target;
         return $this;
     }
 
-    protected function getTarget()
+    protected function getTarget(): string
     {
         $connection = $this->getConnection();
         if (!$target = $connection->getTableClass($this->target)) {

@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\DataTables\Example\Dummy;
-use App\DataTables\Example\Test;
+use App\DBTables\Example\Dummy;
+use App\DBTables\Example\Test;
 use App\Models\Abstracts\Model;
 use Pheral\Essential\Storage\Database\DB;
 

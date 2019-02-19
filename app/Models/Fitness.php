@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\DataTables\Fitness\Practices;
-use App\DataTables\Fitness\Users;
+use App\DBTables\Fitness\Practices;
+use App\DBTables\Fitness\Users;
 use App\Models\Abstracts\Model;
 use Pheral\Essential\Storage\Database\Query;
 

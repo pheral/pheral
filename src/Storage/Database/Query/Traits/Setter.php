@@ -69,10 +69,10 @@ trait Setter
      * @param string $alias
      * @return \Pheral\Essential\Storage\Database\Query|static
      */
-    protected function dataTable($table, $alias = '')
+    protected function setDBTable(string $table, string $alias = null)
     {
-        if (!$this->dataTable) {
-            $this->dataTable = $table;
+        if (!$this->dbTable) {
+            $this->dbTable = $table;
         }
         return $this->addTable($this->getTableName($table), $alias);
     }

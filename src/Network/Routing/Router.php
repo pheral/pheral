@@ -2,6 +2,8 @@
 
 namespace Pheral\Essential\Network\Routing;
 
+use Pheral\Essential\Layers\Wrapper;
+
 class Router
 {
     private static $instance;
@@ -47,6 +49,18 @@ class Router
         }
         return $this;
     }
+    public function wrap($wrappers, callable $closure)
+    {
+        $wrappers = array_wrap($wrappers);
+        $notWrapped = $this->data;
+        $closure();
+        $wrapped = array_diff_key($this->data, $notWrapped);
+        foreach ($wrapped as $pattern => $options) {
+            $routeWrappers = array_get($options, 'wrappers', []);
+            $options['wrappers'] = array_unique(array_merge($wrappers, $routeWrappers));
+            $this->data[$pattern] = $options;
+        }
+    }
     public function add($pattern, $options = [])
     {
         array_set($this->data, $pattern, $options);
@@ -78,10 +92,22 @@ class Router
             break;
         }
         if (isset($route)) {
+            $this->filterWrappers($route);
             return Route::make($route);
         }
         return null;
     }
+
+    protected function filterWrappers(array $options)
+    {
+        if ($routeWrappers = array_get($options, 'wrappers', [])) {
+            $options['wrappers'] = array_filter($routeWrappers, function ($wrapper) {
+                return is_subclass_of($wrapper, Wrapper::class);
+            });
+        }
+        return $options;
+    }
+
     protected function parse($path, $pattern)
     {
         if (strpos($pattern, '{') === false) {

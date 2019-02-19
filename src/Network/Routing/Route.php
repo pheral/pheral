@@ -8,21 +8,25 @@ class Route
     protected $action;
     protected $params = [];
     protected $method;
-    public function __construct($controller = '', $action = '', $params = [], $method = '')
+    protected $wrappers = [];
+    public function __construct($controller = '', $action = '', $params = [], $method = '', $wrappers = [])
     {
         $this->controller = $controller;
         $this->action = $action;
         $this->params = $params;
         $this->method = $method;
+        $this->wrappers = $wrappers;
     }
     public static function make($options = []): Route
     {
-        return new static(
+        $route = new static(
             array_get($options, 'controller'),
             array_get($options, 'action', 'index'),
             array_get($options, 'params', []),
-            array_get($options, 'method')
+            array_get($options, 'method'),
+            array_get($options, 'wrappers', [])
         );
+        return $route;
     }
     public function controller()
     {
@@ -39,6 +43,10 @@ class Route
     public function params()
     {
         return $this->params;
+    }
+    public function wrappers()
+    {
+        return $this->wrappers;
     }
     public function get($key, $default = null)
     {

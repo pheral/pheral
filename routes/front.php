@@ -14,7 +14,13 @@ $router->add('/example/{param?}', [
     'method' => 'any'
 ]);
 
-$router->add('/fitness', [
-    'controller' => \App\Controllers\Fitness::class,
-    'action' => 'index',
-]);
+$router->wrap([
+    \App\Wrappers\Fitness\Authorized::class,
+], function () use ($router) {
+
+    $router->add('/fitness', [
+        'controller' => \App\Controllers\Fitness::class,
+        'action' => 'index',
+    ]);
+
+});

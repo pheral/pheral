@@ -62,7 +62,12 @@ abstract class Wrapper
         $this->callNext = null;
     }
 
-    protected function skipNextByRedirect(Redirect $redirect)
+    protected function skipNextWithMessage(string $message)
+    {
+        $this->callNext = $message;
+    }
+
+    protected function skipNextWithRedirect(Redirect $redirect)
     {
         $this->callNext = $redirect;
     }

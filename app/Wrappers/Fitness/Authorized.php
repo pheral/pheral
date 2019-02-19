@@ -8,7 +8,6 @@ class Authorized extends Wrapper
 {
     public function beforeController()
     {
-        debug_trace('@todo check authorization');
-        $this->skipNext();
+        $this->skipNextWithMessage('TODO: check authorization');
     }
 }

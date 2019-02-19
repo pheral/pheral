@@ -2,7 +2,7 @@
 <div>
     <ul>
         <li>
-            <a href="/fitness <?= url()->path('/fitness'); ?>">Fitness</a>
+            <a href="<?= url()->path('/fitness'); ?>">Fitness</a>
         </li>
     </ul>
 </div>

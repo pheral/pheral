@@ -135,8 +135,8 @@ class Network implements Executable
     {
         if ($this->wrappers) {
             $wrappers = array_reverse($this->wrappers);
-            foreach ($wrappers as $wrapperClass) {
-                $this->terminateWrapper($wrapperClass);
+            foreach ($wrappers as $wrapper) {
+                $this->terminateWrapper($wrapper);
             }
         }
     }

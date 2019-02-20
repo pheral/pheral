@@ -39,9 +39,7 @@ class AuthController extends FitnessController
             return redirect()->back();
         }
         $frame->session()->set('uid', $user->id);
-        if (!$url = $frame->session()->getFlush('url')) {
-            $url = url()->path('/fitness');
-        }
+        $url = url()->path('/fitness');
         return redirect($url);
     }
 

@@ -11,12 +11,7 @@ class Authorized extends Wrapper
     {
         $frame = Frame::instance();
         if (!$frame->session()->get('uid')) {
-            $flushUrl = $frame->getCurrentUrl();
             $authUrl = url()->path('/fitness/auth');
-            if ($flushUrl == $authUrl) {
-                $flushUrl = url()->path('/fitness');
-            }
-            $frame->session()->setFlush('url', $flushUrl);
             $this->skipNextWithRedirect(redirect($authUrl));
         }
     }

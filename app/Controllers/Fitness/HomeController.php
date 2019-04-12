@@ -18,9 +18,11 @@ class HomeController extends FitnessController
     public function index()
     {
         $user = $this->auth->getUser();
+        $workouts = $this->home->getWorkouts($user);
         $practices = $this->home->getPractices($user);
         return $this->render([
             'content' => view('templates.fitness.home.index', [
+                'workouts' => $workouts,
                 'practices' => $practices,
             ])
         ]);

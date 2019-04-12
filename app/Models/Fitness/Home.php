@@ -3,12 +3,49 @@
 namespace App\Models\Fitness;
 
 use App\DBTables\Fitness\Practices;
+use App\DBTables\Fitness\UserExercise;
 use App\DBTables\Fitness\Users;
+use App\DBTables\Fitness\Workouts;
 use App\Models\Abstracts\Model;
 use Pheral\Essential\Storage\Database\Query;
 
 class Home extends Model
 {
+    public function getWorkouts(Users $user)
+    {
+        $workouts = Workouts::query('w')
+            ->where('user_id', '=', $user->id)
+            ->select()
+            ->all();
+        return $workouts;
+    }
+
+    public function getPracticeExercises(Users $user)
+    {
+        $userExercises = UserExercise::query('ue')
+            ->where('user_id', '=', $user->id)
+            ->with([
+                'exercise' => [
+                    'goal',
+                    'units',
+                ],
+            ])
+            ->select()
+            ->all();
+
+        $exerciseIds = [];
+        foreach ($userExercises as $userExercise) {
+            $exerciseIds[] = $userExercise->exercise;
+        }
+
+
+        $workouts = Workouts::query('w')
+            ->where('user_id', '=', $user->id)
+            ->select()
+            ->all();
+        return $workouts;
+    }
+
     public function getPractices(Users $user)
     {
         $practices = Practices::query('p')

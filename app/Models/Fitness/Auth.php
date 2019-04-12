@@ -29,7 +29,7 @@ class Auth extends Model
                     'level',
                     'data' => 'option'
                 ])
-                ->where('id', '=', Session::instance()->get('uid'))
+                ->where('id', '=', Session::instance()->get('fuid'))
                 ->select()
                 ->row();
         }

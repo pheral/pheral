@@ -2,6 +2,7 @@
 
 namespace Pheral\Essential\Network;
 
+use Pheral\Essential\Network\Routing\Route;
 use Pheral\Essential\Storage\Config;
 use Pheral\Essential\Storage\Cookies;
 use Pheral\Essential\Storage\Server;
@@ -56,35 +57,35 @@ class Frame
         }
         return self::$instance;
     }
-    public function getProtocol()
+    public function getProtocol(): string
     {
         return $this->protocol;
     }
-    public function getHost()
+    public function getHost(): string
     {
         return $this->server->getHost();
     }
-    public function getPreviousUrl()
+    public function getPreviousUrl(): string
     {
         return $this->previousUrl;
     }
-    public function getCurrentUrl()
+    public function getCurrentUrl(): string
     {
         return $this->currentUrl;
     }
-    public function getRequestMethod()
+    public function getRequestMethod(): string
     {
         return $this->requestMethod;
     }
-    public function isRequestMethod($method)
+    public function isRequestMethod($method): bool
     {
         return $this->requestMethod === strtoupper($method);
     }
-    public function isAjaxRequest()
+    public function isAjaxRequest(): bool
     {
         return $this->server->isXmlHttpRequest();
     }
-    public function route()
+    public function route(): ?Route
     {
         return $this->route;
     }

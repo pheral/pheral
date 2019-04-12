@@ -10,7 +10,7 @@ class Authorized extends Wrapper
     public function beforeController()
     {
         $frame = Frame::instance();
-        if (!$frame->session()->get('uid')) {
+        if (!$frame->session()->get('fuid')) {
             $authUrl = url()->path('/fitness/auth');
             $this->skipNextWithRedirect(redirect($authUrl));
         }
